@@ -1,0 +1,15 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+# Specify your gem's dependencies in orthoses-rails.gemspec
+gemspec
+
+gem "orthoses", path: "../orthoses"
+
+gem "rake", "~> 13.0"
+gem "rgot", "~> 1.1"
+
+gem "debug"
+gem "set"
+gem "sorted_set"

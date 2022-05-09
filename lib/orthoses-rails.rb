@@ -1,0 +1,1 @@
+require 'orthoses/rails'
