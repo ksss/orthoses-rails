@@ -28,7 +28,6 @@ Gem::Specification.new do |spec|
       false
     end
   end
-  pp spec.files
   spec.bindir = "exe"
   spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
