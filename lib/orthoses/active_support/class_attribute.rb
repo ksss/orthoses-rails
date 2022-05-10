@@ -15,17 +15,19 @@ module Orthoses
       end
 
       def call
-        require 'active_support/core_ext/class/attribute'
         target_method = ::Class.instance_method(:class_attribute)
         call_tracer = Orthoses::CallTracer.new
 
-        result = call_tracer.trace(target_method) do
+        store = call_tracer.trace(target_method) do
           @loader.call
         end
 
         call_tracer.result.each do |method, argument|
+          receiver_name = Orthoses::Utils.module_name(method.receiver)
+          next unless receiver_name
+
           methods = []
-          if ::ActiveSupport.version < Gem::Version.new("6.0")
+          if ::ActiveSupport::VERSION::MAJOR < 6
             options = argument[:attrs].extract_options!
             argument[:instance_reader]    = options.fetch(:instance_accessor, true) && options.fetch(:instance_reader, true)
             argument[:instance_writer]    = options.fetch(:instance_accessor, true) && options.fetch(:instance_writer, true)
@@ -49,10 +51,10 @@ module Orthoses
           end
           next if methods.empty?
 
-          result[method.receiver.to_s].concat(methods)
+          store[receiver_name].concat(methods)
         end
 
-        result
+        store
       end
     end
   end
