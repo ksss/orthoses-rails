@@ -13,35 +13,39 @@ module Orthoses
       end
 
       def call
-        target_method = ::ActiveRecord::Base.method(:has_secure_password)
+        target_method = ::ActiveModel::SecurePassword::ClassMethods.instance_method(:has_secure_password)
         call_tracer = Orthoses::CallTracer.new
 
-        result = call_tracer.trace(target_method) do
+        store = call_tracer.trace(target_method) do
           @loader.call
         end
 
         call_tracer.result.each do |method, argument|
-          base = method.receiver.to_s
-          if argument[:attribute].nil? # < 6.0
-            result[base].delete_if { |line| line == "include ActiveModel::SecurePassword::InstanceMethodsOnActivation" }
-          else
-            result[base].delete_if { |line| line.start_with?("include #<InstanceMethodsOnActivation:") }
-          end
+          next unless method.receiver.kind_of?(Class)
+          base_name = Utils.module_name(method.receiver)
+          next unless base_name
+
           attribute = argument[:attribute] || :password
-          mod_name = "ActiveModel_SecurePassword_InstanceMethodsOnActivation_#{attribute}"
+          full_name = if ::ActiveModel::VERSION::MAJOR < 6
+            "ActiveModel::SecurePassword::InstanceMethodsOnActivation"
+          else
+            "#{base_name}::ActiveModel_SecurePassword_InstanceMethodsOnActivation_#{attribute}"
+          end
+
           lines = []
           lines << "attr_reader #{attribute}: String?"
           lines << "def #{attribute}=: (String) -> String"
           lines << "def #{attribute}_confirmation=: (String) -> String"
-          lines << "def authenticate_#{attribute}: (String) -> (#{base} | false)"
+          lines << "def authenticate_#{attribute}: (String) -> (#{base_name} | false)"
           if attribute == :password
             lines << "alias authenticate authenticate_password"
           end
-          result["module #{base}::#{mod_name}"].concat(lines)
-          result[base] << "include #{mod_name}"
+          store[full_name].header = "module #{full_name}"
+          store[full_name].concat(lines)
+          store[base_name] << "include #{full_name}"
         end
 
-        result
+        store
       end
     end
   end
