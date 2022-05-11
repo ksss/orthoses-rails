@@ -6,6 +6,7 @@ require "rgot/cli"
 task :test do
   require 'orthoses/rails'
   require 'active_support/all'
+  require 'active_record'
 
   Rgot::Cli.new(%w[-v lib]).run
 end
