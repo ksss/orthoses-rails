@@ -5,8 +5,6 @@ module HasSecurePasswordTest
     end
   }
   def test_has_secure_password(t)
-    require 'active_record'
-
     store = Orthoses::ActiveModel::HasSecurePassword.new(
       Orthoses::Store.new(LOADER)
     ).call

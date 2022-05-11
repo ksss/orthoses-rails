@@ -11,6 +11,7 @@ module Orthoses
         @loader.call.tap do |store|
           ::ActiveRecord::Base.descendants.each do |base|
             next if base.abstract_class?
+            base_name = Utils.module_name(base) || next
 
             lines = base.reflect_on_all_associations(:has_one).flat_map do |ref|
               type = ref.klass.to_s
@@ -26,11 +27,11 @@ module Orthoses
               ]
             end
 
-            generated_association_methods = "#{base}::GeneratedAssociationMethods"
-            store["module #{generated_association_methods}"].concat(lines)
+            generated_association_methods = "#{base_name}::GeneratedAssociationMethods"
+            store[generated_association_methods].header = "module #{generated_association_methods}"
+            store[generated_association_methods].concat(lines)
 
-            code = "include #{generated_association_methods}"
-            store[base.to_s] << code
+            store[base_name] << "include #{generated_association_methods}"
           end
         end
       end

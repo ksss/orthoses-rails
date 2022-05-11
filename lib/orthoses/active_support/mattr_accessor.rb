@@ -16,15 +16,14 @@ module Orthoses
         mattr_reader = Orthoses::CallTracer.new
         mattr_writer = Orthoses::CallTracer.new
 
-        require 'active_support/core_ext/module/attribute_accessors.rb'
-        result = mattr_reader.trace(::Module.instance_method(:mattr_reader)) do
+        store = mattr_reader.trace(::Module.instance_method(:mattr_reader)) do
           mattr_writer.trace(::Module.instance_method(:mattr_writer)) do
             @loader.call
           end
         end
 
         mattr_reader.result.each do |method, argument|
-          base = method.receiver.to_s
+          base = Orthoses::Utils.module_name(method.receiver) || next
           methods = []
           argument[:syms].each do |sym|
             next unless @if.nil? || @if.call(method, sym)
@@ -36,11 +35,11 @@ module Orthoses
           end
           next if methods.empty?
 
-          result[base].concat(methods)
+          store[base].concat(methods)
         end
 
         mattr_writer.result.each do |method, argument|
-          base = method.receiver.to_s
+          base = Orthoses::Utils.module_name(method.receiver) || next
           methods = []
           argument[:syms].each do |sym|
             next unless @if.nil? || @if.call(method, sym)
@@ -52,10 +51,10 @@ module Orthoses
           end
           next if methods.empty?
 
-          result[base].concat(methods)
+          store[base].concat(methods)
         end
 
-        result
+        store
       end
     end
   end

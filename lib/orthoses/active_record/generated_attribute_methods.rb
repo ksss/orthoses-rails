@@ -12,9 +12,7 @@ module Orthoses
           ::ActiveRecord::Base.descendants.each do |klass|
             next if klass.abstract_class?
 
-            name = klass.to_s
-            generated_attribute_methods = "#{name}::AttributeMethods::GeneratedAttributeMethods"
-            store[name] << "include #{generated_attribute_methods}"
+            name = Utils.module_name(klass) || next
             lines = klass.columns.flat_map do |col|
               req = sql_type_to_rbs(col.type)
               opt = "#{req}?"
@@ -41,7 +39,11 @@ module Orthoses
                 "def clear_#{col.name}_change: () -> void",
               ]
             end
-            store["module #{generated_attribute_methods}"].concat(lines)
+            generated_attribute_methods = "#{name}::AttributeMethods::GeneratedAttributeMethods"
+            store[name] << "include #{generated_attribute_methods}"
+
+            store[generated_attribute_methods].header = "module #{generated_attribute_methods}"
+            store[generated_attribute_methods].concat(lines)
           end
         end
       end
