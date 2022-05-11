@@ -11,6 +11,7 @@ module Orthoses
         @loader.call.tap do |store|
           ::ActiveRecord::Base.descendants.each do |base|
             next if base.abstract_class?
+            base_name = Orthoses::Utils.module_name(base) || next
 
             lines = base.reflect_on_all_associations(:belongs_to).flat_map do |ref|
               # FIXME: Can I get list of class for polymorphic?
@@ -30,11 +31,16 @@ module Orthoses
               end
             end
 
-            generated_association_methods = "#{base}::GeneratedAssociationMethods"
-            store["module #{generated_association_methods}"].concat(lines)
+            generated_association_methods = "#{base_name}::GeneratedAssociationMethods"
 
-            code = "include #{generated_association_methods}"
-            store[base.to_s] << code
+            store[generated_association_methods].tap do |content|
+              content.header = "module #{generated_association_methods}"
+              content.concat(lines)
+            end
+
+            store[base_name].tap do |content|
+              store[base_name] << "include #{generated_association_methods}"
+            end
           end
         end
       end
