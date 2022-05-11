@@ -39,12 +39,12 @@ module GeneratedAttributeMethodsTest
       Orthoses::Store.new(LOADER)
     ).call
 
-    unless store.length == 1
-      keys = [
-        "GeneratedAttributeMethodsTest::User",
-        "GeneratedAttributeMethodsTest::User::AttributeMethods::GeneratedAttributeMethods"
-      ]
-      t.error("found unexpected keys #{store.keys - keys}")
+    expected_keys = [
+      "GeneratedAttributeMethodsTest::User",
+      "GeneratedAttributeMethodsTest::User::AttributeMethods::GeneratedAttributeMethods"
+    ]
+    unless store.keys.sort == expected_keys.sort
+      t.error("found unexpected keys #{store.keys - expected_keys}")
     end
 
     expect = <<~RBS
