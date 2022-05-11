@@ -11,9 +11,9 @@ module Orthoses
         @loader.call.tap do |store|
           ::ActiveRecord::Base.descendants.each do |base|
             next if base.abstract_class?
+            base_name = Utils.module_name(base) || next
 
-            generated_association_methods = "#{base}::GeneratedAssociationMethods"
-            collection_proxy = "#{base}::ActiveRecord_Associations_CollectionProxy"
+            collection_proxy = "#{base_name}::ActiveRecord_Associations_CollectionProxy"
 
             lines = base.reflect_on_all_associations(:has_many).flat_map do |ref|
               singular_name = ref.name.to_s.singularize
@@ -26,10 +26,10 @@ module Orthoses
               ]
             end
 
-            store["module #{generated_association_methods}"].concat(lines)
-
-            code = "include #{generated_association_methods}"
-            store[base.to_s] << code
+            generated_association_methods = "#{base_name}::GeneratedAssociationMethods"
+            store[generated_association_methods].header = "module #{generated_association_methods}"
+            store[generated_association_methods].concat(lines)
+            store[base_name] << "include #{generated_association_methods}"
           end
         end
       end
