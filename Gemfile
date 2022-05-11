@@ -5,7 +5,7 @@ source "https://rubygems.org"
 # Specify your gem's dependencies in orthoses-rails.gemspec
 gemspec
 
-gem "orthoses"
+gem "orthoses", path: "../orthoses"
 
 gem "rake", "~> 13.0"
 gem "rgot", "~> 1.1"
@@ -15,3 +15,4 @@ gem "set"
 gem "sorted_set"
 gem "rails", "< 8"
 gem "bcrypt"
+gem "steep"
