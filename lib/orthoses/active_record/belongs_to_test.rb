@@ -6,12 +6,26 @@ module BelongsToTest
     class Post < ActiveRecord::Base
       belongs_to :user
     end
+
+    Class.new(ActiveRecord::Base) do
+      belongs_to :user
+    end
   }
 
   def test_belongs_to(t)
     store = Orthoses::ActiveRecord::BelongsTo.new(
       Orthoses::Store.new(LOADER)
     ).call
+
+    expected_keys = [
+      "BelongsToTest::Post::GeneratedAssociationMethods",
+      "BelongsToTest::Post",
+      "BelongsToTest::User::GeneratedAssociationMethods",
+      "BelongsToTest::User"
+    ]
+    unless store.keys.sort == expected_keys.sort
+      t.error("found unexpected keys #{store.keys - expected_keys}")
+    end
 
     expect = <<~RBS
       class BelongsToTest::Post < ::ActiveRecord::Base
