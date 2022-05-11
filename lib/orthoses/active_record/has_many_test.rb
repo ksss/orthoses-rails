@@ -12,7 +12,7 @@ module HasManyTest
     end
   }
 
-  def test_belongs_to(t)
+  def test_hash_many(t)
     store = Orthoses::ActiveRecord::HasMany.new(
       Orthoses::Store.new(LOADER)
     ).call

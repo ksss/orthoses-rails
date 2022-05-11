@@ -12,7 +12,7 @@ module HasOneTest
     end
   }
 
-  def test_belongs_to(t)
+  def test_has_one(t)
     store = Orthoses::ActiveRecord::HasOne.new(
       Orthoses::Store.new(LOADER)
     ).call
