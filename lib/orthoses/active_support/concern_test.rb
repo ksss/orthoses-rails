@@ -3,12 +3,19 @@ module ConcernTest
     module Mod
       extend ActiveSupport::Concern
     end
+    Module.new do
+      extend ActiveSupport::Concern
+    end
   }
 
   def test_concern(t)
     store = Orthoses::ActiveSupport::Concern.new(
       Orthoses::Store.new(LOADER)
     ).call
+
+    unless store.length == 1
+      t.error("found unexpected keys #{store.keys - ["ConcernTest::Mod"]}")
+    end
 
     expect = <<~RBS
       module ConcernTest::Mod

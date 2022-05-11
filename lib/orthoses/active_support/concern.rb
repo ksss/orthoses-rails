@@ -13,6 +13,8 @@ module Orthoses
           @loader.call
         end
         extended.result.each do |method, argument|
+          base_name = Orthoses::Utils.module_name(argument[:base])
+          next unless base_name
           store[argument[:base].to_s] << "extend ActiveSupport::Concern"
         end
         store
