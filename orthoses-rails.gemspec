@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.authors = ["ksss"]
   spec.email = ["co000ri@gmail.com"]
 
-  spec.summary = "Orthoses  middleware collection for Ruby on Rails"
+  spec.summary = "Orthoses middleware collection for Ruby on Rails"
   spec.description = "Orthoses middleware collection for Ruby on Rails"
   spec.homepage = "https://github.com/ksss/orthoses-rails"
   spec.license = "MIT"

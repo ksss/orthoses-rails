@@ -3,6 +3,45 @@
 [Orthoses](https://github.com/ksss/orthoses) extension for Ruby on Rails.
 Orthoses::Rails automatically generates RBS for methods added by Rails.
 
+## Features
+
+### Orthoses::ActiveModel::HasSecurePassword
+
+Add signatures that generated form `ActiveModel::SecurePassword::ClassMethods#has_secure_password`.
+
+### Orthoses::ActiveRecord::BelongsTo
+
+Add signatures that generated form `ActiveRecord::Associations::ClassMethods#belongs_to`.
+
+### Orthoses::ActiveRecord::GeneratedAttributeMethods
+
+Add signatures that generated from DB schema columns.
+
+### Orthoses::ActiveRecord::HasMany
+
+Add signatures that generated form `ActiveRecord::Associations::ClassMethods#has_many`.
+
+### Orthoses::ActiveRecord::HasOne
+
+Add signatures that generated form `ActiveRecord::Associations::ClassMethods#has_one`.
+
+### Orthoses::ActiveSupport::ClassAttribute
+
+Add signatures that generated form `Class#class_attribute`.
+
+### Orthoses::ActiveSupport::Concern
+
+Add signature `extend ActiveSupport::Concern` only.
+
+### Orthoses::ActiveSupport::MattrAccessor
+
+Add signatures that generated form `Module#mattr_accessor`, `Module#mattr_reader` and `Module#mattr_writer`.
+
+### Orthoses::ActiveSupport::TimeWithZone
+
+Add signatures `Time` and `ActiveSupport::TimeWithZone`.
+Methods and mixin delegated from `Time` are added to `ActiveSupport::TimeWithZone`.
+
 ## Installation
 
 Install the gem and add to the application's Gemfile by executing:
