@@ -8,8 +8,16 @@ module Orthoses
       end
 
       def call
+        target_method = begin
+          ::ActiveSupport::Concern.method(:extended)
+        rescue NameError => err
+          Orthoses.logger.warn("Run `require 'active_support/concern'` and retry because #{err}")
+          require 'active_support/concern'
+          retry
+        end
+
         extended = CallTracer.new
-        store = extended.trace(::ActiveSupport::Concern.method(:extended)) do
+        store = extended.trace(target_method) do
           @loader.call
         end
         extended.result.each do |method, argument|

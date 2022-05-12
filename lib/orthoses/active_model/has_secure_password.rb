@@ -13,7 +13,14 @@ module Orthoses
       end
 
       def call
-        target_method = ::ActiveModel::SecurePassword::ClassMethods.instance_method(:has_secure_password)
+        target_method = begin
+          ::ActiveModel::SecurePassword::ClassMethods.instance_method(:has_secure_password)
+        rescue NameError => err
+          Orthoses.logger.warn("Run `require 'active_support/concern'; require 'active_model/secure_password'` and retry because #{err}")
+          require 'active_support/concern'
+          require 'active_model/secure_password'
+          retry
+        end
         call_tracer = Orthoses::CallTracer.new
 
         store = call_tracer.trace(target_method) do

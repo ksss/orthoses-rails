@@ -15,7 +15,13 @@ module Orthoses
       end
 
       def call
-        target_method = ::Class.instance_method(:class_attribute)
+        target_method = begin
+          ::Class.instance_method(:class_attribute)
+        rescue NameError => err
+          Orthoses.logger.warn("Run `require 'active_support/core_ext/class/attribute'` and retry because #{err}")
+          require 'active_support/core_ext/class/attribute'
+          retry
+        end
         call_tracer = Orthoses::CallTracer.new
 
         store = call_tracer.trace(target_method) do
