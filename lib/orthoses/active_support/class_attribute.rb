@@ -53,7 +53,7 @@ module Orthoses
             methods << "def self.#{name}=: (untyped value) -> untyped"
             methods << "def #{name}: () -> untyped" if argument[:instance_reader]
             methods << "def #{name}?: () -> bool" if argument[:instance_predicate] && argument[:instance_reader]
-            methods << "attr_writer #{name}: untyped" if argument[:instance_writer]
+            methods << "def #{name}=: (untyped value) -> untyped" if argument[:instance_writer]
           end
           next if methods.empty?
 

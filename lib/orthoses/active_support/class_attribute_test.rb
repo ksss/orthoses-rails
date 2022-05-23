@@ -18,14 +18,14 @@ module ClassAttributeTest
         def self.bar=: (untyped value) -> untyped
         def bar: () -> untyped
         def bar?: () -> bool
-        attr_writer bar: untyped
+        def bar=: (untyped value) -> untyped
         def self.baz: () -> untyped
         def self.baz?: () -> bool
         def self.baz=: (untyped value) -> untyped
         def self.qux: () -> untyped
         def self.qux=: (untyped value) -> untyped
         def qux: () -> untyped
-        attr_writer qux: untyped
+        def qux=: (untyped value) -> untyped
       end
     RBS
     actual = store["ClassAttributeTest::Foo"].to_rbs
