@@ -102,10 +102,6 @@ gems:
     revision: 8e1f19e0c8768b6bac2815fe65a3310298ba400e
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
-- name: minitest
-  version: '0'
-  source:
-    type: stdlib
 - name: nokogiri
   version: '1.11'
   source:
