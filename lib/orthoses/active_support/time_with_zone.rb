@@ -15,10 +15,10 @@ module Orthoses
       # Time <= (known Time)
       # TimeWithZone <= (known TimeWithZone, known Time, core Time)
       def call
-        store = Orthoses::LoadRBS.new(@loader, paths: LOAD_PATHS).call
+        store = @loader.call
 
         time_with_zone_store = store["ActiveSupport::TimeWithZone"]
-        each_line_from_core_time_definition do |line|
+        each_line_from_core_time_definition(store) do |line|
           time_with_zone_store << line
         end
 
@@ -35,15 +35,18 @@ module Orthoses
         localtime
       ]
 
-      def each_line_from_core_time_definition
+      def each_line_from_core_time_definition(store)
         type_name_time = TypeName("::Time")
-        loader = RBS::EnvironmentLoader.new
-        env = RBS::Environment.from_loader(loader)
-        LOAD_PATHS.each do |path|
-          RBS::Parser.parse_signature(File.read(path)).each do |decl|
-            env << decl
-          end
-        end
+        env = Utils.rbs_environment(collection: true).dup
+        env << store["Time"].to_decl
+        env << store["DateAndTime"].to_decl
+        env << store["DateAndTime::Zones"].to_decl
+        env << store["DateAndTime::Calculations"].to_decl
+        env << store["DateAndTime::Compatibility"].to_decl
+        env << store["ActiveSupport"].to_decl
+        env << store["ActiveSupport::TimeZone"].to_decl
+        env << store["ActiveSupport::Duration"].to_decl
+        env << store["ActiveSupport::TimeWithZone"].to_decl
 
         builder = RBS::DefinitionBuilder.new(env: env.resolve_type_names)
         one_ancestors = builder.ancestor_builder.one_instance_ancestors(type_name_time)

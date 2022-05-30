@@ -17,6 +17,14 @@ module TimeWithZoneTest
       module DateAndTime
         module Calculations
         end
+        module Compatibility
+        end
+        module Zones
+        end
+      end
+      module JSON
+        class State
+        end
       end
     RBS
       env << decl
@@ -31,6 +39,10 @@ module TimeWithZoneTest
     definetion_builder = RBS::DefinitionBuilder.new(env: env.resolve_type_names)
     begin
       definetion_builder.build_instance(TypeName("::Time"))
+    rescue => err
+      t.error("\n```rbs\n#{store["Time"].to_rbs}```\n#{err.inspect}")
+    end
+    begin
       definetion_builder.build_instance(TypeName("::ActiveSupport::TimeWithZone"))
     rescue => err
       t.error("\n```rbs\n#{store["ActiveSupport::TimeWithZone"].to_rbs}```\n#{err.inspect}")

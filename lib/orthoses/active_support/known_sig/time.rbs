@@ -1,6 +1,10 @@
 module DateAndTime
   module Calculations
   end
+  module Zones
+  end
+  module Compatibility
+  end
 end
 module ActiveSupport
   class TimeZone

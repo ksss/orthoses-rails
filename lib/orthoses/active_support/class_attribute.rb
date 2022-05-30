@@ -40,6 +40,9 @@ module Orthoses
             argument[:instance_predicate] = options.fetch(:instance_predicate, true)
             argument[:default_value]      = options.fetch(:default, nil)
           end
+
+          content = store[receiver_name]
+
           argument[:attrs].each do |name|
             next unless @if.nil? || @if.call(method, name)
 
@@ -54,10 +57,12 @@ module Orthoses
             methods << "def #{name}: () -> untyped" if argument[:instance_reader]
             methods << "def #{name}?: () -> bool" if argument[:instance_predicate] && argument[:instance_reader]
             methods << "def #{name}=: (untyped value) -> untyped" if argument[:instance_writer]
+            # In RBS, `foo=` and attr_writer :foo cannot live together.
+            content.body.delete_if { |line| line.start_with?("attr_writer #{name}:") }
           end
           next if methods.empty?
 
-          store[receiver_name].concat(methods)
+          content.concat(methods)
         end
 
         store

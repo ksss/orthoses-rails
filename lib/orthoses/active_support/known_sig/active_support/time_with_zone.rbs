@@ -1,4 +1,0 @@
-module ActiveSupport
-  class TimeWithZone
-  end
-end
