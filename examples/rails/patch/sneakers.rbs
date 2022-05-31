@@ -1,0 +1,2 @@
+module Sneakers
+end

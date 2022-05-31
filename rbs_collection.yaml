@@ -14,7 +14,33 @@ gems:
   - name: rbs
   - name: orthoses-rails
     ignore: true
-  - name: set
-    ignore: true
   - name: io-console
+    ignore: true
+  - name: orthoses
+  - name: activesupport
+    ignore: true
+  - name: uri
+  - name: digest
+  - name: net-http
+  - name: set
+  - name: rubygems
+  - name: openssl
+  - name: mutex_m
+  - name: singleton
+  - name: monitor
+  - name: logger
+  - name: forwardable
+  - name: time
+  - name: did_you_mean
+  - name: actionpack
+    ignore: true
+  - name: actionview
+    ignore: true
+  - name: activejob
+    ignore: true
+  - name: activemodel
+    ignore: true
+  - name: activerecord
+    ignore: true
+  - name: activestorage
     ignore: true

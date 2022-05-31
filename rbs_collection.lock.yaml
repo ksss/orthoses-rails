@@ -10,68 +10,68 @@ gems:
   version: 2.5.0
   source:
     type: rubygems
-- name: actionpack
-  version: '6.0'
+- name: orthoses
+  version: 0.5.0
   source:
-    type: git
-    name: ruby/gem_rbs_collection
-    revision: 8e1f19e0c8768b6bac2815fe65a3310298ba400e
-    remote: https://github.com/ruby/gem_rbs_collection.git
-    repo_dir: gems
-- name: actionview
-  version: '6.0'
+    type: rubygems
+- name: uri
+  version: '0'
   source:
-    type: git
-    name: ruby/gem_rbs_collection
-    revision: 8e1f19e0c8768b6bac2815fe65a3310298ba400e
-    remote: https://github.com/ruby/gem_rbs_collection.git
-    repo_dir: gems
-- name: activejob
-  version: '6.0'
+    type: stdlib
+- name: digest
+  version: '0'
   source:
-    type: git
-    name: ruby/gem_rbs_collection
-    revision: 8e1f19e0c8768b6bac2815fe65a3310298ba400e
-    remote: https://github.com/ruby/gem_rbs_collection.git
-    repo_dir: gems
-- name: activemodel
-  version: '6.0'
+    type: stdlib
+- name: net-http
+  version: '0'
   source:
-    type: git
-    name: ruby/gem_rbs_collection
-    revision: 8e1f19e0c8768b6bac2815fe65a3310298ba400e
-    remote: https://github.com/ruby/gem_rbs_collection.git
-    repo_dir: gems
-- name: activerecord
-  version: '6.1'
+    type: stdlib
+- name: set
+  version: '0'
   source:
-    type: git
-    name: ruby/gem_rbs_collection
-    revision: 8e1f19e0c8768b6bac2815fe65a3310298ba400e
-    remote: https://github.com/ruby/gem_rbs_collection.git
-    repo_dir: gems
-- name: activestorage
-  version: '6.1'
+    type: stdlib
+- name: rubygems
+  version: '0'
   source:
-    type: git
-    name: ruby/gem_rbs_collection
-    revision: 8e1f19e0c8768b6bac2815fe65a3310298ba400e
-    remote: https://github.com/ruby/gem_rbs_collection.git
-    repo_dir: gems
-- name: activesupport
-  version: '6.0'
+    type: stdlib
+- name: openssl
+  version: '0'
   source:
-    type: git
-    name: ruby/gem_rbs_collection
-    revision: 8e1f19e0c8768b6bac2815fe65a3310298ba400e
-    remote: https://github.com/ruby/gem_rbs_collection.git
-    repo_dir: gems
+    type: stdlib
+- name: mutex_m
+  version: '0'
+  source:
+    type: stdlib
+- name: singleton
+  version: '0'
+  source:
+    type: stdlib
+- name: monitor
+  version: '0'
+  source:
+    type: stdlib
+- name: logger
+  version: '0'
+  source:
+    type: stdlib
+- name: forwardable
+  version: '0'
+  source:
+    type: stdlib
+- name: time
+  version: '0'
+  source:
+    type: stdlib
+- name: did_you_mean
+  version: '0'
+  source:
+    type: stdlib
 - name: ast
   version: '2.4'
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 8e1f19e0c8768b6bac2815fe65a3310298ba400e
+    revision: 305e7d0aa3fbbd01ee80c97ccc1003504ea65382
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: bcrypt
@@ -79,19 +79,15 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 8e1f19e0c8768b6bac2815fe65a3310298ba400e
+    revision: 305e7d0aa3fbbd01ee80c97ccc1003504ea65382
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
-- name: digest
-  version: '0'
-  source:
-    type: stdlib
 - name: i18n
   version: '1.10'
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 8e1f19e0c8768b6bac2815fe65a3310298ba400e
+    revision: 305e7d0aa3fbbd01ee80c97ccc1003504ea65382
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: listen
@@ -99,7 +95,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 8e1f19e0c8768b6bac2815fe65a3310298ba400e
+    revision: 305e7d0aa3fbbd01ee80c97ccc1003504ea65382
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: nokogiri
@@ -107,19 +103,15 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 8e1f19e0c8768b6bac2815fe65a3310298ba400e
+    revision: 305e7d0aa3fbbd01ee80c97ccc1003504ea65382
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
-- name: orthoses
-  version: 0.4.0
-  source:
-    type: rubygems
 - name: parallel
   version: '1.20'
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 8e1f19e0c8768b6bac2815fe65a3310298ba400e
+    revision: 305e7d0aa3fbbd01ee80c97ccc1003504ea65382
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: rack
@@ -127,7 +119,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 8e1f19e0c8768b6bac2815fe65a3310298ba400e
+    revision: 305e7d0aa3fbbd01ee80c97ccc1003504ea65382
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: railties
@@ -135,7 +127,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 8e1f19e0c8768b6bac2815fe65a3310298ba400e
+    revision: 305e7d0aa3fbbd01ee80c97ccc1003504ea65382
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: rainbow
@@ -143,7 +135,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 8e1f19e0c8768b6bac2815fe65a3310298ba400e
+    revision: 305e7d0aa3fbbd01ee80c97ccc1003504ea65382
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: strscan
@@ -151,10 +143,6 @@ gems:
   source:
     type: stdlib
 - name: timeout
-  version: '0'
-  source:
-    type: stdlib
-- name: logger
   version: '0'
   source:
     type: stdlib
@@ -170,39 +158,7 @@ gems:
   version: '0'
   source:
     type: stdlib
-- name: rubygems
-  version: '0'
-  source:
-    type: stdlib
 - name: tsort
-  version: '0'
-  source:
-    type: stdlib
-- name: tempfile
-  version: '0'
-  source:
-    type: stdlib
-- name: monitor
-  version: '0'
-  source:
-    type: stdlib
-- name: date
-  version: '0'
-  source:
-    type: stdlib
-- name: singleton
-  version: '0'
-  source:
-    type: stdlib
-- name: mutex_m
-  version: '0'
-  source:
-    type: stdlib
-- name: time
-  version: '0'
-  source:
-    type: stdlib
-- name: openssl
   version: '0'
   source:
     type: stdlib

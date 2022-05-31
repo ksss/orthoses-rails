@@ -1,0 +1,2 @@
+class ActionCable::Connection::TestCookieJar < ActiveSupport::HashWithIndifferentAccess[untyped, untyped]
+end

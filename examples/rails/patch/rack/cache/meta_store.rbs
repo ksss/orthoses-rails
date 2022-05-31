@@ -1,0 +1,2 @@
+class Rack::Cache::MetaStore
+end

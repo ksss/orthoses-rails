@@ -1,0 +1,2 @@
+module Rack::Cache
+end

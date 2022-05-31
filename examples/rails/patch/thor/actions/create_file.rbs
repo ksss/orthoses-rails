@@ -1,0 +1,2 @@
+class Thor::Actions::CreateFile
+end

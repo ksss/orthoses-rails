@@ -1,0 +1,4 @@
+class ActionDispatch::Response
+  # The HTTP status code.
+  attr_reader status: Integer
+end

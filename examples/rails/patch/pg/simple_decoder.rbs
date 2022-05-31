@@ -1,0 +1,4 @@
+module PG
+  class SimpleDecoder
+  end
+end
