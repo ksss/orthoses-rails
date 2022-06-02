@@ -3,13 +3,15 @@
 module Orthoses
   module ActiveSupport
     class KnownSig
+      include Orthoses::Rails::KnownSigHelper
+
       def initialize(loader)
         @loader = loader
       end
 
       def call
         @loader.call.tap do |store|
-          paths = Dir.glob("#{File.expand_path("known_sig", __dir__)}/**/*.rbs")
+          paths = best_version_paths(::ActiveSupport::VERSION::STRING, __dir__)
           env = Content::Environment.load_from_paths(paths)
           env.write_to(store: store)
         end
