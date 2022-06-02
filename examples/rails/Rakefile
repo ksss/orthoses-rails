@@ -44,7 +44,12 @@ def generate(out_dir, version)
     require "active_job"
     require "active_model"
     require "active_storage"
-    require "action_controller"
+    require "action_dispatch"
+    require "action_mailbox"
+    require "action_mailer"
+    require "action_pack"
+    require "action_text"
+    require "action_view"
 
     [
       ActiveSupport,
@@ -52,7 +57,11 @@ def generate(out_dir, version)
       ActiveJob,
       ActiveRecord,
       ActiveStorage,
-      ActionController,
+      ActionDispatch,
+      ActionMailbox,
+      ActionMailer,
+      ActionText,
+      ActionView,
     ].each do |rails_mod|
       rails_mod.eager_load!
       Orthoses::Utils.each_const_recursive(rails_mod, on_error: -> (e) {
@@ -92,14 +101,9 @@ def generate(out_dir, version)
     Orthoses::ActiveSupport.each do |middleware, **args|
       use middleware, **args
     end
+    use Orthoses::ActiveRecord::QueryMethods
     use Orthoses::ActiveRecord::KnownSig
     use Orthoses::ActiveModel::KnownSig
-    use Orthoses::Attribute
-    use Orthoses::Mixin,
-      if: -> (base_mod, how, mod) {
-        mod != Enumerable # TODO
-      }
-    use Orthoses::DelegateClass
     use Orthoses::ObjectSpaceAll
     use Orthoses::LoadRBS,
       paths: Dir.glob('patch/**/*.rbs')
@@ -112,8 +116,17 @@ def generate(out_dir, version)
     end
     # see activerecord/lib/active_record/migration/compatibility.rb
     use Orthoses::Tap do |store|
-      store["ActiveRecord::Migration::Compatibility::V6_1"].header = nil
-      store["ActiveRecord::Migration::Compatibility::V7_0"].header = "class ActiveRecord::Migration::Compatibility::V7_0 < ActiveRecord::Migration::Current"
+      # TODO: make middleware
+      if defined?(ActiveRecord::Migration::Compatibility::V7_0)
+        store["ActiveRecord::Migration::Compatibility::V6_1"].header = nil
+        store["ActiveRecord::Migration::Compatibility::V7_0"].header = "class ActiveRecord::Migration::Compatibility::V7_0 < ActiveRecord::Migration::Current"
+      elsif defined?(ActiveRecord::Migration::Compatibility::V6_1)
+        store["ActiveRecord::Migration::Compatibility::V6_0"].header = nil
+        store["ActiveRecord::Migration::Compatibility::V6_1"].header = "class ActiveRecord::Migration::Compatibility::V6_1 < ActiveRecord::Migration::Current"
+      elsif defined?(ActiveRecord::Migration::Compatibility::V6_0)
+        store["ActiveRecord::Migration::Compatibility::V5_2"].header = nil
+        store["ActiveRecord::Migration::Compatibility::V6_0"].header = "class ActiveRecord::Migration::Compatibility::V6_0 < ActiveRecord::Migration::Current"
+      end
     end
     # class_eval in #each
     # see activerecord/lib/active_record/migration/command_recorder.rb
@@ -158,17 +171,33 @@ def generate(out_dir, version)
         body.delete("alias numeric decimal")
       end
     end
+    # > Use async_exec instead of exec_params on pg versions before 1.1
+    use Orthoses::Tap do |store|
+      store["PG::Connection"].body.clear
+    end
     # Entrust to auto super class
     use Orthoses::Tap do |store|
       store.each do |_, content|
-        if content.header.include?(" < Type::")
+        if content.header&.include?(" < Type::")
           content.header.sub!(/ < Type::(.*)/, " < ::ActiveModel::Type::\\1")
+        end
+        # delegate to auto_header
+        if content.header&.start_with?("class Arel")
+          content.header = nil
         end
       end
       store["ActionView::Helpers::Tags::CollectionRadioButtons::RadioButtonBuilder"].header = nil
       store["ActionView::Helpers::Tags::CollectionCheckBoxes::CheckBoxBuilder"].header = nil
       store["ActionView::SyntaxErrorInTemplate"].header = nil
+      # MigrationProxy cannot resolve name since class alias.
+      store["ActiveRecord::NullMigration"].header = nil
     end
+    use Orthoses::Mixin,
+      if: -> (base_mod, how, mod) {
+        mod != Enumerable # TODO
+      }
+    use Orthoses::DelegateClass
+    use Orthoses::Attribute
     use Orthoses::RBSPrototypeRB,
       paths: Dir.glob('src/{railties,action{cable,mailbox,mailer,pack,text,view},active{job,model,record,storage,support}}/lib/**/*.rb'),
       constant_filter: -> (member) { false },
@@ -177,6 +206,8 @@ def generate(out_dir, version)
   end.call
 
   sh "rbs --collection ../../rbs_collection.yaml -I #{out_dir}/#{version}/ validate --silent"
+  # $ cat out/7.0/**/*.rbs | wc
+  # 72210  332252 2551928
 end
 
 namespace :generate do
@@ -207,7 +238,7 @@ end
 task default: [
   :clean,
 
-  # 'generate:v60',
-  # 'generate:v61',
+  'generate:v60',
+  'generate:v61',
   'generate:v70',
 ]
