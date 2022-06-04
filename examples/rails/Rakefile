@@ -207,7 +207,7 @@ def generate(out_dir, version)
 
   sh "rbs --collection ../../rbs_collection.yaml -I #{out_dir}/#{version}/ validate --silent"
   # $ cat out/7.0/**/*.rbs | wc
-  # 72210  332252 2551928
+  # 72448  333668 2562603
 end
 
 namespace :generate do

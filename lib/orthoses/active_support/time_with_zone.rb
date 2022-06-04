@@ -7,11 +7,6 @@ module Orthoses
         @loader = loader
       end
 
-      LOAD_PATHS = [
-        File.expand_path("known_sig/time.rbs", __dir__),
-        File.expand_path("known_sig/active_support/time_with_zone.rbs", __dir__),
-      ]
-
       # Time <= (known Time)
       # TimeWithZone <= (known TimeWithZone, known Time, core Time)
       def call
@@ -37,7 +32,7 @@ module Orthoses
 
       def each_line_from_core_time_definition(store)
         type_name_time = TypeName("::Time")
-        env = Utils.rbs_environment(collection: true).dup
+        env = Utils.rbs_environment(collection: true, cache: false)
         env << store["Time"].to_decl
         env << store["DateAndTime"].to_decl
         env << store["DateAndTime::Zones"].to_decl

@@ -1,7 +1,9 @@
 module TimeWithZoneTest
   def test_time_with_zone(t)
     store = Orthoses::ActiveSupport::TimeWithZone.new(->(){
-      Orthoses::Utils.new_store
+      Orthoses::Utils.new_store.tap do |store|
+        store["Time"] << "def defined_method: () -> void"
+      end
     }).call
     store["ActiveSupport::TimeWithZone"].header = "class ActiveSupport::TimeWithZone"
 
@@ -38,7 +40,9 @@ module TimeWithZoneTest
 
     definetion_builder = RBS::DefinitionBuilder.new(env: env.resolve_type_names)
     begin
-      definetion_builder.build_instance(TypeName("::Time"))
+      unless definetion_builder.build_instance(TypeName("::Time")).methods[:defined_method].instance_of?(RBS::Definition::Method)
+        t.error("#defined_method was dropped.")
+      end
     rescue => err
       t.error("\n```rbs\n#{store["Time"].to_rbs}```\n#{err.inspect}")
     end
