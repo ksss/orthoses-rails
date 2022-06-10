@@ -39,7 +39,7 @@ def generate(out_dir, version)
   loader = -> () {
     # require "rails/all"
     require "rails/app_updater"
-    require "active_support"
+    require "active_support/all"
     require "active_record"
     require "active_job"
     require "active_model"
@@ -87,6 +87,9 @@ def generate(out_dir, version)
 
         # FIXME: too hard
         return false if name.include?("::Generators")
+
+        # Ignore known sig
+        return false if Orthoses::Utils.rbs_defined_class?(name, collection: true) && content.body.empty?
 
         true
       }
@@ -192,12 +195,12 @@ def generate(out_dir, version)
       # MigrationProxy cannot resolve name since class alias.
       store["ActiveRecord::NullMigration"].header = nil
     end
+    use Orthoses::DelegateClass
+    use Orthoses::Attribute
     use Orthoses::Mixin,
       if: -> (base_mod, how, mod) {
         mod != Enumerable # TODO
       }
-    use Orthoses::DelegateClass
-    use Orthoses::Attribute
     use Orthoses::RBSPrototypeRB,
       paths: Dir.glob('src/{railties,action{cable,mailbox,mailer,pack,text,view},active{job,model,record,storage,support}}/lib/**/*.rb'),
       constant_filter: -> (member) { false },
@@ -205,40 +208,166 @@ def generate(out_dir, version)
     run loader
   end.call
 
-  sh "rbs --collection ../../rbs_collection.yaml -I #{out_dir}/#{version}/ validate --silent"
   # $ cat out/7.0/**/*.rbs | wc
-  # 72448  333668 2562603
+  # 68367  333370 2555378
 end
 
-namespace :generate do
-  task :v60 do
-    switch_branch("6-0-stable")
-    run_child_process { generate("out", "6.0") }
-  end
-
-  task :v61 do
-    switch_branch("6-1-stable")
-    run_child_process { generate("out", "6.1") }
-  end
-
-  task :v70 do
-    switch_branch("7-0-stable")
-    run_child_process { generate("out", "7.0") }
-  end
-end
+versions = %w[
+  6.0
+  6.1
+  7.0
+]
 
 task :clean do
   FileUtils.rm_rf("out")
+  FileUtils.rm_rf("export")
 end
 
-task :test do
-  sh "steep check"
+namespace :generate do
+  versions.each do |version|
+    task version do
+      switch_branch("#{version.tr('.', '-')}-stable")
+      run_child_process { generate("out", version) }
+    end
+  end
+
+  desc "generate all library"
+  task :all => versions
+end
+
+namespace :export do
+  versions.each do |version|
+    task version do |t|
+      export = "export/activesupport/#{version}"
+
+      sh "rm -fr #{export}"
+      sh "mkdir -p #{export}"
+
+      # minimum
+      sh "cp -a out/#{version}/active_support.rbs #{export}"
+      sh "cp -a out/#{version}/active_support #{export}"
+      sh "rm #{export}/active_support/railtie.rbs"
+
+      # core_ext
+      %w[
+        array benchmark big_decimal class date date_and_time date_time digest
+        enumerable file hash integer kernel load_error marshal module name_error numeric
+        object pathname range regexp securerandom string symbol time uri
+      ].each do |lib|
+        out = "out/#{version}/#{lib}"
+        sh "cp -a #{out} #{export}" if File.exist?(out)
+        sh "cp -a #{out}.rbs #{export}" if File.exist?("#{out}.rbs")
+      end
+
+      Pathname(export).join("EXTERNAL_TODO.rbs").write(<<~RBS)
+        module Minitest
+          class Test
+            def name: () -> untyped
+            def assert_raises: () -> untyped
+            def refute_empty: () -> untyped
+            def refute_equal: () -> untyped
+            def refute_in_delta: () -> untyped
+            def refute_in_epsilon: () -> untyped
+            def refute_includes: () -> untyped
+            def refute_instance_of: () -> untyped
+            def refute_kind_of: () -> untyped
+            def refute_match: () -> untyped
+            def refute_nil: () -> untyped
+            def refute_operator: () -> untyped
+            def refute_predicate: () -> untyped
+            def refute_respond_to: () -> untyped
+            def refute_same: () -> untyped
+          end
+        end
+        module DRb
+          module DRbUndumped
+          end
+        end
+        module Concurrent
+          class Map
+          end
+        end
+      RBS
+
+      case version
+      when "6.0", "6.1"
+        sh "rm -fr #{export}/uri"
+      when "7.0"
+        # deprecated
+        sh "rm -fr #{export}/uri{,.rbs}"
+      end
+
+      Pathname(export).join('_scripts').tap(&:mkdir).join('test').write(<<~'RUBY')
+        #!/usr/bin/env bash
+
+        # set -eou => Exit command with non-zero status code, Output logs of every command executed, Treat unset variables as an error when substituting.
+        set -eou pipefail
+        # Internal Field Separator - Linux shell variable
+        IFS=$'\n\t'
+        # Print shell input lines
+        set -v
+
+        # Set RBS_DIR variable to change directory to execute type checks using `steep check`
+        RBS_DIR=$(cd $(dirname $0)/..; pwd)
+        # Set REPO_DIR variable to validate RBS files added to the corresponding folder
+        REPO_DIR=$(cd $(dirname $0)/../../..; pwd)
+        # Validate RBS files, using the bundler environment present
+        bundle exec rbs --repo=$REPO_DIR \
+          -r digest -r benchmark -r time -r monitor -r date -r singleton \
+          -r logger -r mutex_m -r pathname -r json \
+          -r nokogiri \
+          -r activesupport validate --silent
+
+        cd ${RBS_DIR}/_test
+        # Run type checks
+        bundle exec steep check
+      RUBY
+      sh "chmod +x #{Pathname(export).join('_scripts').join('test')}"
+      Pathname(export).join('_test').tap(&:mkdir).join('Steepfile').write(<<~RUBY)
+        D = Steep::Diagnostic
+
+        target :test do
+          signature "."
+          check "."
+
+          repo_path "../../../"
+
+          library "benchmark"
+          library "date"
+          library "digest"
+          library "json"
+          library "logger"
+          library "monitor"
+          library "mutex_m"
+          library "pathname"
+          library "singleton"
+          library "time"
+
+          library "nokogiri"
+
+          library "activesupport:#{version}"
+
+          configure_code_diagnostics(D::Ruby.all_error)
+        end
+      RUBY
+      Pathname(export).join('_test').join('test.rb').write(<<~'RUBY')
+        require 'active_support/all'
+
+        # Test ActiveSupport::NumericWithFormat
+        42.to_s
+        42.to_s(:phone)
+      RUBY
+
+      sh "rbs --collection ../../rbs_collection.yaml -I #{export} validate --silent"
+    end
+  end
+
+  desc "export all library"
+  task :all => versions
 end
 
 task default: [
   :clean,
-
-  'generate:v60',
-  'generate:v61',
-  'generate:v70',
+  'generate:all',
+  'export:all',
 ]
