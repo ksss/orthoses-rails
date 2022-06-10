@@ -48,7 +48,7 @@ gems:
   - name: did_you_mean
   - name: digest
   - name: erb
-  - name: etc
+  # - name: etc
   - name: fiber
   - name: fileutils
   - name: find
