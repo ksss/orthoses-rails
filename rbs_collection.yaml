@@ -9,29 +9,14 @@ sources:
 path: .gem_rbs_collection
 
 gems:
-  # Skip loading rbs gem's RBS.
-  # It's unnecessary if you don't use rbs as a library.
   - name: rbs
+  - name: orthoses
   - name: orthoses-rails
     ignore: true
-  - name: io-console
+  - name: railties
     ignore: true
-  - name: orthoses
   - name: activesupport
     ignore: true
-  - name: uri
-  - name: digest
-  - name: net-http
-  - name: set
-  - name: rubygems
-  - name: openssl
-  - name: mutex_m
-  - name: singleton
-  - name: monitor
-  - name: logger
-  - name: forwardable
-  - name: time
-  - name: did_you_mean
   - name: actionpack
     ignore: true
   - name: actionview
@@ -44,3 +29,63 @@ gems:
     ignore: true
   - name: activestorage
     ignore: true
+
+  # load gems
+  - name: rack
+  - name: nokogiri
+
+  # load all stdlib
+  - name: abbrev
+  - name: base64
+  - name: benchmark
+  - name: bigdecimal
+  - name: bigdecimal-math
+  - name: cgi
+  - name: coverage
+  - name: csv
+  - name: date
+  - name: dbm
+  - name: did_you_mean
+  - name: digest
+  - name: erb
+  - name: etc
+  - name: fiber
+  - name: fileutils
+  - name: find
+  - name: forwardable
+  - name: io-console
+  - name: ipaddr
+  - name: json
+  - name: logger
+  - name: monitor
+  - name: mutex_m
+  - name: net-http
+  - name: nkf
+  - name: objspace
+  - name: openssl
+  - name: optparse
+  # - name: open-uri
+  # - name: open3
+  - name: pathname
+  - name: prettyprint
+  - name: prime
+  - name: pstore
+  - name: pty
+  - name: resolv
+  # - name: racc
+  # - name: rdoc
+  - name: rubygems
+  - name: securerandom
+  - name: set
+  - name: shellwords
+  - name: singleton
+  - name: socket
+  - name: strscan
+  - name: tempfile
+  - name: time
+  - name: timeout
+  - name: tmpdir
+  - name: tsort
+  - name: uri
+  - name: yaml
+  - name: zlib
