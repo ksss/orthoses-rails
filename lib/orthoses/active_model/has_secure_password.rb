@@ -27,12 +27,12 @@ module Orthoses
           @loader.call
         end
 
-        call_tracer.result.each do |method, argument|
-          next unless method.receiver.kind_of?(Class)
-          base_name = Utils.module_name(method.receiver)
+        call_tracer.captures.each do |capture|
+          next unless capture.method.receiver.kind_of?(Class)
+          base_name = Utils.module_name(capture.method.receiver)
           next unless base_name
 
-          attribute = argument[:attribute] || :password
+          attribute = capture.argument[:attribute] || :password
           full_name = if ::ActiveModel::VERSION::MAJOR < 6
             "ActiveModel::SecurePassword::InstanceMethodsOnActivation"
           else

@@ -24,13 +24,13 @@ module Orthoses
 
         resource = Resource.new(store)
 
-        delegate.result.each do |method, argument|
-          receiver_name = Utils.module_name(method.receiver) or next
+        delegate.captures.each do |capture|
+          receiver_name = Utils.module_name(capture.method.receiver) or next
           receiver_content = store[receiver_name]
-          case argument[:to]
+          case capture.argument[:to]
           when Module
-            to_module_name = Utils.module_name(argument[:to]) or next
-            argument[:methods].each do |arg|
+            to_module_name = Utils.module_name(capture.argument[:to]) or next
+            capture.argument[:methods].each do |arg|
               if sig = resource.build_signature(to_module_name, arg, :singleton, false)
                 receiver_content << "# defined by `delegate` to: #{to_module_name}"
                 receiver_content << sig
@@ -39,21 +39,21 @@ module Orthoses
               end
             end
           else
-            to_name = argument[:to].to_s.to_sym
+            to_name = capture.argument[:to].to_s.to_sym
             tag, to_return_type = resource.find(receiver_name, to_name, :instance, false)
             raise "bug" if tag == :multi
             if to_return_type.nil?
-              Orthoses.logger.warn("[ActiveSupport::Delegation] Ignore #{argument.inspect}")
+              Orthoses.logger.warn("[ActiveSupport::Delegation] Ignore #{capture.argument.inspect}")
               next
             end
             if to_return_type.instance_of?(RBS::Types::Bases::Any)
-              argument[:methods].each do |method|
+              capture.argument[:methods].each do |method|
                 receiver_content << "# defined by `delegate` to: :#{to_name}(#{to_return_type})"
                 receiver_content << "def #{method}: (*untyped, **untyped) -> untyped"
               end
             else
               to_typename = to_return_type.name.relative!.to_s
-              argument[:methods].each do |method|
+              capture.argument[:methods].each do |method|
                 if sig = resource.build_signature(to_typename, method, :instance, true)
                   receiver_content << "# defined by `delegate` to: :#{to_name}(#{to_return_type})"
                   receiver_content << sig

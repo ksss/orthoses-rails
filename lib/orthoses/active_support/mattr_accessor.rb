@@ -22,14 +22,14 @@ module Orthoses
           end
         end
 
-        mattr_reader.result.each do |method, argument|
-          base = Orthoses::Utils.module_name(method.receiver) || next
+        mattr_reader.captures.each do |capture|
+          base = Orthoses::Utils.module_name(capture.method.receiver) || next
           methods = []
-          argument[:syms].each do |sym|
+          capture.argument[:syms].each do |sym|
             next unless @if.nil? || @if.call(method, sym)
 
             methods << "def self.#{sym}: () -> untyped"
-            if argument[:instance_reader] && argument[:instance_accessor]
+            if capture.argument[:instance_reader] && capture.argument[:instance_accessor]
               methods << "def #{sym}: () -> untyped"
             end
           end
@@ -38,14 +38,14 @@ module Orthoses
           store[base].concat(methods)
         end
 
-        mattr_writer.result.each do |method, argument|
-          base = Orthoses::Utils.module_name(method.receiver) || next
+        mattr_writer.captures.each do |capture|
+          base = Orthoses::Utils.module_name(capture.method.receiver) || next
           methods = []
-          argument[:syms].each do |sym|
+          capture.argument[:syms].each do |sym|
             next unless @if.nil? || @if.call(method, sym)
 
             methods << "def self.#{sym}=: (untyped val) -> untyped"
-            if argument[:instance_writer] && argument[:instance_accessor]
+            if capture.argument[:instance_writer] && capture.argument[:instance_accessor]
               methods << "def #{sym}=: (untyped val) -> untyped"
             end
           end

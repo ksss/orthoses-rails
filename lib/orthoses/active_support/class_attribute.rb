@@ -28,22 +28,22 @@ module Orthoses
           @loader.call
         end
 
-        call_tracer.result.each do |method, argument|
-          receiver_name = Orthoses::Utils.module_name(method.receiver)
+        call_tracer.captures.each do |capture|
+          receiver_name = Orthoses::Utils.module_name(capture.method.receiver)
           next unless receiver_name
 
           methods = []
           if ::ActiveSupport::VERSION::MAJOR < 6
-            options = argument[:attrs].extract_options!
-            argument[:instance_reader]    = options.fetch(:instance_accessor, true) && options.fetch(:instance_reader, true)
-            argument[:instance_writer]    = options.fetch(:instance_accessor, true) && options.fetch(:instance_writer, true)
-            argument[:instance_predicate] = options.fetch(:instance_predicate, true)
-            argument[:default_value]      = options.fetch(:default, nil)
+            options = capture.argument[:attrs].extract_options!
+            capture.argument[:instance_reader]    = options.fetch(:instance_accessor, true) && options.fetch(:instance_reader, true)
+            capture.argument[:instance_writer]    = options.fetch(:instance_accessor, true) && options.fetch(:instance_writer, true)
+            capture.argument[:instance_predicate] = options.fetch(:instance_predicate, true)
+            capture.argument[:default_value]      = options.fetch(:default, nil)
           end
 
           content = store[receiver_name]
 
-          argument[:attrs].each do |name|
+          capture.argument[:attrs].each do |name|
             next unless @if.nil? || @if.call(method, name)
 
             # skip internal attribute
@@ -52,11 +52,11 @@ module Orthoses
             next if name == :attributes_to_define_after_schema_loads
 
             methods << "def self.#{name}: () -> untyped"
-            methods << "def self.#{name}?: () -> bool" if argument[:instance_predicate]
+            methods << "def self.#{name}?: () -> bool" if capture.argument[:instance_predicate]
             methods << "def self.#{name}=: (untyped value) -> untyped"
-            methods << "def #{name}: () -> untyped" if argument[:instance_reader]
-            methods << "def #{name}?: () -> bool" if argument[:instance_predicate] && argument[:instance_reader]
-            methods << "def #{name}=: (untyped value) -> untyped" if argument[:instance_writer]
+            methods << "def #{name}: () -> untyped" if capture.argument[:instance_reader]
+            methods << "def #{name}?: () -> bool" if capture.argument[:instance_predicate] && capture.argument[:instance_reader]
+            methods << "def #{name}=: (untyped value) -> untyped" if capture.argument[:instance_writer]
             # In RBS, `foo=` and attr_writer :foo cannot live together.
             content.body.delete_if { |line| line.start_with?("attr_writer #{name}:") }
           end
