@@ -13,6 +13,6 @@ gem "rgot", "~> 1.1"
 gem "debug"
 gem "set"
 gem "sorted_set"
-gem "rails", "< 8"
 gem "bcrypt"
 gem "steep"
+

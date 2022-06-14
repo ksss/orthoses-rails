@@ -1,49 +1,24 @@
-REPO_ROOT = "#{File.dirname(__FILE__)}/src"
-$:.unshift("#{REPO_ROOT}/actioncable/lib")
-$:.unshift("#{REPO_ROOT}/actionmailbox/lib")
-$:.unshift("#{REPO_ROOT}/actionmailer/lib")
-$:.unshift("#{REPO_ROOT}/actionpack/lib")
-$:.unshift("#{REPO_ROOT}/actiontext/lib")
-$:.unshift("#{REPO_ROOT}/actionview/lib")
-$:.unshift("#{REPO_ROOT}/activejob/lib")
-$:.unshift("#{REPO_ROOT}/activemodel/lib")
-$:.unshift("#{REPO_ROOT}/activerecord/lib")
-$:.unshift("#{REPO_ROOT}/activestorage/lib")
-$:.unshift("#{REPO_ROOT}/activesupport/lib")
-$:.unshift("#{REPO_ROOT}/railties/lib")
-
-require 'orthoses'
-require 'orthoses-rails'
-require 'openssl'
-require 'cgi'
-require 'uri'
-
-Orthoses.logger.level = :error
-
-Orthoses::Utils.unautoload!
-
-def run_child_process
-  pid = fork do
-    yield
-  end
-  Process.wait(pid)
-end
-
-def switch_branch(name)
-  cd "src" do
-    sh "git switch #{name}"
-  end
-end
+## run `$ rake`
 
 def generate(out_dir, version)
+  require 'orthoses'
+  require 'orthoses-rails'
+  require 'openssl'
+  require 'cgi'
+  require 'uri'
+
+  Orthoses.logger.level = :error
+
+  Orthoses::Utils.unautoload!
+
   loader = -> () {
     # require "rails/all"
-    require "rails/app_updater"
+    # require "rails/app_updater"
     require "active_support/all"
     require "active_record"
     require "active_job"
     require "active_model"
-    require "active_storage"
+    require "active_storage/engine"
     require "action_dispatch"
     require "action_mailbox"
     require "action_mailer"
@@ -70,6 +45,16 @@ def generate(out_dir, version)
       v = rails_mod.respond_to?(:version) ? rails_mod.version : nil
       puts "loaded #{rails_mod}: v#{v}"
     end
+    eval(<<~RUBY)
+      module Dummy
+        class Application < Rails::Application
+          config.load_defaults #{version.to_s}
+          config.active_storage.service = :local
+        end
+      end
+    RUBY
+    ENV['RAILS_ENV'] = 'development'
+    Rails.application.initialize!
     Orthoses::Utils.unautoload!
   }
   Orthoses::Builder.new do
@@ -202,17 +187,17 @@ def generate(out_dir, version)
         mod != Enumerable # TODO
       }
     use Orthoses::RBSPrototypeRB,
-      paths: Dir.glob('src/{railties,action{cable,mailbox,mailer,pack,text,view},active{job,model,record,storage,support}}/lib/**/*.rb'),
+      paths: Dir.glob('src/{railties,action{cable,mailbox,mailer,pack,text,view},active{job,model,record,storage,support}}/{app,lib}/**/*.rb'),
       constant_filter: -> (member) { false },
       mixin_filter: -> (member) { false }
     run loader
   end.call
 
   # $ cat out/7.0/**/*.rbs | wc
-  # 68367  333370 2555378
+  # 69763  339342 2606899
 end
 
-versions = %w[
+VERSIONS = %w[
   6.0
   6.1
   7.0
@@ -223,147 +208,48 @@ task :clean do
   FileUtils.rm_rf("export")
 end
 
+namespace :bundle do
+  task :update do
+    VERSIONS.each do |version|
+      sh "BUNDLE_GEMFILE=gemfiles/Gemfile_#{version.tr('.', '_')} bundle update"
+    end
+  end
+end
+
 namespace :generate do
-  versions.each do |version|
+  VERSIONS.each do |version|
+    desc "generate version=#{version}"
     task version do
-      switch_branch("#{version.tr('.', '-')}-stable")
-      run_child_process { generate("out", version) }
+      gemfile = File.expand_path("gemfiles/Gemfile_#{version.tr('.', '_')}")
+      sh "BUNDLE_GEMFILE=#{gemfile} bundle install"
+      sh "BUNDLE_GEMFILE=#{gemfile} bundle exec rake generate:exec:#{version}"
+    end
+  end
+  namespace :exec do
+    VERSIONS.each do |version|
+      task version do
+        generate("out", version)
+      end
     end
   end
 
   desc "generate all library"
-  task :all => versions
+  task :all => VERSIONS
 end
 
+load 'tasks/active_job.rake'
+load 'tasks/active_model.rake'
+load 'tasks/active_record.rake'
+load 'tasks/active_storage.rake'
+load 'tasks/active_support.rake'
+
 namespace :export do
-  versions.each do |version|
-    task version do |t|
-      export = "export/activesupport/#{version}"
-
-      sh "rm -fr #{export}"
-      sh "mkdir -p #{export}"
-
-      # minimum
-      sh "cp -a out/#{version}/active_support.rbs #{export}"
-      sh "cp -a out/#{version}/active_support #{export}"
-      sh "rm #{export}/active_support/railtie.rbs"
-
-      # core_ext
-      %w[
-        array benchmark big_decimal class date date_and_time date_time digest
-        enumerable file hash integer kernel load_error marshal module name_error numeric
-        object pathname range regexp securerandom string symbol time uri
-      ].each do |lib|
-        out = "out/#{version}/#{lib}"
-        sh "cp -a #{out} #{export}" if File.exist?(out)
-        sh "cp -a #{out}.rbs #{export}" if File.exist?("#{out}.rbs")
-      end
-
-      Pathname(export).join("EXTERNAL_TODO.rbs").write(<<~RBS)
-        module Minitest
-          class Test
-            def name: () -> untyped
-            def assert_raises: () -> untyped
-            def refute_empty: () -> untyped
-            def refute_equal: () -> untyped
-            def refute_in_delta: () -> untyped
-            def refute_in_epsilon: () -> untyped
-            def refute_includes: () -> untyped
-            def refute_instance_of: () -> untyped
-            def refute_kind_of: () -> untyped
-            def refute_match: () -> untyped
-            def refute_nil: () -> untyped
-            def refute_operator: () -> untyped
-            def refute_predicate: () -> untyped
-            def refute_respond_to: () -> untyped
-            def refute_same: () -> untyped
-          end
-        end
-        module DRb
-          module DRbUndumped
-          end
-        end
-        module Concurrent
-          class Map
-          end
-        end
-      RBS
-
-      case version
-      when "6.0", "6.1"
-        sh "rm -fr #{export}/uri"
-      when "7.0"
-        # deprecated
-        sh "rm -fr #{export}/uri{,.rbs}"
-      end
-
-      Pathname(export).join('_scripts').tap(&:mkdir).join('test').write(<<~'RUBY')
-        #!/usr/bin/env bash
-
-        # set -eou => Exit command with non-zero status code, Output logs of every command executed, Treat unset variables as an error when substituting.
-        set -eou pipefail
-        # Internal Field Separator - Linux shell variable
-        IFS=$'\n\t'
-        # Print shell input lines
-        set -v
-
-        # Set RBS_DIR variable to change directory to execute type checks using `steep check`
-        RBS_DIR=$(cd $(dirname $0)/..; pwd)
-        # Set REPO_DIR variable to validate RBS files added to the corresponding folder
-        REPO_DIR=$(cd $(dirname $0)/../../..; pwd)
-        # Validate RBS files, using the bundler environment present
-        bundle exec rbs --repo=$REPO_DIR \
-          -r digest -r benchmark -r time -r monitor -r date -r singleton \
-          -r logger -r mutex_m -r pathname -r json \
-          -r nokogiri \
-          -r activesupport validate --silent
-
-        cd ${RBS_DIR}/_test
-        # Run type checks
-        bundle exec steep check
-      RUBY
-      sh "chmod +x #{Pathname(export).join('_scripts').join('test')}"
-      Pathname(export).join('_test').tap(&:mkdir).join('Steepfile').write(<<~RUBY)
-        D = Steep::Diagnostic
-
-        target :test do
-          signature "."
-          check "."
-
-          repo_path "../../../"
-
-          library "benchmark"
-          library "date"
-          library "digest"
-          library "json"
-          library "logger"
-          library "monitor"
-          library "mutex_m"
-          library "pathname"
-          library "singleton"
-          library "time"
-
-          library "nokogiri"
-
-          library "activesupport:#{version}"
-
-          configure_code_diagnostics(D::Ruby.all_error)
-        end
-      RUBY
-      Pathname(export).join('_test').join('test.rb').write(<<~'RUBY')
-        require 'active_support/all'
-
-        # Test ActiveSupport::NumericWithFormat
-        42.to_s
-        42.to_s(:phone)
-      RUBY
-
-      sh "rbs --collection ../../rbs_collection.yaml -I #{export} validate --silent"
-    end
+  desc "export all"
+  task :all => ["active_support:all", "active_model:all", "active_job:all", "active_record:all", "active_storage:all"]
+  VERSIONS.each do |version|
+    desc "export all version=#{version}"
+    task "all:#{version}" => ["active_support:#{version}", "active_model:#{version}", "active_job:#{version}", "active_record:#{version}", "active_storage:#{version}"]
   end
-
-  desc "export all library"
-  task :all => versions
 end
 
 task default: [
