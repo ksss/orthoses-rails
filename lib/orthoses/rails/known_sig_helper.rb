@@ -15,7 +15,10 @@ module Orthoses
       end
 
       def version_dir(base_dir)
-        Dir.glob("#{File.expand_path("known_sig", base_dir)}/*").map(&File.method(:basename)).sort
+        Dir.glob("#{File.expand_path("known_sig", base_dir)}/*")
+          .map(&File.method(:basename))
+          .map(&Gem::Version.method(:new))
+          .sort
       end
     end
   end
