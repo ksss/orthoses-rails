@@ -35,7 +35,7 @@ module Orthoses
                 receiver_content << "# defined by `delegate` to: #{to_module_name}"
                 receiver_content << sig
               else
-                Orthoses.logger.warn("[ActiveSupport::Delegation] Ignore #{arg.inspect}")
+                Orthoses.logger.warn("[ActiveSupport::Delegation] Ignore since missing type for #{to_module_name}.#{arg.inspect} in #{capture.argument.inspect}")
               end
             end
           else
@@ -43,22 +43,22 @@ module Orthoses
             tag, to_return_type = resource.find(receiver_name, to_name, :instance, false)
             raise "bug" if tag == :multi
             if to_return_type.nil?
-              Orthoses.logger.warn("[ActiveSupport::Delegation] Ignore #{capture.argument.inspect}")
+              Orthoses.logger.warn("[ActiveSupport::Delegation] Ignore since missing type for #{receiver_name}##{to_name.inspect} in #{capture.argument.inspect}")
               next
             end
             if to_return_type.instance_of?(RBS::Types::Bases::Any)
               capture.argument[:methods].each do |method|
-                receiver_content << "# defined by `delegate` to: :#{to_name}(#{to_return_type})"
+                receiver_content << "# defined by `delegate` to: #{to_return_type}##{to_name}"
                 receiver_content << "def #{method}: (*untyped, **untyped) -> untyped"
               end
             else
               to_typename = to_return_type.name.relative!.to_s
               capture.argument[:methods].each do |method|
                 if sig = resource.build_signature(to_typename, method, :instance, true)
-                  receiver_content << "# defined by `delegate` to: :#{to_name}(#{to_return_type})"
+                  receiver_content << "# defined by `delegate` to #{to_return_type}##{to_name}"
                   receiver_content << sig
                 else
-                  Orthoses.logger.warn("[ActiveSupport::Delegation] Ignore #{method.inspect}")
+                  Orthoses.logger.warn("[ActiveSupport::Delegation] Ignore since missing type for #{to_typename}##{method.inspect} in #{capture.argument.inspect}")
                 end
               end
             end
