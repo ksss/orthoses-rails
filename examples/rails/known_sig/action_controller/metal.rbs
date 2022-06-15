@@ -1,4 +1,0 @@
-class ActionController::Metal < ::AbstractController::Base
-  @_request: ::ActionDispatch::Request
-  @_response: ::ActionDispatch::Response
-end

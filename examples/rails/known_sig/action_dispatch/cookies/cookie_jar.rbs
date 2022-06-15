@@ -1,3 +1,0 @@
-class ActionDispatch::Cookies::CookieJar
-  def to_h: () -> Hash[untyped, untyped]
-end

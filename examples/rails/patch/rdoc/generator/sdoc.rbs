@@ -1,3 +1,0 @@
-# defined in sdoc gem
-class RDoc::Generator::SDoc
-end
