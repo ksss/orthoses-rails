@@ -1,15 +1,14 @@
-namespace :export do
-  namespace :active_support do
-    task all: VERSIONS
+stdlib_dependencies = %w[benchmark date digest json logger monitor mutex_m pathname singleton time]
+gem_dependencies = %w[nokogiri]
+rails_dependencies = %w[]
 
-    stdlib_dependencies = %w[benchmark date digest json logger monitor mutex_m pathname singleton time]
-    gem_dependencies = %w[nokogiri]
-    rails_dependencies = %w[]
+VERSIONS.each do |version|
+  namespace version do
+    namespace :active_support do
+      export = "export/activesupport/#{version}"
 
-    VERSIONS.each do |version|
-      task version do |t|
-        export = "export/activesupport/#{version}"
-
+      desc "export to #{export}"
+      task :export do
         sh "rm -fr #{export}"
         sh "mkdir -p #{export}"
 
@@ -67,47 +66,15 @@ namespace :export do
           sh "rm -fr #{export}/uri{,.rbs}"
         end
 
-        Pathname(export).join('_scripts').tap(&:mkdir).join('test').write(<<~RUBY)
-          #!/usr/bin/env bash
+        generate_test_script(
+          gem: :activesupport,
+          version: version,
+          export: export,
+          stdlib_dependencies: stdlib_dependencies,
+          gem_dependencies: gem_dependencies,
+          rails_dependencies: rails_dependencies,
+        )
 
-          # set -eou => Exit command with non-zero status code, Output logs of every command executed, Treat unset variables as an error when substituting.
-          set -eou pipefail
-          # Internal Field Separator - Linux shell variable
-          IFS=$'\n\t'
-          # Print shell input lines
-          set -v
-
-          # Set RBS_DIR variable to change directory to execute type checks using `steep check`
-          RBS_DIR=$(cd $(dirname $0)/..; pwd)
-          # Set REPO_DIR variable to validate RBS files added to the corresponding folder
-          REPO_DIR=$(cd $(dirname $0)/../../..; pwd)
-          # Validate RBS files, using the bundler environment present
-          bundle exec rbs --repo=$REPO_DIR #{stdlib_dependencies.map{"-r #{_1}"}.join(" ")} \\
-            #{gem_dependencies.map{"-r #{_1}"}.join(" ")} \\
-            -r activesupport validate --silent
-
-          cd ${RBS_DIR}/_test
-          # Run type checks
-          bundle exec steep check
-        RUBY
-        sh "chmod +x #{Pathname(export).join('_scripts').join('test')}"
-        Pathname(export).join('_test').tap(&:mkdir).join('Steepfile').write(<<~RUBY)
-          D = Steep::Diagnostic
-
-          target :test do
-            signature "."
-            check "."
-
-            repo_path "../../../"
-
-          #{stdlib_dependencies.map{"  library \"#{_1}\""}.join("\n")}
-          #{gem_dependencies.map{"  library \"#{_1}\""}.join("\n")}
-
-            library "activesupport:#{version}"
-
-            configure_code_diagnostics(D::Ruby.all_error)
-          end
-        RUBY
         Pathname(export).join('_test').join('test.rb').write(<<~'RUBY')
           require 'active_support/all'
 
@@ -115,7 +82,10 @@ namespace :export do
           42.to_s
           42.to_s(:phone)
         RUBY
+      end
 
+      desc "validate version=#{version} gem=active_support"
+      task :validate do
         stdlib_opt = stdlib_dependencies.map{"-r #{_1}"}.join(" ")
         gem_opt = gem_dependencies.map{"-I ../../.gem_rbs_collection/#{_1}"}.join(" ")
         rails_opt = rails_dependencies.map{"-I export/#{_1}/#{version}"}.join(" ")

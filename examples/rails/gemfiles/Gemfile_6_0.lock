@@ -166,5 +166,8 @@ DEPENDENCIES
   rails (>= 6.0, < 6.1)
   sqlite3
 
+RUBY VERSION
+   ruby 3.1.1p18
+
 BUNDLED WITH
    2.3.9

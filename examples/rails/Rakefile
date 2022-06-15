@@ -1,5 +1,11 @@
 ## run `$ rake`
 
+def switch_branch(name)
+  cd "src" do
+    sh "git switch #{name}"
+  end
+end
+
 def generate(out_dir, version)
   require 'orthoses'
   require 'orthoses-rails'
@@ -93,11 +99,11 @@ def generate(out_dir, version)
     use Orthoses::ActiveRecord::KnownSig
     use Orthoses::ActiveModel::KnownSig
     use Orthoses::ObjectSpaceAll
-    use Orthoses::LoadRBS,
-      paths: Dir.glob('patch/**/*.rbs')
-    use Orthoses::LoadRBS,
-      paths: Dir.glob('known_sig/**/*.rbs')
-    # require in method
+    # use Orthoses::LoadRBS,
+    #   paths: Dir.glob('patch/**/*.rbs')
+    # use Orthoses::LoadRBS,
+    #   paths: Dir.glob('known_sig/**/*.rbs')
+    # # require in method
     use Orthoses::Tap do |store|
       store.delete("DummyERB")
       store.delete("DummyCompiler")
@@ -197,10 +203,63 @@ def generate(out_dir, version)
   # 69763  339342 2606899
 end
 
+def generate_test_script(gem:, version:, export:, stdlib_dependencies:, gem_dependencies:, rails_dependencies:)
+  Pathname(export).join('_scripts').tap(&:mkdir).join('test').write(<<~SHELL)
+    #!/usr/bin/env bash
+
+    # set -eou => Exit command with non-zero status code, Output logs of every command executed, Treat unset variables as an error when substituting.
+    set -eou pipefail
+    # Internal Field Separator - Linux shell variable
+    IFS=$'\n\t'
+    # Print shell input lines
+    set -v
+
+    # Set RBS_DIR variable to change directory to execute type checks using `steep check`
+    RBS_DIR=$(cd $(dirname $0)/..; pwd)
+    # Set REPO_DIR variable to validate RBS files added to the corresponding folder
+    REPO_DIR=$(cd $(dirname $0)/../../..; pwd)
+    # Validate RBS files, using the bundler environment present
+    bundle exec rbs --repo=$REPO_DIR #{stdlib_dependencies.map{"-r #{_1}"}.join(" ")} \\
+      #{gem_dependencies.map{"-r #{_1}"}.join(" ")} \\
+      -r #{gem} validate --silent
+
+    cd ${RBS_DIR}/_test
+    # Run type checks
+    bundle exec steep check
+  SHELL
+
+  sh "chmod +x #{Pathname(export).join('_scripts').join('test')}"
+
+  Pathname(export).join('_test').tap(&:mkdir).join('Steepfile').write(<<~RUBY)
+    D = Steep::Diagnostic
+
+    target :test do
+      signature "."
+      check "."
+
+      repo_path "../../../"
+
+    #{stdlib_dependencies.map{"  library \"#{_1}\""}.join("\n")}
+    #{gem_dependencies.map{"  library \"#{_1}\""}.join("\n")}
+
+      library "#{gem}:#{version}"
+
+      configure_code_diagnostics(D::Ruby.all_error)
+    end
+  RUBY
+end
+
 VERSIONS = %w[
   6.0
   6.1
   7.0
+]
+GEMS = %w[
+  active_support
+  active_model
+  active_record
+  active_job
+  active_storage
 ]
 
 task :clean do
@@ -216,25 +275,27 @@ namespace :bundle do
   end
 end
 
-namespace :generate do
-  VERSIONS.each do |version|
+VERSIONS.each do |version|
+  namespace version do
+    desc "run all version=#{version}"
+    task :all => [
+      "#{version}:generate",
+      *(GEMS.map{"#{version}:#{_1}:export"}),
+      *(GEMS.map{"#{version}:#{_1}:validate"})
+    ]
+
     desc "generate version=#{version}"
-    task version do
+    task :generate do |t|
       gemfile = File.expand_path("gemfiles/Gemfile_#{version.tr('.', '_')}")
       sh "BUNDLE_GEMFILE=#{gemfile} bundle install"
-      sh "BUNDLE_GEMFILE=#{gemfile} bundle exec rake generate:exec:#{version}"
+      sh "BUNDLE_GEMFILE=#{gemfile} bundle exec rake #{t.name}_exec"
     end
-  end
-  namespace :exec do
-    VERSIONS.each do |version|
-      task version do
-        generate("out", version)
-      end
-    end
-  end
 
-  desc "generate all library"
-  task :all => VERSIONS
+    task :generate_exec do
+      switch_branch("#{version.tr('.', '-')}-stable")
+      generate("out", version)
+    end
+  end
 end
 
 load 'tasks/active_job.rake'
@@ -243,17 +304,7 @@ load 'tasks/active_record.rake'
 load 'tasks/active_storage.rake'
 load 'tasks/active_support.rake'
 
-namespace :export do
-  desc "export all"
-  task :all => ["active_support:all", "active_model:all", "active_job:all", "active_record:all", "active_storage:all"]
-  VERSIONS.each do |version|
-    desc "export all version=#{version}"
-    task "all:#{version}" => ["active_support:#{version}", "active_model:#{version}", "active_job:#{version}", "active_record:#{version}", "active_storage:#{version}"]
-  end
-end
-
 task default: [
   :clean,
-  'generate:all',
-  'export:all',
+  *(VERSIONS.map {"#{_1}:all"})
 ]

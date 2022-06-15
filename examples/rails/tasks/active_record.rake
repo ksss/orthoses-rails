@@ -1,15 +1,14 @@
-namespace :export do
-  namespace :active_record do
-    task all: VERSIONS
+stdlib_dependencies = %w[time monitor singleton logger mutex_m json date benchmark digest forwardable did_you_mean openssl socket]
+gem_dependencies = %w[nokogiri]
+rails_dependencies = %w[activesupport activemodel activejob]
 
-    stdlib_dependencies = %w[time monitor singleton logger mutex_m json date benchmark digest forwardable did_you_mean openssl socket]
-    gem_dependencies = %w[nokogiri]
-    rails_dependencies = %w[activesupport activemodel activejob]
+VERSIONS.each do |version|
+  namespace version do
+    namespace :active_record do
+      export = "export/activerecord/#{version}"
 
-    VERSIONS.each do |version|
-      task version do |t|
-        export = "export/activerecord/#{version}"
-
+      desc "export to #{export}"
+      task :export do
         sh "rm -fr #{export}"
         sh "mkdir -p #{export}"
 
@@ -34,6 +33,30 @@ namespace :export do
           end
         RBS
 
+        generate_test_script(
+          gem: :activerecord,
+          version: version,
+          export: export,
+          stdlib_dependencies: stdlib_dependencies,
+          gem_dependencies: gem_dependencies,
+          rails_dependencies: rails_dependencies,
+        )
+
+        Pathname(export).join('_test').join('test.rb').write(<<~RUBY)
+          class User < ActiveRecord::Base
+          end
+
+          user = User.new
+        RUBY
+
+        Pathname(export).join('_test').join('test.rbs').write(<<~RBS)
+          class User < ActiveRecord::Base
+          end
+        RBS
+      end
+
+      desc "validate version=#{version} gem=active_record"
+      task :validate do
         stdlib_opt = stdlib_dependencies.map{"-r #{_1}"}.join(" ")
         gem_opt = gem_dependencies.map{"-I ../../.gem_rbs_collection/#{_1}"}.join(" ")
         rails_opt = rails_dependencies.map{"-I export/#{_1}/#{version}"}.join(" ")
