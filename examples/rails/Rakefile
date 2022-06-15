@@ -98,11 +98,6 @@ def generate(out_dir, version)
     use Orthoses::ActiveRecord::QueryMethods
     use Orthoses::ActiveRecord::KnownSig
     use Orthoses::ActiveModel::KnownSig
-    use Orthoses::ObjectSpaceAll
-    # use Orthoses::LoadRBS,
-    #   paths: Dir.glob('patch/**/*.rbs')
-    # use Orthoses::LoadRBS,
-    #   paths: Dir.glob('known_sig/**/*.rbs')
     # # require in method
     use Orthoses::Tap do |store|
       store.delete("DummyERB")
