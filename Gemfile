@@ -16,3 +16,4 @@ gem "sorted_set"
 gem "bcrypt"
 gem "steep"
 
+gem "rails"
