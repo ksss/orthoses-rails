@@ -17,6 +17,9 @@ VERSIONS.each do |version|
         sh "rm #{export}/active_model/railtie.rbs"
 
         Pathname(export).join("EXTERNAL_TODO.rbs").write(<<~RBS)
+          # !!! GENERATED CODE !!!
+          # Please see generators/rails-generator
+
           class Delegator
           end
           class SimpleDelegator < Delegator
@@ -30,6 +33,13 @@ VERSIONS.each do |version|
         gem_opt = gem_dependencies.map{"-I ../../.gem_rbs_collection/#{_1}"}.join(" ")
         rails_opt = rails_dependencies.map{"-I export/#{_1}/#{version}"}.join(" ")
         sh "rbs #{stdlib_opt} #{gem_opt} #{rails_opt} -I #{export} validate --silent"
+      end
+
+      desc "install to ../../../gems/activemodel/#{version}"
+      task :install do
+        install_to = File.expand_path("../../../gems/activemodel/#{version}", __dir__)
+        sh "rm -fr #{install_to}"
+        sh "cp -a #{export} #{install_to}"
       end
     end
   end

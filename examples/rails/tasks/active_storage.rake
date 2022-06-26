@@ -25,6 +25,7 @@ VERSIONS.each do |version|
           decl.members.select! do |member|
             case member
             when RBS::AST::Members::Mixin
+              # Remove ActiveStorage
               member.name.to_s.include?("ActiveStorage")
             end
           end
@@ -52,6 +53,9 @@ VERSIONS.each do |version|
         )
 
         Pathname(export).join('_test').join('test.rb').write(<<~RUBY)
+          # !!! GENERATED CODE !!!
+          # Please see generators/rails-generator
+
           class User < ActiveRecord::Base
             has_one_attached :one_image
             has_many_attached :many_image
@@ -63,6 +67,9 @@ VERSIONS.each do |version|
         RUBY
 
         Pathname(export).join('_test').join('test.rbs').write(<<~RBS)
+          # !!! GENERATED CODE !!!
+          # Please see generators/rails-generator
+
           class User < ActiveRecord::Base
           end
         RBS
@@ -74,6 +81,13 @@ VERSIONS.each do |version|
         gem_opt = gem_dependencies.map{"-I ../../.gem_rbs_collection/#{_1}"}.join(" ")
         rails_opt = rails_dependencies.map{"-I export/#{_1}/#{version}"}.join(" ")
         sh "rbs #{stdlib_opt} #{gem_opt} #{rails_opt} -I #{export} validate --silent"
+      end
+
+      desc "install to ../../../gems/activestorage/#{version}"
+      task :install do
+        install_to = File.expand_path("../../../gems/activestorage/#{version}", __dir__)
+        sh "rm -fr #{install_to}"
+        sh "cp -a #{export} #{install_to}"
       end
     end
   end

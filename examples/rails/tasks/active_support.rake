@@ -1,4 +1,4 @@
-stdlib_dependencies = %w[benchmark date digest json logger monitor mutex_m pathname singleton time]
+stdlib_dependencies = %w[benchmark date digest json logger monitor mutex_m pathname singleton time minitest]
 gem_dependencies = %w[nokogiri]
 rails_dependencies = %w[]
 
@@ -29,25 +29,9 @@ VERSIONS.each do |version|
         end
 
         Pathname(export).join("EXTERNAL_TODO.rbs").write(<<~RBS)
-          module Minitest
-            class Test
-              def name: () -> untyped
-              def assert_raises: () -> untyped
-              def refute_empty: () -> untyped
-              def refute_equal: () -> untyped
-              def refute_in_delta: () -> untyped
-              def refute_in_epsilon: () -> untyped
-              def refute_includes: () -> untyped
-              def refute_instance_of: () -> untyped
-              def refute_kind_of: () -> untyped
-              def refute_match: () -> untyped
-              def refute_nil: () -> untyped
-              def refute_operator: () -> untyped
-              def refute_predicate: () -> untyped
-              def refute_respond_to: () -> untyped
-              def refute_same: () -> untyped
-            end
-          end
+          # !!! GENERATED CODE !!!
+          # Please see generators/rails-generator
+
           module DRb
             module DRbUndumped
             end
@@ -76,11 +60,16 @@ VERSIONS.each do |version|
         )
 
         Pathname(export).join('_test').join('test.rb').write(<<~'RUBY')
+          # !!! GENERATED CODE !!!
+          # Please see generators/rails-generator
+
           require 'active_support/all'
 
           # Test ActiveSupport::NumericWithFormat
           42.to_s
           42.to_s(:phone)
+
+          3.days.ago + 1.minute
         RUBY
       end
 
@@ -90,6 +79,13 @@ VERSIONS.each do |version|
         gem_opt = gem_dependencies.map{"-I ../../.gem_rbs_collection/#{_1}"}.join(" ")
         rails_opt = rails_dependencies.map{"-I export/#{_1}/#{version}"}.join(" ")
         sh "rbs #{stdlib_opt} #{gem_opt} #{rails_opt} -I #{export} validate --silent"
+      end
+
+      desc "install to ../../../gems/activesupport/#{version}"
+      task :install do
+        install_to = File.expand_path("../../../gems/activesupport/#{version}", __dir__)
+        sh "rm -fr #{install_to}"
+        sh "cp -a #{export} #{install_to}"
       end
     end
   end

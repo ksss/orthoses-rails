@@ -17,6 +17,9 @@ VERSIONS.each do |version|
         sh "rm #{export}/active_job/railtie.rbs"
 
         Pathname(export).join("EXTERNAL_TODO.rbs").write(<<~RBS)
+          # !!! GENERATED CODE !!!
+          # Please see generators/rails-generator
+
           module Que
             class Job
             end
@@ -33,6 +36,9 @@ VERSIONS.each do |version|
         )
 
         Pathname(export).join('_test').join('test.rb').write(<<~RUBY)
+          # !!! GENERATED CODE !!!
+          # Please see generators/rails-generator
+
           class SendMessageJob < ActiveJob::Base
             queue_as :default
             self.queue_adapter = :sidekiq
@@ -61,6 +67,9 @@ VERSIONS.each do |version|
         RUBY
 
         Pathname(export).join('_test').join('test.rbs').write(<<~RBS)
+          # !!! GENERATED CODE !!!
+          # Please see generators/rails-generator
+
           class SendMessageJob < ActiveJob::Base
             def perform: (*untyped) -> void
           end
@@ -73,6 +82,13 @@ VERSIONS.each do |version|
         gem_opt = gem_dependencies.map{"-I ../../.gem_rbs_collection/#{_1}"}.join(" ")
         rails_opt = rails_dependencies.map{"-I export/#{_1}/#{version}"}.join(" ")
         sh "rbs #{stdlib_opt} #{gem_opt} #{rails_opt} -I #{export} validate --silent"
+      end
+
+      desc "install to ../../../gems/activejob/#{version}"
+      task :install do
+        install_to = File.expand_path("../../../gems/activejob/#{version}", __dir__)
+        sh "rm -fr #{install_to}"
+        sh "cp -a #{export} #{install_to}"
       end
     end
   end

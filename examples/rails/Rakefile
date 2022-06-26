@@ -16,8 +16,6 @@ def generate(out_dir, version)
   Orthoses.logger.level = :error
 
   loader = -> () {
-    # require "rails/all"
-    # require "rails/app_updater"
     require "active_support/all"
     require "active_record"
     require "active_job"
@@ -63,7 +61,7 @@ def generate(out_dir, version)
   Orthoses::Builder.new do
     use Orthoses::CreateFileByName,
       base_dir: "#{out_dir}/#{version}",
-      header: "# !!! GENERATED CODE !!!"
+      header: "# !!! GENERATED CODE !!!\n# Please see generators/rails-generator"
     use Orthoses::AvoidRecursiveAncestorError
     use Orthoses::Filter,
       if: -> (name, content) {
@@ -93,8 +91,12 @@ def generate(out_dir, version)
       use middleware, **args
     end
     use Orthoses::ActiveRecord::QueryMethods
-    use Orthoses::ActiveRecord::KnownSig
-    use Orthoses::ActiveModel::KnownSig
+    use Orthoses::LoadRBS,
+      paths: -> { Orthoses::PathHelper.best_version_paths(::ActiveRecord::VERSION::STRING, "known_sig/activerecord") }
+    use Orthoses::LoadRBS,
+      paths: -> { Orthoses::PathHelper.best_version_paths(::ActiveModel::VERSION::STRING, "known_sig/activemodel") }
+    use Orthoses::LoadRBS,
+      paths: -> { Orthoses::PathHelper.best_version_paths(::ActiveSupport::VERSION::STRING, "known_sig/activesupport") }
     # # require in method
     use Orthoses::Tap do |store|
       store.delete("DummyERB")
@@ -187,8 +189,9 @@ def generate(out_dir, version)
     use Orthoses::RBSPrototypeRB,
       paths: Dir.glob('_src/{railties,action{cable,mailbox,mailer,pack,text,view},active{job,model,record,storage,support}}/{app,lib}/**/*.rb'),
       constant_filter: -> (member) { false },
-      mixin_filter: -> (member) { false }
-    use Orthoses::UnAutoload
+      mixin_filter: -> (member) { false },
+      attribute_filter: -> (member) { false }
+    use Orthoses::Autoload
     run loader
   end.call
 
@@ -199,6 +202,9 @@ end
 def generate_test_script(gem:, version:, export:, stdlib_dependencies:, gem_dependencies:, rails_dependencies:)
   Pathname(export).join('_scripts').tap(&:mkdir).join('test').write(<<~SHELL)
     #!/usr/bin/env bash
+
+    # !!! GENERATED CODE !!!
+    # Please see generators/rails-generator
 
     # set -eou => Exit command with non-zero status code, Output logs of every command executed, Treat unset variables as an error when substituting.
     set -eou pipefail
@@ -224,6 +230,9 @@ def generate_test_script(gem:, version:, export:, stdlib_dependencies:, gem_depe
   sh "chmod +x #{Pathname(export).join('_scripts').join('test')}"
 
   Pathname(export).join('_test').tap(&:mkdir).join('Steepfile').write(<<~RUBY)
+    # !!! GENERATED CODE !!!
+    # Please see generators/rails-generator
+
     D = Steep::Diagnostic
 
     target :test do
@@ -247,6 +256,8 @@ VERSIONS = %w[
   6.1
   7.0
 ]
+Object.private_constant :VERSIONS
+
 GEMS = %w[
   active_support
   active_model
@@ -254,10 +265,10 @@ GEMS = %w[
   active_job
   active_storage
 ]
+Object.private_constant :GEMS
 
 task :clean do
   FileUtils.rm_rf("out")
-  FileUtils.rm_rf("export")
 end
 
 namespace :bundle do
@@ -274,7 +285,8 @@ VERSIONS.each do |version|
     task :all => [
       "#{version}:generate",
       *(GEMS.map{"#{version}:#{_1}:export"}),
-      *(GEMS.map{"#{version}:#{_1}:validate"})
+      # *(GEMS.map{"#{version}:#{_1}:validate"}),
+      # *(GEMS.map{"#{version}:#{_1}:install"})
     ]
 
     desc "generate version=#{version}"
