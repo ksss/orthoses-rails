@@ -1,7 +1,0 @@
-module ActiveSupport
-  module Multibyte
-    class Chars
-      attr_reader wrapped_string: ::String
-    end
-  end
-end

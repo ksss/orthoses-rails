@@ -3,7 +3,6 @@
 require 'orthoses'
 
 require_relative "rails/version"
-require_relative "rails/known_sig_helper"
 
 require_relative 'active_model'
 require_relative 'active_record'

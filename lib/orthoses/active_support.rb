@@ -5,7 +5,6 @@ require_relative 'active_support/configurable'
 require_relative 'active_support/delegation'
 require_relative 'active_support/mattr_accessor'
 require_relative 'active_support/time_with_zone'
-require_relative 'active_support/known_sig'
 
 module Orthoses
   module ActiveSupport
@@ -18,7 +17,6 @@ module Orthoses
       yield Delegation
       yield MattrAccessor
       yield TimeWithZone
-      yield KnownSig
     end
   end
 end

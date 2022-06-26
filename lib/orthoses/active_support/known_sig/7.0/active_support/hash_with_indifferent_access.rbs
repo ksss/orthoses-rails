@@ -1,6 +1,0 @@
-module ActiveSupport
-  class HashWithIndifferentAccess[K, V] < ::Hash[K, V]
-    def []=: (K key, V value) -> untyped
-    def []: (K key) -> V
-  end
-end
