@@ -22,16 +22,22 @@ module Orthoses
 
       private
 
-      NOT_DELEGATE_METHODS = %i[
+      NOT_DELEGATE_METHODS = Set.new(%i[
         utc
         getgm
         getutc
         gmtime
         localtime
-      ]
+      ])
+
+      TYPE_MERGE_METHODS = Set.new(%i[
+        +
+        -
+      ])
 
       def each_line_from_core_time_definition(store)
         type_name_time = TypeName("::Time")
+        type_name_time_with_zone = TypeName("::ActiveSupport::TimeWithZone")
         env = Utils.rbs_environment(collection: true, cache: false)
         env << store["Time"].to_decl
         env << store["DateAndTime"].to_decl
@@ -48,6 +54,7 @@ module Orthoses
         one_ancestors.included_modules.each do |included_module|
           yield "include #{included_module.source.name}"
         end
+        twz_methods = builder.build_instance(type_name_time_with_zone).methods
         builder.build_instance(type_name_time).methods.each do |sym, definition_method|
           next if !definition_method.public?
           definition_method.defs.reject! do |type_def|
@@ -65,7 +72,17 @@ module Orthoses
           end
 
           if definition_method.alias_of.nil?
-            yield "def #{sym}: #{definition_method.method_types.join(" | ")}"
+            method_types = definition_method.method_types
+
+            if TYPE_MERGE_METHODS.include?(sym)
+              twz_definition_method = twz_methods[sym]
+              twz_definition_method.defs.each do |type_def|
+                if type_def.implemented_in == type_name_time_with_zone
+                  method_types << type_def.type
+                end
+              end
+            end
+            yield "def #{sym}: #{method_types.join(" | ")}"
           else
             yield "alias #{sym} #{definition_method.alias_of.defs.first.member.name}"
           end

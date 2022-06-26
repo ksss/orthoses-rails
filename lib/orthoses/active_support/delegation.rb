@@ -146,7 +146,7 @@ module Orthoses
             when RBS::AST::Members::Mixin, RBS::AST::Members::LocationOnly
               next
             else
-              binding.irb
+              raise "bug: #{member.class} is not supported yet"
             end
           end
 
