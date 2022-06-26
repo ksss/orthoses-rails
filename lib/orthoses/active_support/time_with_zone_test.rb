@@ -8,6 +8,7 @@ module TimeWithZoneTest
     store["ActiveSupport::TimeWithZone"].header = "class ActiveSupport::TimeWithZone"
 
     loader = RBS::EnvironmentLoader.new
+    loader.add(library: 'date')
     env = RBS::Environment.from_loader(loader)
     RBS::Parser.parse_signature(<<~RBS).each do |decl|
       module ActiveSupport

@@ -75,10 +75,11 @@ module Orthoses
             method_types = definition_method.method_types
 
             if TYPE_MERGE_METHODS.include?(sym)
-              twz_definition_method = twz_methods[sym]
-              twz_definition_method.defs.each do |type_def|
-                if type_def.implemented_in == type_name_time_with_zone
-                  method_types << type_def.type
+              if twz_definition_method = twz_methods[sym]
+                twz_definition_method.defs.each do |type_def|
+                  if type_def.implemented_in == type_name_time_with_zone
+                    method_types << type_def.type
+                  end
                 end
               end
             end

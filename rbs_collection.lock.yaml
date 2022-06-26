@@ -11,7 +11,7 @@ gems:
   source:
     type: rubygems
 - name: orthoses
-  version: 0.9.0
+  version: 0.10.0
   source:
     type: rubygems
 - name: rack
@@ -19,7 +19,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: f096cbfe0590fe6b6980c77256bde630b77dbb7f
+    revision: cd6db41310b911e1df3476246257510673f01b8a
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: nokogiri
@@ -27,7 +27,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: f096cbfe0590fe6b6980c77256bde630b77dbb7f
+    revision: cd6db41310b911e1df3476246257510673f01b8a
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: abbrev
@@ -231,7 +231,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: f096cbfe0590fe6b6980c77256bde630b77dbb7f
+    revision: cd6db41310b911e1df3476246257510673f01b8a
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: bcrypt
@@ -239,7 +239,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: f096cbfe0590fe6b6980c77256bde630b77dbb7f
+    revision: cd6db41310b911e1df3476246257510673f01b8a
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: i18n
@@ -247,7 +247,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: f096cbfe0590fe6b6980c77256bde630b77dbb7f
+    revision: cd6db41310b911e1df3476246257510673f01b8a
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: listen
@@ -255,7 +255,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: f096cbfe0590fe6b6980c77256bde630b77dbb7f
+    revision: cd6db41310b911e1df3476246257510673f01b8a
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: minitest
@@ -267,7 +267,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: f096cbfe0590fe6b6980c77256bde630b77dbb7f
+    revision: cd6db41310b911e1df3476246257510673f01b8a
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: rainbow
@@ -275,6 +275,6 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: f096cbfe0590fe6b6980c77256bde630b77dbb7f
+    revision: cd6db41310b911e1df3476246257510673f01b8a
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
