@@ -2,7 +2,7 @@ PATH
   remote: ../../..
   specs:
     orthoses-rails (0.4.0)
-      orthoses (>= 0.8)
+      orthoses (>= 0.10)
 
 GEM
   remote: https://rubygems.org/
@@ -84,7 +84,7 @@ GEM
     method_source (1.0.0)
     mini_mime (1.1.2)
     mini_portile2 (2.8.0)
-    minitest (5.15.0)
+    minitest (5.16.1)
     net-imap (0.2.3)
       digest
       net-protocol
@@ -103,12 +103,12 @@ GEM
     nokogiri (1.13.6)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
-    orthoses (0.9.0)
+    orthoses (0.10.0)
       rbs (~> 2.0)
     racc (1.6.0)
     rack (2.2.3.1)
-    rack-test (1.1.0)
-      rack (>= 1.0, < 3)
+    rack-test (2.0.0)
+      rack (>= 1.3)
     rails (6.1.6)
       actioncable (= 6.1.6)
       actionmailbox (= 6.1.6)
@@ -136,15 +136,15 @@ GEM
       rake (>= 12.2)
       thor (~> 1.0)
     rake (13.0.6)
-    rbs (2.5.0)
-    sprockets (4.0.3)
+    rbs (2.6.0)
+    sprockets (4.1.0)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
     sprockets-rails (3.4.2)
       actionpack (>= 5.2)
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
-    sqlite3 (1.4.3)
+    sqlite3 (1.4.4)
     strscan (3.0.3)
     thor (1.2.1)
     timeout (0.3.0)
@@ -162,7 +162,6 @@ DEPENDENCIES
   net-imap
   net-pop
   net-smtp
-  orthoses
   orthoses-rails!
   rails (>= 6.1, < 7)
   sqlite3

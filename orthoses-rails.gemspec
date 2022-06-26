@@ -32,5 +32,5 @@ Gem::Specification.new do |spec|
   spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "orthoses", ">= 0.8"
+  spec.add_dependency "orthoses", ">= 0.10"
 end

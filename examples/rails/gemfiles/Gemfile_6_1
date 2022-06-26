@@ -6,7 +6,7 @@ gemspec path: '../../../'
 
 gem "rails", ">= 6.1", "< 7"
 gem "sqlite3"
-gem "orthoses"
+# gem "orthoses", path: "../../../../orthoses"
 
 if RUBY_VERSION >= "3.1"
   gem "net-smtp", require: false
