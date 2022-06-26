@@ -8,7 +8,7 @@
 /tmp/
 /.gem_rbs_collection/
 
-examples/rails/src
+examples/rails/_src
 examples/rails/out
 examples/rails/export
 examples/rails/tmp

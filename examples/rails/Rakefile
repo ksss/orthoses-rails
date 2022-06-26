@@ -1,7 +1,7 @@
 ## run `$ rake`
 
 def switch_branch(name)
-  cd "src" do
+  cd "_src" do
     sh "git switch #{name}"
   end
 end
@@ -14,8 +14,6 @@ def generate(out_dir, version)
   require 'uri'
 
   Orthoses.logger.level = :error
-
-  Orthoses::Utils.unautoload!
 
   loader = -> () {
     # require "rails/all"
@@ -61,7 +59,6 @@ def generate(out_dir, version)
     RUBY
     ENV['RAILS_ENV'] = 'development'
     Rails.application.initialize!
-    Orthoses::Utils.unautoload!
   }
   Orthoses::Builder.new do
     use Orthoses::CreateFileByName,
@@ -188,9 +185,10 @@ def generate(out_dir, version)
         mod != Enumerable # TODO
       }
     use Orthoses::RBSPrototypeRB,
-      paths: Dir.glob('src/{railties,action{cable,mailbox,mailer,pack,text,view},active{job,model,record,storage,support}}/{app,lib}/**/*.rb'),
+      paths: Dir.glob('_src/{railties,action{cable,mailbox,mailer,pack,text,view},active{job,model,record,storage,support}}/{app,lib}/**/*.rb'),
       constant_filter: -> (member) { false },
       mixin_filter: -> (member) { false }
+    use Orthoses::UnAutoload
     run loader
   end.call
 
