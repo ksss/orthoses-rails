@@ -2,7 +2,7 @@ module EnumTest
   LOADER1 = ->(){
     class User1 < ActiveRecord::Base
       enum array: [ :array_active, :array_archived ]
-      enum hash: { hash_active: "active", hash_archived: "archived" }
+      enum map: { map_active: "active", map_archived: "archived" }
       enum pref: [ :active, :archived ], _prefix: true
       enum suff: [ :active, :archived ], _suffix: true
     end
@@ -16,7 +16,7 @@ module EnumTest
     expect = <<~RBS
       class EnumTest::User1 < ::ActiveRecord::Base
         def self.arrays: () -> ActiveSupport::HashWithIndifferentAccess[String, Integer]
-        def self.hashes: () -> ActiveSupport::HashWithIndifferentAccess[String, String]
+        def self.maps: () -> ActiveSupport::HashWithIndifferentAccess[String, String]
         def self.prefs: () -> ActiveSupport::HashWithIndifferentAccess[String, Integer]
         def self.suffs: () -> ActiveSupport::HashWithIndifferentAccess[String, Integer]
       end
@@ -36,13 +36,13 @@ module EnumTest
 
         def array_archived!: () -> bool
 
-        def hash_active?: () -> bool
+        def map_active?: () -> bool
 
-        def hash_active!: () -> bool
+        def map_active!: () -> bool
 
-        def hash_archived?: () -> bool
+        def map_archived?: () -> bool
 
-        def hash_archived!: () -> bool
+        def map_archived!: () -> bool
 
         def pref_active?: () -> bool
 
@@ -69,7 +69,7 @@ module EnumTest
   LOADER2 = ->(){
     class User2 < ActiveRecord::Base
       enum array: [ :array_active, :array_archived ]
-      enum hash: { hash_active: "active", hash_archived: "archived" }, _scopes: false
+      enum map: { map_active: "active", map_archived: "archived" }, _scopes: false
     end
   }
   def test_enum_with_scope(t)
@@ -87,7 +87,7 @@ module EnumTest
         def self.array_archived: () -> EnumTest::User2::ActiveRecord_Relation
         def self.not_array_archived: () -> EnumTest::User2::ActiveRecord_Relation
         def self.arrays: () -> ActiveSupport::HashWithIndifferentAccess[String, Integer]
-        def self.hashes: () -> ActiveSupport::HashWithIndifferentAccess[String, String]
+        def self.maps: () -> ActiveSupport::HashWithIndifferentAccess[String, String]
       end
     RBS
     unless expect == actual
@@ -115,7 +115,7 @@ module EnumTest
     LOADER3 = ->{
       class User3 < ActiveRecord::Base
         enum :array, [ :array_active, :array_archived ]
-        enum :hash, hash_active: "active", hash_archived: "archived"
+        enum :map, map_active: "active", map_archived: "archived"
       end
     }
     def test_rails_7_style(t)
@@ -127,7 +127,7 @@ module EnumTest
       expect = <<~RBS
         class EnumTest::User3 < ::ActiveRecord::Base
           def self.arrays: () -> ActiveSupport::HashWithIndifferentAccess[String, Integer]
-          def self.hashes: () -> ActiveSupport::HashWithIndifferentAccess[String, String]
+          def self.maps: () -> ActiveSupport::HashWithIndifferentAccess[String, String]
         end
       RBS
       unless expect == actual

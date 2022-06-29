@@ -17,9 +17,16 @@ jobs:
           - '2.7.6'
           - '3.0.4'
           - '3.1.2'
-
+        rails_version:
+          - '6.0'
+          - '6.1'
+          - '7.0'
+    env:
+      RAILS_VERSION: ${{ matrix.rails_version }}
     steps:
     - uses: actions/checkout@v2
+    - name: Remove Gemfile.lock for CI
+      run: rm Gemfile.lock
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
