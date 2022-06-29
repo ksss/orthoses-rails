@@ -22,6 +22,7 @@ module Orthoses
 
           definition = "#{name}: #{parameters_to_type(body.parameters)} -> #{base_name}::ActiveRecord_Relation"
           store[base_name] << "def self.#{definition}"
+          store["#{base_name}::GeneratedRelationMethods"].header = "module #{base_name}::GeneratedRelationMethods"
           store["#{base_name}::GeneratedRelationMethods"] << "def #{definition}"
         end
 
