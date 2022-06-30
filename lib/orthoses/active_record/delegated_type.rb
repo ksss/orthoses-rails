@@ -45,32 +45,6 @@ module Orthoses
 
         store
       end
-
-      private
-
-      def _enum(store, base_name, name, values, prefix: nil, suffix: nil, **_options)
-        name = name.to_s
-
-        prefix = if prefix
-          prefix == true ? "#{name}_" : "#{prefix}_"
-        end
-
-        suffix = if suffix
-          suffix == true ? "_#{name}" : "_#{suffix}"
-        end
-
-        return_type_param = Hash === values ? "[String, String]" : "[String, Integer]"
-        store[base_name] << "def self.#{name.pluralize}: () -> ActiveSupport::HashWithIndifferentAccess#{return_type_param}"
-
-        pairs = values.respond_to?(:each_pair) ? values.each_pair : values.each_with_index
-        pairs.each do |label, value|
-          value_method_name = "#{prefix}#{label}#{suffix}"
-          enum_methods_content = store["#{base_name}::ActiveRecord_Enum_EnumMethods"]
-          enum_methods_content.header = "module #{base_name}::ActiveRecord_Enum_EnumMethods"
-          enum_methods_content << "def #{value_method_name}?: () -> bool"
-          enum_methods_content << "def #{value_method_name}!: () -> bool"
-        end
-      end
     end
   end
 end
