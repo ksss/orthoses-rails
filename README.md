@@ -5,42 +5,36 @@ Orthoses::Rails automatically generates RBS for methods added by Rails.
 
 ## Features
 
-### Orthoses::ActiveModel::HasSecurePassword
+### Orthoses::ActiveModel
 
-Add signatures that generated form `ActiveModel::SecurePassword::ClassMethods#has_secure_password`.
+- `HasSecurePassword`
+  - Add signatures that generated form `has_secure_password`.
 
-### Orthoses::ActiveRecord::BelongsTo
+### Orthoses::ActiveRecord
 
-Add signatures that generated form `ActiveRecord::Associations::ClassMethods#belongs_to`.
+- `BelongsTo`
+  - Add signatures that generated form `belongs_to`.
+- `DelegatedType`
+  - Add signatures that generated from `delegated_type`
+- `Enum`
+  - Add signatures that generated from `enum`
+- `HasMany`
+  - Add signatures that generated form `has_many`.
+- `HasOne`
+  - Add signatures that generated form `has_one`.
+- `Scope`
+  - Add signatures that generated form `scope`.
 
-### Orthoses::ActiveRecord::GeneratedAttributeMethods
+### Orthoses::ActiveSupport
 
-Add signatures that generated from DB schema columns.
-
-### Orthoses::ActiveRecord::HasMany
-
-Add signatures that generated form `ActiveRecord::Associations::ClassMethods#has_many`.
-
-### Orthoses::ActiveRecord::HasOne
-
-Add signatures that generated form `ActiveRecord::Associations::ClassMethods#has_one`.
-
-### Orthoses::ActiveSupport::ClassAttribute
-
-Add signatures that generated form `Class#class_attribute`.
-
-### Orthoses::ActiveSupport::Concern
-
-Add signature `extend ActiveSupport::Concern` only.
-
-### Orthoses::ActiveSupport::MattrAccessor
-
-Add signatures that generated form `Module#mattr_accessor`, `Module#mattr_reader` and `Module#mattr_writer`.
-
-### Orthoses::ActiveSupport::TimeWithZone
-
-Add signatures `Time` and `ActiveSupport::TimeWithZone`.
-Methods and mixin delegated from `Time` are added to `ActiveSupport::TimeWithZone`.
+- `ClassAttribute`
+  - Add signatures that generated form `class_attribute`.
+- `Configurable`
+  - Add signatures that generated from `config_accessor`
+- `Delegation`
+  - Add signatures that generated from `delegate`. The type definition of the method or instance variable specified by `to` is required.
+- `MattrAccessor`
+  - Add signatures that generated form `mattr_accessor`, `cattr_accessor`, `mattr_reader`, `cattr_reader`, `mattr_writer` and `cattr_writer`.
 
 ## Installation
 
@@ -68,16 +62,14 @@ Orthoses::Builder.new do
   use YourCustom::Middleware
   use Orthoses::ActiveModel::HasSecurePassword
   use Orthoses::ActiveRecord::BelongsTo
-  use Orthoses::ActiveRecord::GeneratedAttributeMethods
   use Orthoses::ActiveRecord::HasMany
   use Orthoses::ActiveRecord::HasOne
-  use Orthoses::ActiveSupport::Concern
   use Orthoses::ActiveSupport::ClassAttribute
   use Orthoses::ActiveSupport::MattrAccessor
-  use Orthoses::ActiveSupport::TimeWithZone
   use Orthoses::Mixin
   use Orthoses::Constant, strict: false
   use Orthoses::ObjectSpaceAll
+  use Orthoses::Autoload
   run -> () {
     Rake::Task[:environment].invoke
     Rails.application.eager_load!
