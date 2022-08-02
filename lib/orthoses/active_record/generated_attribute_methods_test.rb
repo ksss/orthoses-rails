@@ -41,6 +41,7 @@ module GeneratedAttributeMethodsTest
 
     expected_keys = [
       "GeneratedAttributeMethodsTest::User",
+      "GeneratedAttributeMethodsTest::User::AttributeMethods",
       "GeneratedAttributeMethodsTest::User::AttributeMethods::GeneratedAttributeMethods"
     ]
     unless store.keys.sort == expected_keys.sort

@@ -42,6 +42,7 @@ module Orthoses
             generated_attribute_methods = "#{name}::AttributeMethods::GeneratedAttributeMethods"
             store[name] << "include #{generated_attribute_methods}"
 
+            store["#{name}::AttributeMethods"].header = "module #{name}::AttributeMethods"
             store[generated_attribute_methods].header = "module #{generated_attribute_methods}"
             store[generated_attribute_methods].concat(lines)
           end
