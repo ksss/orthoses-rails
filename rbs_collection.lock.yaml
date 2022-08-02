@@ -6,10 +6,6 @@ sources:
   repo_dir: gems
 path: ".gem_rbs_collection"
 gems:
-- name: rbs
-  version: 2.6.0
-  source:
-    type: rubygems
 - name: orthoses
   version: 0.10.0
   source:
@@ -19,7 +15,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: cd6db41310b911e1df3476246257510673f01b8a
+    revision: 73137fe17c719cf52eaf099d541c0fbd9192500e
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: nokogiri
@@ -27,7 +23,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: cd6db41310b911e1df3476246257510673f01b8a
+    revision: 73137fe17c719cf52eaf099d541c0fbd9192500e
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: abbrev
@@ -111,6 +107,10 @@ gems:
   source:
     type: stdlib
 - name: logger
+  version: '0'
+  source:
+    type: stdlib
+- name: minitest
   version: '0'
   source:
     type: stdlib
@@ -231,7 +231,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: cd6db41310b911e1df3476246257510673f01b8a
+    revision: 73137fe17c719cf52eaf099d541c0fbd9192500e
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: bcrypt
@@ -239,7 +239,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: cd6db41310b911e1df3476246257510673f01b8a
+    revision: 73137fe17c719cf52eaf099d541c0fbd9192500e
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: i18n
@@ -247,7 +247,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: cd6db41310b911e1df3476246257510673f01b8a
+    revision: 73137fe17c719cf52eaf099d541c0fbd9192500e
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: listen
@@ -255,19 +255,15 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: cd6db41310b911e1df3476246257510673f01b8a
+    revision: 73137fe17c719cf52eaf099d541c0fbd9192500e
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
-- name: minitest
-  version: '0'
-  source:
-    type: stdlib
 - name: parallel
   version: '1.20'
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: cd6db41310b911e1df3476246257510673f01b8a
+    revision: 73137fe17c719cf52eaf099d541c0fbd9192500e
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: rainbow
@@ -275,6 +271,10 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: cd6db41310b911e1df3476246257510673f01b8a
+    revision: 73137fe17c719cf52eaf099d541c0fbd9192500e
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
+- name: rbs
+  version: 2.6.0
+  source:
+    type: rubygems
