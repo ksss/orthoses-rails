@@ -251,6 +251,13 @@ def generate_test_script(gem:, version:, export:, stdlib_dependencies:, gem_depe
   RUBY
 end
 
+def generate_manifest(export:, stdlib_dependencies:)
+  Pathname(export).join('manifest.yaml').write(<<~YAML)
+    dependencies:
+      #{stdlib_dependencies.map{"- name: #{_1}"}.join("\n  ")}
+  YAML
+end
+
 VERSIONS = %w[
   6.0
   6.1

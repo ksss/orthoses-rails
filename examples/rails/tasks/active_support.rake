@@ -50,6 +50,10 @@ VERSIONS.each do |version|
           sh "rm -fr #{export}/uri{,.rbs}"
         end
 
+        generate_manifest(
+          export: export,
+          stdlib_dependencies: stdlib_dependencies
+        )
         generate_test_script(
           gem: :activesupport,
           version: version,
