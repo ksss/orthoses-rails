@@ -27,6 +27,7 @@ module Orthoses
         delegate.captures.each do |capture|
           receiver_name = Utils.module_name(capture.method.receiver) or next
           receiver_content = store[receiver_name]
+
           case capture.argument[:to]
           when Module
             to_module_name = Utils.module_name(capture.argument[:to]) or next
@@ -42,11 +43,9 @@ module Orthoses
             to_name = capture.argument[:to].to_s.to_sym
             tag, to_return_type = resource.find(receiver_name, to_name, :instance, false)
             raise "bug" if tag == :multi
-            if to_return_type.nil?
-              Orthoses.logger.warn("[ActiveSupport::Delegation] Ignore since missing type for #{receiver_name}##{to_name.inspect} in #{capture.argument.inspect}")
-              next
-            end
-            if to_return_type.instance_of?(RBS::Types::Bases::Any)
+
+            case to_return_type
+            when nil, RBS::Types::Bases::Any
               capture.argument[:methods].each do |method|
                 receiver_content << "# defined by `delegate` to: #{to_return_type}##{to_name}"
                 receiver_content << "def #{method}: (*untyped, **untyped) -> untyped"

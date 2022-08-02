@@ -40,6 +40,7 @@ module DelegationTest
         SINGLE_CONST: Integer
         def name: () -> ::String?
         def ref_no_type: (*untyped, **untyped) -> untyped
+        def skip: (*untyped, **untyped) -> untyped
         def gsub: (::Regexp | ::string pattern, ::string replacement) -> ::String
                 | (::Regexp | ::string pattern, ::Hash[::String, ::String] hash) -> ::String
                 | (::Regexp | ::string pattern) { (::String match) -> ::_ToS } -> ::String
