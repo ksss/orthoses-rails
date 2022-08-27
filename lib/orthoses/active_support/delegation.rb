@@ -11,7 +11,7 @@ module Orthoses
       # def delegate_missing_to(target, allow_nil: nil)
       def call
         delegate = CallTracer::Lazy.new
-        store = delegate.trace('Module.delegate') do
+        store = delegate.trace('Module#delegate') do
           @loader.call
         end
 
