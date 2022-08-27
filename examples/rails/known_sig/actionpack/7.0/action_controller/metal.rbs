@@ -1,0 +1,4 @@
+module ActionController
+  class Metal < AbstractController::Base
+  end
+end
