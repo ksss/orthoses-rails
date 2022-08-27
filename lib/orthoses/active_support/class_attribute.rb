@@ -15,20 +15,13 @@ module Orthoses
       end
 
       def call
-        target_method = begin
-          ::Class.instance_method(:class_attribute)
-        rescue NameError => err
-          Orthoses.logger.warn("Run `require 'active_support/core_ext/class/attribute'` and retry because #{err}")
-          require 'active_support/core_ext/class/attribute'
-          retry
-        end
-        call_tracer = Orthoses::CallTracer.new
+        lazy_tracer = Orthoses::CallTracer::Lazy.new
 
-        store = call_tracer.trace(target_method) do
+        store = lazy_tracer.trace('Class#class_attribute') do
           @loader.call
         end
 
-        call_tracer.captures.each do |capture|
+        lazy_tracer.captures.each do |capture|
           receiver_name = Orthoses::Utils.module_name(capture.method.receiver)
           next unless receiver_name
 

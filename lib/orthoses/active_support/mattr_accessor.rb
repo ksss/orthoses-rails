@@ -13,11 +13,11 @@ module Orthoses
       end
 
       def call
-        mattr_reader = Orthoses::CallTracer.new
-        mattr_writer = Orthoses::CallTracer.new
+        mattr_reader = CallTracer::Lazy.new
+        mattr_writer = CallTracer::Lazy.new
 
-        store = mattr_reader.trace(target_method(:mattr_reader)) do
-          mattr_writer.trace(target_method(:mattr_writer)) do
+        store = mattr_reader.trace('Module#mattr_reader') do
+          mattr_writer.trace('Module#mattr_writer') do
             @loader.call
           end
         end
@@ -55,14 +55,6 @@ module Orthoses
         end
 
         store
-      end
-
-      def target_method(name)
-        ::Module.instance_method(name)
-      rescue NameError => err
-        Orthoses.logger.warn("Run `require 'active_support/core_ext/module/attribute_accessors'` and retry because #{err}")
-        require 'active_support/core_ext/module/attribute_accessors'
-        retry
       end
     end
   end

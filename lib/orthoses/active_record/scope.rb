@@ -9,8 +9,8 @@ module Orthoses
       end
 
       def call
-        scope = CallTracer.new
-        store = scope.trace(::ActiveRecord::Scoping::Named::ClassMethods.instance_method(:scope)) do
+        scope = CallTracer::Lazy.new
+        store = scope.trace('ActiveRecord::Scoping::Named::ClassMethods#scope') do
           @loader.call
         end
 

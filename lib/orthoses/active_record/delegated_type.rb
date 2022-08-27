@@ -12,14 +12,8 @@ module Orthoses
       end
 
       def call
-        target = begin
-          ::ActiveRecord::DelegatedType.instance_method(:delegated_type)
-        rescue NameError
-          Orthoses.logger.warn("[ActiveRecord::DelegatedType] Skip since `delegated_type' is not implemented")
-          return @loader.call
-        end
-        delegated_type = CallTracer.new
-        store = delegated_type.trace(target) do
+        delegated_type = CallTracer::Lazy.new
+        store = delegated_type.trace('ActiveRecord::DelegatedType#delegated_type') do
           @loader.call
         end
 

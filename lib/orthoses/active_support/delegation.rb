@@ -10,15 +10,8 @@ module Orthoses
       # def delegate(*methods, to: nil, prefix: nil, allow_nil: nil, private: nil)
       # def delegate_missing_to(target, allow_nil: nil)
       def call
-        target_method = begin
-          ::Module.method(:delegate)
-        rescue NameError => err
-          Orthoses.logger.warn("Run `require 'active_support/core_ext/module/delegation'` and retry because #{err}")
-          require 'active_support/core_ext/module/delegation'
-          retry
-        end
-        delegate = CallTracer.new
-        store = delegate.trace(target_method) do
+        delegate = CallTracer::Lazy.new
+        store = delegate.trace('Module.delegate') do
           @loader.call
         end
 

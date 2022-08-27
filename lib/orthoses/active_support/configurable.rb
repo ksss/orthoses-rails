@@ -12,8 +12,9 @@ module Orthoses
       end
 
       def call
-        config_accessor = CallTracer.new
-        store = config_accessor.trace(::ActiveSupport::Configurable::ClassMethods.instance_method(:config_accessor)) do
+        config_accessor = CallTracer::Lazy.new
+
+        store = config_accessor.trace('ActiveSupport::Configurable::ClassMethods#config_accessor') do
           @loader.call
         end
         config_accessor.captures.each do |capture|

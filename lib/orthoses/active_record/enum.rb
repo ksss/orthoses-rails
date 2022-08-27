@@ -12,8 +12,8 @@ module Orthoses
       end
 
       def call
-        enum = CallTracer.new
-        store = enum.trace(::ActiveRecord::Enum.instance_method(:enum)) do
+        enum = CallTracer::Lazy.new
+        store = enum.trace('ActiveRecord::Enum#enum') do
           @loader.call
         end
 
