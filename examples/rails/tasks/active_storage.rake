@@ -1,6 +1,6 @@
 require 'rbs'
 
-stdlib_dependencies = %w[time monitor singleton logger mutex_m json date benchmark digest forwardable did_you_mean openssl socket]
+stdlib_dependencies = %w[time monitor singleton logger mutex_m json date benchmark digest forwardable did_you_mean openssl socket minitest]
 gem_dependencies = %w[nokogiri]
 rails_dependencies = %w[activesupport activemodel activejob activerecord]
 

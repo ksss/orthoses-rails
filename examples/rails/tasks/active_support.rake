@@ -28,6 +28,9 @@ VERSIONS.each do |version|
           sh "cp -a #{out}.rbs #{export}" if File.exist?("#{out}.rbs")
         end
 
+        # 5.2
+        sh "cp -a out/#{version}/logger_silence.rbs #{export}" if File.exist?("out/#{version}/logger_silence.rbs")
+
         Pathname(export).join("EXTERNAL_TODO.rbs").write(<<~RBS)
           # !!! GENERATED CODE !!!
           # Please see generators/rails-generator

@@ -1,15 +1,16 @@
 source "https://rubygems.org"
 
-ruby "~> 3.1.0"
+ruby ">= 3.1.0"
 
-gemspec path: '../../../'
+gemspec path: '../../'
 
-gem "rails", ">= 7.0", "< 7.1"
+gem "rails", path: "_src"
 gem "sqlite3"
-# gem "orthoses", path: "../../../../orthoses"
+# gem "orthoses", path: "../../../orthoses"
 
 if RUBY_VERSION >= "3.1"
   gem "net-smtp", require: false
   gem "net-imap", require: false
   gem "net-pop", require: false
+  gem "psych", "~> 3"
 end

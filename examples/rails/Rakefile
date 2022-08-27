@@ -22,24 +22,29 @@ def generate(out_dir, version)
     require "active_model"
     require "active_storage/engine"
     require "action_dispatch"
-    require "action_mailbox"
+    begin
+      require "action_mailbox"
+      require "action_text"
+    rescue LoadError
+    end
     require "action_mailer"
     require "action_pack"
-    require "action_text"
     require "action_view"
 
-    [
+    roots = [
       ActiveSupport,
       ActiveModel,
       ActiveJob,
       ActiveRecord,
       ActiveStorage,
       ActionDispatch,
-      ActionMailbox,
       ActionMailer,
-      ActionText,
       ActionView,
-    ].each do |rails_mod|
+    ]
+    roots << ActionMailbox if defined?(ActionMailbox)
+    roots << ActionText if defined?(ActionText)
+
+    roots.each do |rails_mod|
       rails_mod.eager_load!
       Orthoses::Utils.each_const_recursive(rails_mod, on_error: -> (e) {
         Orthoses.logger.warn "skip load const by [#{e.root}][#{e.const}](#{e.error.class})#{e.error.message}"
@@ -62,7 +67,6 @@ def generate(out_dir, version)
     use Orthoses::CreateFileByName,
       base_dir: "#{out_dir}/#{version}",
       header: "# !!! GENERATED CODE !!!\n# Please see generators/rails-generator"
-    use Orthoses::AvoidRecursiveAncestorError
     use Orthoses::Filter,
       if: -> (name, content) {
         # OMG, both ERB and Erb are exist...
@@ -87,9 +91,10 @@ def generate(out_dir, version)
       on_error: -> (e) {
         Orthoses.logger.warn "[Orthoses::Constant] skip load const by #{e.root}[::#{e.const}] (#{e.error.class}) #{e.error.message}"
       }
-    Orthoses::ActiveSupport.each do |middleware, **args|
-      use middleware, **args
-    end
+    use Orthoses::ActiveSupport::ClassAttribute
+    use Orthoses::ActiveSupport::Delegation
+    use Orthoses::ActiveSupport::MattrAccessor
+    use Orthoses::ActiveSupport::TimeWithZone
     use Orthoses::ActiveRecord::QueryMethods
     use Orthoses::LoadRBS,
       paths: -> { Orthoses::PathHelper.best_version_paths(::ActiveRecord::VERSION::STRING, "known_sig/activerecord") }
@@ -114,6 +119,9 @@ def generate(out_dir, version)
       elsif defined?(ActiveRecord::Migration::Compatibility::V6_0)
         store["ActiveRecord::Migration::Compatibility::V5_2"].header = nil
         store["ActiveRecord::Migration::Compatibility::V6_0"].header = "class ActiveRecord::Migration::Compatibility::V6_0 < ActiveRecord::Migration::Current"
+      elsif defined?(ActiveRecord::Migration::Compatibility::V5_2)
+        store["ActiveRecord::Migration::Compatibility::V5_1"].header = nil
+        store["ActiveRecord::Migration::Compatibility::V5_2"].header = "class ActiveRecord::Migration::Compatibility::V5_2 < ActiveRecord::Migration::Current"
       end
     end
     # class_eval in #each
@@ -182,6 +190,13 @@ def generate(out_dir, version)
     end
     use Orthoses::DelegateClass
     use Orthoses::Attribute
+    use Orthoses::Railties::Mixin, callback: -> (railties_mixin) {
+      Orthoses::CreateFileByName.new(
+        ->{ railties_mixin },
+        base_dir: "#{out_dir}/#{version}/railties_mixin",
+        header: "# !!! GENERATED CODE !!!\n# Please see generators/rails-generator"
+      ).call
+    }
     use Orthoses::Mixin,
       if: -> (base_mod, how, mod) {
         mod != Enumerable # TODO
@@ -260,61 +275,51 @@ end
 
 VERSIONS = %w[
   6.0
-  6.1
-  7.0
 ]
 Object.private_constant :VERSIONS
 
-GEMS = %w[
-  active_support
-  active_model
-  active_record
-  active_job
-  active_storage
-]
+tasks = Dir["tasks/*"]
+tasks.each do |task|
+  load task
+end
+GEMS = tasks.map { File.basename(_1).sub(/\.rake/, '') }
 Object.private_constant :GEMS
 
 task :clean do
   FileUtils.rm_rf("out")
 end
 
-namespace :bundle do
-  task :update do
-    VERSIONS.each do |version|
-      sh "BUNDLE_GEMFILE=gemfiles/Gemfile_#{version.tr('.', '_')} bundle update"
-    end
-  end
-end
-
 VERSIONS.each do |version|
   namespace version do
     desc "run all version=#{version}"
     task :all => [
-      "#{version}:generate",
-      *(GEMS.map{"#{version}:#{_1}:export"}),
-      # *(GEMS.map{"#{version}:#{_1}:validate"}),
-      # *(GEMS.map{"#{version}:#{_1}:install"})
+      :generate,
+      :export,
+      :validate,
+      :install,
     ]
+
+    desc "run export version=#{version}"
+    task :export => GEMS.map{"#{version}:#{_1}:export"}
+
+    desc "run validate version=#{version}"
+    task :validate => GEMS.map{"#{version}:#{_1}:validate"}
+
+    desc "run install version=#{version}"
+    task :install => GEMS.map{"#{version}:#{_1}:install"}
 
     desc "generate version=#{version}"
     task :generate do |t|
-      gemfile = File.expand_path("gemfiles/Gemfile_#{version.tr('.', '_')}")
-      sh "BUNDLE_GEMFILE=#{gemfile} bundle install"
-      sh "BUNDLE_GEMFILE=#{gemfile} bundle exec rake #{t.name}_exec"
+      switch_branch("#{version.tr('.', '-')}-stable")
+      sh "bundle install"
+      sh "bundle exec rake #{t.name}_exec"
     end
 
     task :generate_exec do
-      switch_branch("#{version.tr('.', '-')}-stable")
       generate("out", version)
     end
   end
 end
-
-load 'tasks/active_job.rake'
-load 'tasks/active_model.rake'
-load 'tasks/active_record.rake'
-load 'tasks/active_storage.rake'
-load 'tasks/active_support.rake'
 
 task default: [
   :clean,

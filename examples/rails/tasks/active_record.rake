@@ -1,6 +1,6 @@
-stdlib_dependencies = %w[time monitor singleton logger mutex_m json date benchmark digest forwardable did_you_mean openssl socket]
+stdlib_dependencies = %w[time monitor singleton logger mutex_m json date benchmark digest forwardable did_you_mean openssl socket minitest]
 gem_dependencies = %w[nokogiri]
-rails_dependencies = %w[activesupport activemodel activejob]
+rails_dependencies = %w[activesupport activemodel]
 
 VERSIONS.each do |version|
   namespace version do
@@ -18,6 +18,7 @@ VERSIONS.each do |version|
         sh "cp -a out/#{version}/arel.rbs #{export}"
         sh "cp -a out/#{version}/_active_record_relation.rbs #{export}"
         sh "rm #{export}/active_record/railtie.rbs"
+        sh "rm -fr #{export}/active_record/connection_adapters" # FIXME
         sh "cat out/#{version}/active_record/base.rbs | grep -v ActiveStorage > #{export}/active_record/base.rbs"
 
         Pathname(export).join("EXTERNAL_TODO.rbs").write(<<~RBS)

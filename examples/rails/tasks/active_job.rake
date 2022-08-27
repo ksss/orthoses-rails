@@ -1,4 +1,4 @@
-stdlib_dependencies = %w[time monitor singleton logger mutex_m json date benchmark digest]
+stdlib_dependencies = %w[time monitor singleton logger mutex_m json date benchmark digest minitest]
 gem_dependencies = %w[nokogiri]
 rails_dependencies = %w[activesupport]
 
@@ -21,6 +21,10 @@ VERSIONS.each do |version|
           # Please see generators/rails-generator
 
           module Que
+            class Job
+            end
+          end
+          module Qu
             class Job
             end
           end

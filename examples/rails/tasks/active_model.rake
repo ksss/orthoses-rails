@@ -1,4 +1,4 @@
-stdlib_dependencies = %w[benchmark date digest forwardable json logger monitor mutex_m singleton time]
+stdlib_dependencies = %w[benchmark date digest forwardable json logger monitor mutex_m singleton time minitest]
 gem_dependencies = %w[nokogiri]
 rails_dependencies = %w[activesupport]
 
