@@ -1,4 +1,4 @@
-stdlib_dependencies = %w[benchmark date digest json logger monitor mutex_m pathname singleton time minitest]
+stdlib_dependencies = %w[benchmark date digest json logger monitor mutex_m pathname singleton time minitest did_you_mean]
 gem_dependencies = %w[nokogiri i18n rack]
 rails_dependencies = %w[activesupport]
 
@@ -41,6 +41,9 @@ VERSIONS.each do |version|
         Pathname(export).join("EXTERNAL_TODO.rbs").write(<<~RBS)
           # !!! GENERATED CODE !!!
           # Please see generators/rails-generator
+
+          class Ripper
+          end
 
           class Delegator
           end

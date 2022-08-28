@@ -30,6 +30,9 @@ VERSIONS.each do |version|
           # !!! GENERATED CODE !!!
           # Please see generators/rails-generator
 
+          class Ripper
+          end
+
           class Delegator
           end
 

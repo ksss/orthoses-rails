@@ -1,4 +1,4 @@
-stdlib_dependencies = %w[benchmark date digest json logger monitor mutex_m pathname singleton time minitest securerandom ipaddr did_you_mean forwardable]
+stdlib_dependencies = %w[benchmark date digest json logger monitor mutex_m pathname singleton time minitest securerandom ipaddr did_you_mean forwardable openssl socket]
 gem_dependencies = %w[nokogiri i18n rack rails-dom-testing]
 rails_dependencies = %w[actionpack actionview activejob activemodel activerecord activestorage activesupport]
 
