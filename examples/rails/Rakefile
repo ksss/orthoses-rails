@@ -298,7 +298,7 @@ VERSIONS.each do |version|
       :generate,
       :export,
       :validate,
-      :install,
+      # :install,
     ]
 
     desc "run export version=#{version}"

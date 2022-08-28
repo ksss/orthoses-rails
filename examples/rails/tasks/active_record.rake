@@ -21,7 +21,7 @@ VERSIONS.each do |version|
         sh "rm #{export}/active_record/railtie.rbs"
         sh "rm -fr #{export}/active_record/connection_adapters" # FIXME
         sh "rm -fr #{export}/active_record/migration/compatibility" # FIXME
-        sh "rm #{export}/active_record/destroy_association_async_job.rbs" # move to railties
+        sh "rm -f #{export}/active_record/destroy_association_async_job.rbs" # move to railties
 
         sh "cat out/#{version}/active_record/base.rbs | grep -v ActiveStorage > #{export}/active_record/base.rbs"
 

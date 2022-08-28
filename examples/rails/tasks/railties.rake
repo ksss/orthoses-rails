@@ -12,8 +12,10 @@ VERSIONS.each do |version|
         sh "rm -fr #{export}"
         sh "mkdir -p #{export}"
 
-        sh "mkdir -p #{export}/active_record"
-        sh "cp -p out/#{version}/active_record/destroy_association_async_job.rbs #{export}/active_record/destroy_association_async_job.rbs"
+        if File.exist?("out/#{version}/active_record/destroy_association_async_job.rbs")
+          sh "mkdir -p #{export}/active_record"
+          sh "cp out/#{version}/active_record/destroy_association_async_job.rbs #{export}/active_record/destroy_association_async_job.rbs"
+        end
       end
 
       desc "validate version=#{version} gem=railties"
