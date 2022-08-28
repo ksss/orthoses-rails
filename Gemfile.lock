@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     orthoses-rails (0.6.0)
-      orthoses (>= 0.10)
+      orthoses (>= 0.11)
 
 GEM
   remote: https://rubygems.org/
