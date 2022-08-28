@@ -17,8 +17,12 @@ VERSIONS.each do |version|
         sh "cp -a out/#{version}/arel #{export}"
         sh "cp -a out/#{version}/arel.rbs #{export}"
         sh "cp -a out/#{version}/_active_record_relation.rbs #{export}"
+
         sh "rm #{export}/active_record/railtie.rbs"
         sh "rm -fr #{export}/active_record/connection_adapters" # FIXME
+        sh "rm -fr #{export}/active_record/migration/compatibility" # FIXME
+        sh "rm #{export}/active_record/destroy_association_async_job.rbs" # move to railties
+
         sh "cat out/#{version}/active_record/base.rbs | grep -v ActiveStorage > #{export}/active_record/base.rbs"
 
         Pathname(export).join("EXTERNAL_TODO.rbs").write(<<~RBS)

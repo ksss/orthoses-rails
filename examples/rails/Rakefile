@@ -275,6 +275,7 @@ end
 
 VERSIONS = %w[
   6.0
+  6.1
 ]
 Object.private_constant :VERSIONS
 

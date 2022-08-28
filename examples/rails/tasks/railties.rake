@@ -1,4 +1,4 @@
-stdlib_dependencies = %w[benchmark date digest json logger monitor mutex_m pathname singleton time minitest securerandom ipaddr]
+stdlib_dependencies = %w[benchmark date digest json logger monitor mutex_m pathname singleton time minitest securerandom ipaddr did_you_mean forwardable]
 gem_dependencies = %w[nokogiri i18n rack rails-dom-testing]
 rails_dependencies = %w[actionpack actionview activejob activemodel activerecord activestorage activesupport]
 
@@ -11,6 +11,9 @@ VERSIONS.each do |version|
       task :export do
         sh "rm -fr #{export}"
         sh "mkdir -p #{export}"
+
+        sh "mkdir -p #{export}/active_record"
+        sh "cp -p out/#{version}/active_record/destroy_association_async_job.rbs #{export}/active_record/destroy_association_async_job.rbs"
       end
 
       desc "validate version=#{version} gem=railties"
