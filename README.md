@@ -48,34 +48,35 @@ If bundler is not being used to manage dependencies, install the gem by executin
 
 ## Usage
 
+Build your Rake task for RBS generation.
+
 ```rb
-Orthoses::Builder.new do
-  use Orthoses::CreateFileByName
-    base_dir: Rails.root.join("sig/out"),
-    header: "# !!! GENERATED CODE !!!"
-  use Orthoses::Filter,
-    if: -> (name, _content) {
+task :rbs_generate => :environment do
+  Orthoses::Builder.new do
+    use Orthoses::CreateFileByName
+      base_dir: Rails.root.join("sig/out"),
+      header: "# !!! GENERATED CODE !!!"
+    use Orthoses::Filter do |name, _content|
       path, _lineno = Object.const_source_location(name)
       return false unless path
       %r{app/models}.match?(path)
+    end
+    use YourCustom::Middleware
+    use Orthoses::ActiveModel::HasSecurePassword
+    use Orthoses::ActiveRecord::BelongsTo
+    use Orthoses::ActiveRecord::HasMany
+    use Orthoses::ActiveRecord::HasOne
+    use Orthoses::ActiveSupport::ClassAttribute
+    use Orthoses::ActiveSupport::MattrAccessor
+    use Orthoses::Mixin
+    use Orthoses::Constant, strict: false
+    use Orthoses::ObjectSpaceAll
+    use Orthoses::Autoload
+    run -> {
+      Rails.application.eager_load!
     }
-  use YourCustom::Middleware
-  use Orthoses::ActiveModel::HasSecurePassword
-  use Orthoses::ActiveRecord::BelongsTo
-  use Orthoses::ActiveRecord::HasMany
-  use Orthoses::ActiveRecord::HasOne
-  use Orthoses::ActiveSupport::ClassAttribute
-  use Orthoses::ActiveSupport::MattrAccessor
-  use Orthoses::Mixin
-  use Orthoses::Constant, strict: false
-  use Orthoses::ObjectSpaceAll
-  use Orthoses::Autoload
-  run -> () {
-    Rake::Task[:environment].invoke
-    Rails.application.eager_load!
-    Orthoses::Utils.unautoload!
-  }
-end.call
+  end.call
+end
 ```
 
 ## Development
