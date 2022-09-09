@@ -67,22 +67,21 @@ def generate(out_dir, version)
     use Orthoses::CreateFileByName,
       base_dir: "#{out_dir}/#{version}",
       header: "# !!! GENERATED CODE !!!\n# Please see generators/rails-generator"
-    use Orthoses::Filter,
-      if: -> (name, content) {
-        # OMG, both ERB and Erb are exist...
-        return false if name.start_with?("Erb")
+    use Orthoses::Filter do |name, content|
+      # OMG, both ERB and Erb are exist...
+      return false if name.start_with?("Erb")
 
-        # ArgumentError
-        return false if name.start_with?("I18n::Tests")
+      # ArgumentError
+      return false if name.start_with?("I18n::Tests")
 
-        # FIXME: too hard
-        return false if name.include?("::Generators")
+      # FIXME: too hard
+      return false if name.include?("::Generators")
 
-        # Ignore known sig
-        return false if Orthoses::Utils.rbs_defined_class?(name, collection: true) && content.body.empty?
+      # Ignore known sig
+      return false if Orthoses::Utils.rbs_defined_class?(name, collection: true) && content.body.empty?
 
-        true
-      }
+      true
+    end
     use Orthoses::Constant,
       strict: false,
       if: -> (current, const, _val, _rbs) {
