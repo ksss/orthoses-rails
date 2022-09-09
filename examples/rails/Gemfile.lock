@@ -2,7 +2,7 @@ PATH
   remote: ../..
   specs:
     orthoses-rails (0.7.0)
-      orthoses (>= 0.11)
+      orthoses (~> 1.0)
 
 PATH
   remote: _src
@@ -134,9 +134,9 @@ GEM
     nokogiri (1.13.8)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
-    orthoses (0.11.0)
+    orthoses (1.0.0)
       rbs (~> 2.0)
-    psych (3.3.2)
+    psych (3.3.3)
     racc (1.6.0)
     rack (2.2.4)
     rack-test (2.0.2)
@@ -148,7 +148,8 @@ GEM
       loofah (~> 2.3)
     rake (13.0.6)
     rbs (2.6.0)
-    sqlite3 (1.4.4)
+    sqlite3 (1.5.0)
+      mini_portile2 (~> 2.8.0)
     strscan (3.0.4)
     thor (1.2.1)
     timeout (0.3.0)
