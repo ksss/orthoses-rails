@@ -50,7 +50,7 @@ gems:
   - name: digest
   - name: erb
   # - name: etc
-  - name: fiber
+  # - name: fiber
   - name: fileutils
   - name: find
   - name: forwardable
@@ -76,7 +76,6 @@ gems:
   - name: resolv
   # - name: racc
   # - name: rdoc
-  - name: rubygems
   - name: securerandom
   - name: set
   - name: shellwords
