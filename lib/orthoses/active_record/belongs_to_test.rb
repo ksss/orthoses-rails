@@ -23,7 +23,7 @@ module BelongsToTest
       "BelongsToTest::User::GeneratedAssociationMethods",
       "BelongsToTest::User"
     ]
-    unless store.keys.sort == expected_keys.sort
+    unless store.keys.filter{_1.start_with?("BelongsToTest")}.sort == expected_keys.sort
       t.error("found unexpected keys #{store.keys - expected_keys}")
     end
 

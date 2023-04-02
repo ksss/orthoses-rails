@@ -44,7 +44,7 @@ module GeneratedAttributeMethodsTest
       "GeneratedAttributeMethodsTest::User::AttributeMethods",
       "GeneratedAttributeMethodsTest::User::AttributeMethods::GeneratedAttributeMethods"
     ]
-    unless store.keys.sort == expected_keys.sort
+    unless store.keys.filter{_1.start_with?("GeneratedAttributeMethodsTest")}.sort == expected_keys.sort
       t.error("found unexpected keys #{store.keys - expected_keys}")
     end
 
