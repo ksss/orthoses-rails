@@ -117,11 +117,11 @@ module Orthoses
               if argument
                 return [:multi, member.types]
               else
-                type = member.types.find do |method_type|
+                method_type = member.overloads.map(&:method_type).find do |method_type|
                   method_type.type.required_positionals.empty? && method_type.type.required_keywords.empty?
                 end
-                next unless type
-                return [:single, type.type.return_type]
+                next unless method_type
+                return [:single, method_type.type.return_type]
               end
             when RBS::AST::Members::Var
               next unless member.name == name
