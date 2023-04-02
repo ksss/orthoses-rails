@@ -35,19 +35,25 @@ module Orthoses
         -
       ])
 
+      def add_signature(env, content)
+        buffer, directives, decls = RBS::Parser.parse_signature(content.to_rbs)
+        env.add_signature(buffer: buffer, directives: directives, decls: decls)
+      end
+
       def each_line_from_core_time_definition(store)
         type_name_time = TypeName("::Time")
         type_name_time_with_zone = TypeName("::ActiveSupport::TimeWithZone")
         env = Utils.rbs_environment(collection: true, cache: false)
-        env << store["Time"].to_decl
-        env << store["DateAndTime"].to_decl
-        env << store["DateAndTime::Zones"].to_decl
-        env << store["DateAndTime::Calculations"].to_decl
-        env << store["DateAndTime::Compatibility"].to_decl
-        env << store["ActiveSupport"].to_decl
-        env << store["ActiveSupport::TimeZone"].to_decl
-        env << store["ActiveSupport::Duration"].to_decl
-        env << store["ActiveSupport::TimeWithZone"].to_decl
+
+        add_signature(env, store["Time"])
+        add_signature(env, store["DateAndTime"])
+        add_signature(env, store["DateAndTime::Zones"])
+        add_signature(env, store["DateAndTime::Calculations"])
+        add_signature(env, store["DateAndTime::Compatibility"])
+        add_signature(env, store["ActiveSupport"])
+        add_signature(env, store["ActiveSupport::TimeZone"])
+        add_signature(env, store["ActiveSupport::Duration"])
+        add_signature(env, store["ActiveSupport::TimeWithZone"])
 
         builder = RBS::DefinitionBuilder.new(env: env.resolve_type_names)
         one_ancestors = builder.ancestor_builder.one_instance_ancestors(type_name_time)

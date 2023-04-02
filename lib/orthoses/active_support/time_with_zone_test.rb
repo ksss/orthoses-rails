@@ -10,7 +10,7 @@ module TimeWithZoneTest
     loader = RBS::EnvironmentLoader.new
     loader.add(library: 'date')
     env = RBS::Environment.from_loader(loader)
-    RBS::Parser.parse_signature(<<~RBS).each do |decl|
+    buffer, directives, decls = RBS::Parser.parse_signature(<<~RBS)
       module ActiveSupport
         class TimeZone
         end
@@ -30,14 +30,11 @@ module TimeWithZoneTest
         end
       end
     RBS
-      env << decl
-    end
-    RBS::Parser.parse_signature(store["Time"].to_rbs).each do |decl|
-      env << decl
-    end
-    RBS::Parser.parse_signature(store["ActiveSupport::TimeWithZone"].to_rbs).each do |decl|
-      env << decl
-    end
+    env.add_signature(buffer: buffer, directives: directives, decls: decls)
+    buffer, directives, decls = RBS::Parser.parse_signature(store["Time"].to_rbs)
+    env.add_signature(buffer: buffer, directives: directives, decls: decls)
+    buffer, directives, decls = RBS::Parser.parse_signature(store["ActiveSupport::TimeWithZone"].to_rbs)
+    env.add_signature(buffer: buffer, directives: directives, decls: decls)
 
     definetion_builder = RBS::DefinitionBuilder.new(env: env.resolve_type_names)
     begin
