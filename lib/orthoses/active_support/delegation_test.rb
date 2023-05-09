@@ -11,9 +11,19 @@ module DelegationTest
       delegate :to_f, to: "@@single_cvar"
       delegate :to_r, to: :SINGLE_CONST
       delegate :ord, to: :single_alias
+      delegate :even?, to: :defined
+      delegate :from_bar, to: :to_bar
     end
   }
   def test_delegate(t)
+    buffer, directives, decls = RBS::Parser.parse_signature(<<~RBS)
+      module DelegationTest
+        class Foo
+          def defined: () -> ::Integer
+        end
+      end
+    RBS
+    Orthoses::Utils.rbs_environment.add_signature(buffer: buffer, directives: directives, decls: decls)
     store = Orthoses::ActiveSupport::Delegation.new(
       Orthoses::Tap.new(Orthoses::Store.new(LOADER)) { |store|
         store["DelegationTest::Foo"].header = "class Foo"
@@ -23,6 +33,8 @@ module DelegationTest
         store["DelegationTest::Foo"] << "@@single_cvar: Integer"
         store["DelegationTest::Foo"] << "alias single_alias string"
         store["DelegationTest::Foo"] << "SINGLE_CONST: Integer"
+        store["DelegationTest::Foo"] << "def to_bar: () -> DelegationTest::Bar"
+        store["DelegationTest::Bar"] << "def from_bar: () -> DelegationTest::Bar"
       }
     ).call
 
@@ -38,6 +50,7 @@ module DelegationTest
         @@single_cvar: Integer
         alias single_alias string
         SINGLE_CONST: Integer
+        def to_bar: () -> DelegationTest::Bar
         def name: () -> ::String?
         def ref_no_type: (*untyped, **untyped) -> untyped
         def skip: (*untyped, **untyped) -> untyped
@@ -49,6 +62,8 @@ module DelegationTest
         def to_f: () -> ::Float
         def to_r: () -> ::Rational
         def ord: () -> ::Integer
+        def even?: () -> bool
+        def from_bar: () -> DelegationTest::Bar
       end
     RBS
     unless expect == actual

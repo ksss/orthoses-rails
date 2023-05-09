@@ -22,6 +22,7 @@ module Orthoses
           receiver_content = store[receiver_name]
 
           case capture.argument[:to]
+          # delegate :foo, to: Foo
           when Module
             to_module_name = Utils.module_name(capture.argument[:to]) or next
             capture.argument[:methods].each do |arg|
@@ -35,15 +36,23 @@ module Orthoses
           else
             to_name = capture.argument[:to].to_s.to_sym
             tag, to_return_type = resource.find(receiver_name, to_name, :instance, false)
-            raise "bug" if tag == :multi
+            if tag == :multi
+              to_return_type = if to_return_type.length == 1
+                to_return_type.first.type.return_type
+              else
+                nil
+              end
+            end
 
             case to_return_type
             when nil, RBS::Types::Bases::Any
+              # no type found
               capture.argument[:methods].each do |method|
                 receiver_content << "# defined by `delegate` to: #{to_return_type}##{to_name}"
                 receiver_content << "def #{method}: (*untyped, **untyped) -> untyped"
               end
             else
+              # found return type in store or env
               to_typename = to_return_type.name.relative!.to_s
               capture.argument[:methods].each do |method|
                 if sig = resource.build_signature(to_typename, method, :instance, true)
@@ -73,6 +82,7 @@ module Orthoses
           typename = TypeName(mod_name).absolute!
 
           if definition_method = build_definition(typename, kind)&.methods&.[](name)
+            # found in env
             return [:multi, definition_method.defs.map(&:type)]
           end
           resolve_type_by_name(@store[mod_name].to_decl.members, name, kind, argument)
@@ -85,7 +95,7 @@ module Orthoses
           when :singleton
             @definition_builder.build_singleton(typename)
           else
-            raise "big"
+            raise "bug"
           end
         rescue RuntimeError => e
           if e.message.match?(/\AUnknown name for/)
@@ -115,7 +125,7 @@ module Orthoses
             when RBS::AST::Members::MethodDefinition
               next unless member.name == name && member.kind == kind
               if argument
-                return [:multi, member.types]
+                return [:multi, member.overloads.map { |o| o.method_type }]
               else
                 method_type = member.overloads.map(&:method_type).find do |method_type|
                   method_type.type.required_positionals.empty? && method_type.type.required_keywords.empty?
