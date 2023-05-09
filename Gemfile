@@ -7,7 +7,7 @@ gemspec
 
 # gem "orthoses", path: "../orthoses"
 
-gem "rake", "~> 13.0"
+gem "rake", github: "ruby/rake"
 gem "rgot", "~> 1.1"
 
 gem "debug"

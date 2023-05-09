@@ -7,6 +7,9 @@ gemspec path: '../../'
 gem "rails", path: "_src"
 gem "sqlite3"
 # gem "orthoses", path: "../../../orthoses"
+gem "rgot"
+gem "rake", github: "ruby/rake"
+gem "debug"
 
 if RUBY_VERSION >= "3.1"
   gem "net-smtp", require: false

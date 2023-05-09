@@ -2,7 +2,7 @@
 sources:
 - type: git
   name: ruby/gem_rbs_collection
-  revision: 6751bcb8010ea20e2a7838e92264a122e1d42c79
+  revision: 12631190e75c631eca0908ecc8c03bcfd78c0c99
   remote: https://github.com/ruby/gem_rbs_collection.git
   repo_dir: gems
 path: ".gem_rbs_collection"
@@ -16,7 +16,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 6751bcb8010ea20e2a7838e92264a122e1d42c79
+    revision: 12631190e75c631eca0908ecc8c03bcfd78c0c99
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: base64
@@ -28,7 +28,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 6751bcb8010ea20e2a7838e92264a122e1d42c79
+    revision: 12631190e75c631eca0908ecc8c03bcfd78c0c99
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: benchmark
@@ -87,6 +87,14 @@ gems:
   version: '0'
   source:
     type: stdlib
+- name: globalid
+  version: '1.1'
+  source:
+    type: git
+    name: ruby/gem_rbs_collection
+    revision: 12631190e75c631eca0908ecc8c03bcfd78c0c99
+    remote: https://github.com/ruby/gem_rbs_collection.git
+    repo_dir: gems
 - name: io-console
   version: '0'
   source:
@@ -108,7 +116,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 6751bcb8010ea20e2a7838e92264a122e1d42c79
+    revision: 12631190e75c631eca0908ecc8c03bcfd78c0c99
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: minitest
@@ -136,7 +144,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 6751bcb8010ea20e2a7838e92264a122e1d42c79
+    revision: 12631190e75c631eca0908ecc8c03bcfd78c0c99
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: objspace
@@ -180,7 +188,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 6751bcb8010ea20e2a7838e92264a122e1d42c79
+    revision: 12631190e75c631eca0908ecc8c03bcfd78c0c99
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: rails-dom-testing
@@ -188,11 +196,11 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 6751bcb8010ea20e2a7838e92264a122e1d42c79
+    revision: 12631190e75c631eca0908ecc8c03bcfd78c0c99
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: rbs
-  version: 3.0.4
+  version: 3.1.0
   source:
     type: rubygems
 - name: rdoc
