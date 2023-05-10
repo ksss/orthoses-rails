@@ -58,7 +58,7 @@ task :rbs_generate => :environment do
       header: "# !!! GENERATED CODE !!!"
     use Orthoses::Filter do |name, _content|
       path, _lineno = Object.const_source_location(name)
-      return false unless path
+      next false unless path
       %r{app/models}.match?(path)
     end
     use YourCustom::Middleware
