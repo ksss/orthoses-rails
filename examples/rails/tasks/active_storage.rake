@@ -18,10 +18,11 @@ VERSIONS.each do |version|
         sh "cp -a out/#{version}/active_storage.rbs #{export}"
         sh "cp -a out/#{version}/active_storage #{export}"
         sh "rm #{export}/active_storage/engine.rbs"
-        decls = RBS::Parser.parse_signature(RBS::Buffer.new(
+        _, _, decls = RBS::Parser.parse_signature(RBS::Buffer.new(
           content: File.read("out/#{version}/active_record/base.rbs"),
           name: "out/#{version}/active_record/base.rbs"
-        )).map do |decl|
+        ))
+        decls.each do |decl|
           decl.members.select! do |member|
             case member
             when RBS::AST::Members::Mixin
@@ -29,7 +30,6 @@ VERSIONS.each do |version|
               member.name.to_s.include?("ActiveStorage")
             end
           end
-          decl
         end
         File.open("#{export}/active_record_base.rbs", "w+") do |f|
           RBS::Writer.new(out: f).write(decls)
