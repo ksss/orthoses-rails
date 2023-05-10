@@ -69,16 +69,16 @@ def generate(out_dir, version)
       header: "# !!! GENERATED CODE !!!\n# Please see generators/rails-generator"
     use Orthoses::Filter do |name, content|
       # OMG, both ERB and Erb are exist...
-      return false if name.start_with?("Erb")
+      next false if name.start_with?("Erb")
 
       # ArgumentError
-      return false if name.start_with?("I18n::Tests")
+      next false if name.start_with?("I18n::Tests")
 
       # FIXME: too hard
-      return false if name.include?("::Generators")
+      next false if name.include?("::Generators")
 
       # Ignore known sig
-      return false if Orthoses::Utils.rbs_defined_class?(name, collection: true) && content.body.empty?
+      next false if Orthoses::Utils.rbs_defined_class?(name, collection: true) && content.body.empty?
 
       true
     end
