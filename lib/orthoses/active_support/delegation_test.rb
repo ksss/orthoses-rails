@@ -34,6 +34,7 @@ module DelegationTest
         store["DelegationTest::Foo"] << "alias single_alias string"
         store["DelegationTest::Foo"] << "SINGLE_CONST: Integer"
         store["DelegationTest::Foo"] << "def to_bar: () -> DelegationTest::Bar"
+        store["DelegationTest::Bar"].header = "class Bar"
         store["DelegationTest::Bar"] << "def from_bar: () -> DelegationTest::Bar"
       }
     ).call
