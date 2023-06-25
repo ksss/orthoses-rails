@@ -13,6 +13,13 @@ module Orthoses
             next if klass.abstract_class?
 
             name = Utils.module_name(klass) || next
+            begin
+              klass.columns
+            rescue ::ActiveRecord::StatementInvalid => e
+              Orthoses.logger.warn(e.to_s)
+              next
+            end
+
             lines = klass.columns.flat_map do |col|
               req = sql_type_to_rbs(col.type)
               opt = "#{req}?"
