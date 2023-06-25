@@ -20,6 +20,7 @@ module Orthoses
         delegate.captures.each do |capture|
           receiver_name = Utils.module_name(capture.method.receiver) or next
           receiver_content = store[receiver_name]
+          prefix = capture.argument[:private] ? "private " : ""
 
           case capture.argument[:to]
           # delegate :foo, to: Foo
@@ -28,7 +29,7 @@ module Orthoses
             capture.argument[:methods].each do |arg|
               if sig = resource.build_signature(to_module_name, arg, :singleton, false)
                 receiver_content << "# defined by `delegate` to: #{to_module_name}"
-                receiver_content << sig
+                receiver_content << "#{prefix}#{sig}"
               else
                 Orthoses.logger.warn("[ActiveSupport::Delegation] Ignore since missing type for #{to_module_name}.#{arg.inspect} in #{capture.argument.inspect}")
               end
@@ -49,7 +50,7 @@ module Orthoses
               # no type found
               capture.argument[:methods].each do |method|
                 receiver_content << "# defined by `delegate` to: #{to_return_type}##{to_name}"
-                receiver_content << "def #{method}: (*untyped, **untyped) -> untyped"
+                receiver_content << "#{prefix}def #{method}: (*untyped, **untyped) -> untyped"
               end
             else
               # found return type in store or env
@@ -57,7 +58,7 @@ module Orthoses
               capture.argument[:methods].each do |method|
                 if sig = resource.build_signature(to_typename, method, :instance, true)
                   receiver_content << "# defined by `delegate` to #{to_return_type}##{to_name}"
-                  receiver_content << sig
+                  receiver_content << "#{prefix}#{sig}"
                 else
                   Orthoses.logger.warn("[ActiveSupport::Delegation] Ignore since missing type for #{to_typename}##{method.inspect} in #{capture.argument.inspect}")
                 end

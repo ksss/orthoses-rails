@@ -3,6 +3,7 @@ module DelegationTest
     class Foo
       delegate :name, to: Object
       delegate :nothing, to: Object
+      delegate :prev, to: :to_bar, private: true
       delegate :ref_no_type, to: :no_type
       delegate :skip, to: :nothing
       delegate :nothing, to: :string
@@ -36,6 +37,7 @@ module DelegationTest
         store["DelegationTest::Foo"] << "def to_bar: () -> DelegationTest::Bar"
         store["DelegationTest::Bar"].header = "class Bar"
         store["DelegationTest::Bar"] << "def from_bar: () -> DelegationTest::Bar"
+        store["DelegationTest::Bar"] << "private def priv: () -> void"
       }
     ).call
 
