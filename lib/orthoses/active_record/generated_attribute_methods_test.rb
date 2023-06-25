@@ -1,31 +1,6 @@
 # frozen_string_literal: true
 
-module ActiveRecord::ModelSchema::ClassMethods
-  FakeColumn = Struct.new(:type, :name, :null, keyword_init: true)
-
-  def load_schema
-  end
-
-  def columns_hash
-    {
-      id: FakeColumn.new(
-        name: :id,
-        null: false,
-        type: :integer,
-      ),
-      name: FakeColumn.new(
-        name: :name,
-        null: false,
-        type: :string,
-      ),
-      confirmed: FakeColumn.new(
-        name: :confirmed,
-        null: true,
-        type: :boolean,
-      ),
-    }
-  end
-end
+require_relative '../../../test/fake_schema'
 
 module GeneratedAttributeMethodsTest
   LOADER = -> () {

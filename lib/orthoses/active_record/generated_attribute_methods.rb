@@ -21,7 +21,7 @@ module Orthoses
             end
 
             lines = klass.columns.flat_map do |col|
-              req = sql_type_to_rbs(col.type)
+              req = ActiveRecord.sql_type_to_rbs(col.type)
               opt = "#{req}?"
               type = col.null ? opt : req
 
@@ -53,35 +53,6 @@ module Orthoses
             store[generated_attribute_methods].header = "module #{generated_attribute_methods}"
             store[generated_attribute_methods].concat(lines)
           end
-        end
-      end
-
-      # Thanks https://github.com/pocke/rbs_rails/blob/8a128a8d29f0861aa2c25aa4110ff7c2ea674865/lib/rbs_rails/active_record.rb#L525-L551
-      def sql_type_to_rbs(t)
-        case t
-        when :integer
-          'Integer'
-        when :float
-          'Float'
-        when :decimal
-          'BigDecimal'
-        when :string, :text, :citext, :uuid, :binary
-          'String'
-        when :datetime
-          'ActiveSupport::TimeWithZone'
-        when :boolean
-          "bool"
-        when :jsonb, :json
-          "untyped"
-        when :date
-          'Date'
-        when :time
-          'Time'
-        when :inet
-          "IPAddr"
-        else
-          # Unknown column type, give up
-          'untyped'
         end
       end
     end
