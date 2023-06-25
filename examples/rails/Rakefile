@@ -202,6 +202,14 @@ def generate(out_dir, version)
       }
     use Orthoses::RBSPrototypeRB,
       paths: Dir.glob('_src/{railties,action{cable,mailbox,mailer,pack,text,view},active{job,model,record,storage,support}}/{app,lib}/**/*.rb'),
+      method_definition_filter: -> (member) {
+        ![
+          :method_missing,
+          :respond_to?,
+          :respond_to_missing?,
+          :freeze,
+        ].include?(member.name)
+      },
       constant_filter: -> (member) { false },
       mixin_filter: -> (member) { false },
       attribute_filter: -> (member) { false }
@@ -270,6 +278,17 @@ def generate_manifest(export:, stdlib_dependencies:)
     dependencies:
       #{stdlib_dependencies.map{"- name: #{_1}"}.join("\n  ")}
   YAML
+end
+
+def gem_rbs_collection_path(gem)
+  "../../../../ruby/gem_rbs_collection/gems/#{gem}"
+end
+
+def validate(stdlib_dependencies:, gem_dependencies:, rails_dependencies:, version:, export:)
+  stdlib_opt = stdlib_dependencies.map{"-r #{_1}"}.join(" ")
+  gem_opt = gem_dependencies.map{"-I #{gem_rbs_collection_path(_1)}"}.join(" ")
+  rails_opt = rails_dependencies.map{"-I export/#{_1}/#{version}"}.join(" ")
+  sh "rbs --no-collection #{stdlib_opt} #{gem_opt} #{rails_opt} -I #{export} validate --silent"
 end
 
 VERSIONS = %w[

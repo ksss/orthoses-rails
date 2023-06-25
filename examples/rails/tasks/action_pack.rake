@@ -1,4 +1,4 @@
-stdlib_dependencies = %w[benchmark date digest json logger monitor mutex_m pathname singleton time minitest securerandom ipaddr did_you_mean]
+stdlib_dependencies = %w[benchmark date digest json logger monitor mutex_m pathname singleton time minitest securerandom ipaddr did_you_mean uri cgi]
 gem_dependencies = %w[nokogiri i18n rack rails-dom-testing]
 rails_dependencies = %w[activesupport actionview]
 
@@ -59,75 +59,18 @@ VERSIONS.each do |version|
               end
             end
           end
-
-          module Rails
-            module Dom
-              module Testing
-                module Assertions
-                  include Rails::Dom::Testing::Assertions::SelectorAssertions
-
-                  include Rails::Dom::Testing::Assertions::DomAssertions
-
-                  extend ActiveSupport::Concern
-
-                  module DomAssertions
-                    public
-
-                    def assert_dom_equal: (untyped expected, untyped actual, ?untyped message) -> untyped
-
-                    def assert_dom_not_equal: (untyped expected, untyped actual, ?untyped message) -> untyped
-
-                    private
-
-                    def fragment: (untyped text) -> untyped
-                  end
-
-                  module SelectorAssertions
-                    include Rails::Dom::Testing::Assertions::SelectorAssertions::CountDescribable
-
-                    public
-
-                    def assert_select: (*untyped args) { (*untyped) -> untyped } -> untyped
-
-                    def assert_select_email: () { (*untyped) -> untyped } -> untyped
-
-                    def assert_select_encoded: (?untyped element) { (*untyped) -> untyped } -> untyped
-
-                    def css_select: (*untyped args) -> untyped
-
-                    private
-
-                    def assert_size_match!: (untyped size, untyped equals, untyped css_selector, ?untyped message) -> untyped
-
-                    def document_root_element: () -> untyped
-
-                    def nest_selection: (untyped selection) { (untyped) -> untyped } -> untyped
-
-                    def nodeset: (untyped node) -> untyped
-
-                    module CountDescribable
-                      extend ActiveSupport::Concern
-
-                      private
-
-                      def count_description: (untyped min, untyped max, untyped count) -> untyped
-
-                      def pluralize_element: (untyped quantity) -> untyped
-                    end
-                  end
-                end
-              end
-            end
-          end
         RBS
       end
 
       desc "validate version=#{version} gem=action_pack"
       task :validate do
-        stdlib_opt = stdlib_dependencies.map{"-r #{_1}"}.join(" ")
-        gem_opt = gem_dependencies.map{"-I ../../.gem_rbs_collection/#{_1}"}.join(" ")
-        rails_opt = rails_dependencies.map{"-I export/#{_1}/#{version}"}.join(" ")
-        sh "rbs #{stdlib_opt} #{gem_opt} #{rails_opt} -I #{export} validate --silent"
+        validate(
+          stdlib_dependencies: stdlib_dependencies,
+          gem_dependencies: gem_dependencies,
+          rails_dependencies: rails_dependencies,
+          version: version,
+          export: export
+        )
       end
 
       desc "install to ../../../gems/actionpack/#{version}"

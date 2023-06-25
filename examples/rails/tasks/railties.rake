@@ -1,4 +1,4 @@
-stdlib_dependencies = %w[benchmark date digest json logger monitor mutex_m pathname singleton time minitest securerandom ipaddr did_you_mean forwardable openssl socket]
+stdlib_dependencies = %w[benchmark date digest json logger monitor mutex_m pathname singleton time minitest securerandom ipaddr did_you_mean forwardable openssl socket uri cgi]
 gem_dependencies = %w[nokogiri i18n rack rails-dom-testing]
 rails_dependencies = %w[actionpack actionview activejob activemodel activerecord activestorage activesupport]
 
@@ -13,14 +13,18 @@ VERSIONS.each do |version|
         sh "mkdir -p #{export}"
 
         sh "cp -a out/#{version}/railties_mixin #{export}"
+        sh "rm -fr #{export}/railties_mixin/active_record/connection_adapters" # FIXME
       end
 
       desc "validate version=#{version} gem=railties"
       task :validate do
-        stdlib_opt = stdlib_dependencies.map{"-r #{_1}"}.join(" ")
-        gem_opt = gem_dependencies.map{"-I ../../.gem_rbs_collection/#{_1}"}.join(" ")
-        rails_opt = rails_dependencies.map{"-I export/#{_1}/#{version}"}.join(" ")
-        sh "rbs #{stdlib_opt} #{gem_opt} #{rails_opt} -I #{export} validate --silent"
+        validate(
+          stdlib_dependencies: stdlib_dependencies,
+          gem_dependencies: gem_dependencies,
+          rails_dependencies: rails_dependencies,
+          version: version,
+          export: export
+        )
       end
 
       desc "install to ../../../gems/railties/#{version}"
