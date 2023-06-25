@@ -22,14 +22,6 @@ module Orthoses
 
       private
 
-      NOT_DELEGATE_METHODS = Set.new(%i[
-        utc
-        getgm
-        getutc
-        gmtime
-        localtime
-      ])
-
       TYPE_MERGE_METHODS = Set.new(%i[
         +
         -
@@ -62,29 +54,31 @@ module Orthoses
         end
         twz_methods = builder.build_instance(type_name_time_with_zone).methods
         builder.build_instance(type_name_time).methods.each do |sym, definition_method|
+          next if twz_methods.has_key?(sym) && !TYPE_MERGE_METHODS.include?(sym)
           next if !definition_method.public?
+
           definition_method.defs.reject! do |type_def|
             type_def.implemented_in != type_name_time
           end
           next if definition_method.defs.empty?
 
-          if !NOT_DELEGATE_METHODS.include?(sym)
-            definition_method.method_types.each do |method_type|
-              rt = method_type.type.return_type
-              if rt.instance_of?(RBS::Types::ClassInstance) && rt.name.to_s == "::Time"
-                rt.instance_variable_set(:@name, RBS::Types::Bases::Self.new(location: nil))
-              end
+          definition_method.method_types.each do |method_type|
+            rt = method_type.type.return_type
+            if rt.instance_of?(RBS::Types::ClassInstance) && rt.name.to_s == "::Time"
+              rt.instance_variable_set(:@name, RBS::Types::Bases::Self.new(location: nil))
             end
           end
 
           if definition_method.alias_of.nil?
             method_types = definition_method.method_types
 
+            # merge method types (e.g. :+, :-
+            # TimeWithZone -delegate-> Time(core_ext) -delegate-> Time(core)
             if TYPE_MERGE_METHODS.include?(sym)
               if twz_definition_method = twz_methods[sym]
                 twz_definition_method.defs.each do |type_def|
                   if type_def.implemented_in == type_name_time_with_zone
-                    method_types << type_def.type
+                    method_types.unshift(type_def.type)
                   end
                 end
               end
