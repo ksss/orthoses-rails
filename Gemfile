@@ -6,9 +6,10 @@ source "https://rubygems.org"
 gemspec
 
 # gem "orthoses", path: "../orthoses"
+gem "rbs"# , path: "../rbs"
 
 gem "rake", github: "ruby/rake"
-gem "rgot", "~> 1.1"
+gem "rgot", "~> 1.4"
 
 gem "debug"
 gem "set"

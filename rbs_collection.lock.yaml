@@ -2,7 +2,7 @@
 sources:
 - type: git
   name: ruby/gem_rbs_collection
-  revision: 12631190e75c631eca0908ecc8c03bcfd78c0c99
+  revision: 87fba082504c606c03edf724cdf2e119bcd46c8c
   remote: https://github.com/ruby/gem_rbs_collection.git
   repo_dir: gems
 path: ".gem_rbs_collection"
@@ -16,7 +16,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 12631190e75c631eca0908ecc8c03bcfd78c0c99
+    revision: 87fba082504c606c03edf724cdf2e119bcd46c8c
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: base64
@@ -28,7 +28,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 12631190e75c631eca0908ecc8c03bcfd78c0c99
+    revision: 87fba082504c606c03edf724cdf2e119bcd46c8c
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: benchmark
@@ -92,7 +92,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 12631190e75c631eca0908ecc8c03bcfd78c0c99
+    revision: 87fba082504c606c03edf724cdf2e119bcd46c8c
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: io-console
@@ -116,7 +116,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 12631190e75c631eca0908ecc8c03bcfd78c0c99
+    revision: 87fba082504c606c03edf724cdf2e119bcd46c8c
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: minitest
@@ -144,7 +144,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 12631190e75c631eca0908ecc8c03bcfd78c0c99
+    revision: 87fba082504c606c03edf724cdf2e119bcd46c8c
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: objspace
@@ -188,7 +188,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 12631190e75c631eca0908ecc8c03bcfd78c0c99
+    revision: 87fba082504c606c03edf724cdf2e119bcd46c8c
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: rails-dom-testing
@@ -196,7 +196,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 12631190e75c631eca0908ecc8c03bcfd78c0c99
+    revision: 87fba082504c606c03edf724cdf2e119bcd46c8c
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: rbs
@@ -212,7 +212,7 @@ gems:
   source:
     type: stdlib
 - name: rgot
-  version: 1.3.0
+  version: 1.4.0
   source:
     type: rubygems
 - name: securerandom
