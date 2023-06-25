@@ -160,7 +160,7 @@ gems:
   source:
     type: stdlib
 - name: orthoses
-  version: 1.6.0
+  version: 1.7.0
   source:
     type: rubygems
 - name: pathname
