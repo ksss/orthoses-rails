@@ -16,25 +16,25 @@ module Orthoses
     def self.sql_type_to_rbs(t)
       case t
       when :integer
-        'Integer'
+        '::Integer'
       when :float
-        'Float'
+        '::Float'
       when :decimal
-        'BigDecimal'
+        '::BigDecimal'
       when :string, :text, :citext, :uuid, :binary
-        'String'
+        '::String'
       when :datetime
-        'ActiveSupport::TimeWithZone'
+        '::ActiveSupport::TimeWithZone'
       when :boolean
         "bool"
       when :jsonb, :json
         "untyped"
       when :date
-        'Date'
+        '::Date'
       when :time
-        'Time'
+        '::Time'
       when :inet
-        "IPAddr"
+        "::IPAddr"
       else
         # Unknown column type, give up
         'untyped'
