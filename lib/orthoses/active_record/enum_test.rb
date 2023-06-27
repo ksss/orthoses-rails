@@ -15,6 +15,7 @@ module EnumTest
     actual = store["EnumTest::User1"].to_rbs
     expect = <<~RBS
       class EnumTest::User1 < ::ActiveRecord::Base
+        include EnumTest::User1::ActiveRecord_Enum_EnumMethods
         def self.arrays: () -> ActiveSupport::HashWithIndifferentAccess[String, Integer]
         def self.maps: () -> ActiveSupport::HashWithIndifferentAccess[String, String]
         def self.prefs: () -> ActiveSupport::HashWithIndifferentAccess[String, Integer]
@@ -86,6 +87,7 @@ module EnumTest
         def self.not_array_active: () -> EnumTest::User2::ActiveRecord_Relation
         def self.array_archived: () -> EnumTest::User2::ActiveRecord_Relation
         def self.not_array_archived: () -> EnumTest::User2::ActiveRecord_Relation
+        include EnumTest::User2::ActiveRecord_Enum_EnumMethods
         def self.arrays: () -> ActiveSupport::HashWithIndifferentAccess[String, Integer]
         def self.maps: () -> ActiveSupport::HashWithIndifferentAccess[String, String]
       end
@@ -126,6 +128,7 @@ module EnumTest
       actual = store["EnumTest::User3"].to_rbs
       expect = <<~RBS
         class EnumTest::User3 < ::ActiveRecord::Base
+          include EnumTest::User3::ActiveRecord_Enum_EnumMethods
           def self.arrays: () -> ActiveSupport::HashWithIndifferentAccess[String, Integer]
           def self.maps: () -> ActiveSupport::HashWithIndifferentAccess[String, String]
         end

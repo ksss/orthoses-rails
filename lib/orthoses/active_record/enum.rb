@@ -20,6 +20,11 @@ module Orthoses
         enum.captures.each do |capture|
           base_name = Utils.module_name(capture.method.receiver) or next
 
+          sig = "include #{base_name}::ActiveRecord_Enum_EnumMethods"
+          if !store[base_name].body.include?(sig)
+            store[base_name] << sig
+          end
+
           if capture.argument[:definitions]
             # on rails 6
             definitions = capture.argument[:definitions].slice!(:_prefix, :_suffix, :_scopes, :_default)
