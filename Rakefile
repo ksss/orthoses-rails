@@ -9,7 +9,7 @@ task :test do
   # Create cache for performance
   Orthoses::Utils.rbs_environment(collection: true)
 
-  Rgot::Cli.new(%w[-v --require active_record --require active_support/all lib]).run
+  exit Rgot::Cli.new(%w[-v --require active_record --require active_support/all lib]).run
 end
 
 task default: :test
