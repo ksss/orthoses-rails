@@ -35,33 +35,33 @@ module GeneratedAttributeMethodsTest
 
     expect = <<~RBS
       module GeneratedAttributeMethodsTest::User::AttributeMethods::GeneratedAttributeMethods
-        def id: () -> Integer
+        def id: () -> ::Integer
 
-        def id=: (Integer) -> Integer
+        def id=: (::Integer) -> ::Integer
 
         def id?: () -> bool
 
         def id_changed?: () -> bool
 
-        def id_change: () -> [ Integer?, Integer? ]
+        def id_change: () -> [ ::Integer?, ::Integer? ]
 
         def id_will_change!: () -> void
 
-        def id_was: () -> Integer?
+        def id_was: () -> ::Integer?
 
         def id_previously_changed?: () -> bool
 
-        def id_previous_change: () -> Array[Integer?]?
+        def id_previous_change: () -> Array[::Integer?]?
 
-        def id_previously_was: () -> Integer?
+        def id_previously_was: () -> ::Integer?
 
-        def id_before_last_save: () -> Integer?
+        def id_before_last_save: () -> ::Integer?
 
-        def id_change_to_be_saved: () -> Array[Integer?]?
+        def id_change_to_be_saved: () -> Array[::Integer?]?
 
-        def id_in_database: () -> Integer?
+        def id_in_database: () -> ::Integer?
 
-        def saved_change_to_id: () -> Array[Integer?]?
+        def saved_change_to_id: () -> Array[::Integer?]?
 
         def saved_change_to_id?: () -> bool
 
@@ -71,33 +71,33 @@ module GeneratedAttributeMethodsTest
 
         def clear_id_change: () -> void
 
-        def name: () -> String
+        def name: () -> ::String
 
-        def name=: (String) -> String
+        def name=: (::String) -> ::String
 
         def name?: () -> bool
 
         def name_changed?: () -> bool
 
-        def name_change: () -> [ String?, String? ]
+        def name_change: () -> [ ::String?, ::String? ]
 
         def name_will_change!: () -> void
 
-        def name_was: () -> String?
+        def name_was: () -> ::String?
 
         def name_previously_changed?: () -> bool
 
-        def name_previous_change: () -> Array[String?]?
+        def name_previous_change: () -> Array[::String?]?
 
-        def name_previously_was: () -> String?
+        def name_previously_was: () -> ::String?
 
-        def name_before_last_save: () -> String?
+        def name_before_last_save: () -> ::String?
 
-        def name_change_to_be_saved: () -> Array[String?]?
+        def name_change_to_be_saved: () -> Array[::String?]?
 
-        def name_in_database: () -> String?
+        def name_in_database: () -> ::String?
 
-        def saved_change_to_name: () -> Array[String?]?
+        def saved_change_to_name: () -> Array[::String?]?
 
         def saved_change_to_name?: () -> bool
 
