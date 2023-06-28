@@ -38,9 +38,8 @@ module Orthoses
               content.concat(lines)
             end
 
-            store[base_name].tap do |content|
-              store[base_name] << "include #{generated_association_methods}"
-            end
+            sig = "include #{generated_association_methods}"
+            store[base_name] << sig if !store[base_name].body.include?(sig)
           end
         end
       end

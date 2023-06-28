@@ -29,7 +29,9 @@ module Orthoses
             generated_association_methods = "#{base_name}::GeneratedAssociationMethods"
             store[generated_association_methods].header = "module #{generated_association_methods}"
             store[generated_association_methods].concat(lines)
-            store[base_name] << "include #{generated_association_methods}"
+
+            sig = "include #{generated_association_methods}"
+            store[base_name] << sig if !store[base_name].body.include?(sig)
           end
         end
       end
