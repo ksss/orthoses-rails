@@ -13,6 +13,7 @@ module Orthoses
         store = @loader.call
 
         time_with_zone_store = store["ActiveSupport::TimeWithZone"]
+        time_with_zone_store.body.replace(filter_decl(time_with_zone_store))
         each_line_from_core_time_definition(store) do |line|
           time_with_zone_store << line
         end
@@ -26,6 +27,16 @@ module Orthoses
         +
         -
       ])
+
+      def filter_decl(time_with_zone_store)
+        writer = RBS::Writer.new(out: StringIO.new)
+        time_with_zone_store.to_decl.members.each do |member|
+          # ActiveSupport::TimeWithZone.name has been deprecated
+          next if member.instance_of?(RBS::AST::Members::MethodDefinition) && member.kind == :singleton && member.name == :name
+          writer.write_member(member)
+        end
+        writer.out.string.each_line.to_a
+      end
 
       def add_signature(env, content)
         buffer, directives, decls = RBS::Parser.parse_signature(content.to_rbs)
