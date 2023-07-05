@@ -48,10 +48,6 @@ module Orthoses
         add_signature(env, store["ActiveSupport::TimeWithZone"])
 
         builder = RBS::DefinitionBuilder.new(env: env.resolve_type_names)
-        one_ancestors = builder.ancestor_builder.one_instance_ancestors(type_name_time)
-        one_ancestors.included_modules.each do |included_module|
-          yield "include #{included_module.source.name}"
-        end
         twz_methods = builder.build_instance(type_name_time_with_zone).methods
         builder.build_instance(type_name_time).methods.each do |sym, definition_method|
           next if twz_methods.has_key?(sym) && !TYPE_MERGE_METHODS.include?(sym)
