@@ -51,32 +51,13 @@ If bundler is not being used to manage dependencies, install the gem by executin
 Build your Rake task for RBS generation.
 
 ```rb
-task :rbs_generate => :environment do
-  Orthoses::Builder.new do
-    use Orthoses::CreateFileByName
-      base_dir: Rails.root.join("sig/out"),
-      header: "# !!! GENERATED CODE !!!"
-    use Orthoses::Filter do |name, _content|
-      path, _lineno = Object.const_source_location(name)
-      next false unless path
-      %r{app/models}.match?(path)
-    end
-    use YourCustom::Middleware
-    use Orthoses::ActiveModel::HasSecurePassword
-    use Orthoses::ActiveRecord::BelongsTo
-    use Orthoses::ActiveRecord::HasMany
-    use Orthoses::ActiveRecord::HasOne
-    use Orthoses::ActiveSupport::ClassAttribute
-    use Orthoses::ActiveSupport::MattrAccessor
-    use Orthoses::Mixin
-    use Orthoses::Constant, strict: false
-    use Orthoses::ObjectSpaceAll
-    use Orthoses::Autoload
-    run -> {
-      Rails.application.eager_load!
-    }
-  end.call
-end
+$ bin/rails generate orthoses:rails
+```
+
+Then run the rake task.
+
+```
+$ bin/rails orthoses:rails
 ```
 
 ## Development
