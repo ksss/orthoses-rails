@@ -13,7 +13,12 @@ VERSIONS.each do |version|
         sh "mkdir -p #{export}"
 
         sh "cp -a out/#{version}/railties_mixin #{export}"
-        sh "rm -fr #{export}/railties_mixin/active_record/connection_adapters" # FIXME
+
+        # FIXME
+        Dir.glob("#{export}/railties_mixin/*").grep_v(/action|active/).each do |rm_dir|
+          sh "rm -fr #{rm_dir}"
+        end
+        sh "rm -fr #{export}/railties_mixin/active_record/connection_adapters"
       end
 
       desc "validate version=#{version} gem=railties"
