@@ -2,9 +2,10 @@
 
 require 'orthoses'
 
-require_relative "rails/version"
-
 require_relative 'active_model'
 require_relative 'active_record'
 require_relative 'active_support'
 require_relative 'railties'
+
+require_relative "rails/application"
+require_relative "rails/version"

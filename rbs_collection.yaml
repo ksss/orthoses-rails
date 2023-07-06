@@ -9,8 +9,6 @@ sources:
 path: .gem_rbs_collection
 
 gems:
-  # Skip loading rbs gem's RBS.
-  # It's unnecessary if you don't use rbs as a library.
   - name: orthoses
   - name: steep
     ignore: true
@@ -31,6 +29,8 @@ gems:
   - name: activerecord
     ignore: true
   - name: activestorage
+    ignore: true
+  - name: actionmailer
     ignore: true
 
   # load gems
