@@ -5,6 +5,7 @@ module BelongsToTest
 
     class Post < ActiveRecord::Base
       belongs_to :user
+      belongs_to :nothing
     end
 
     Class.new(ActiveRecord::Base) do

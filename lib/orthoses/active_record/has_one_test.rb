@@ -2,6 +2,7 @@ module HasOneTest
   LOADER = ->(){
     class User < ActiveRecord::Base
       has_one :password
+      has_one :nothing
     end
 
     class Password < ActiveRecord::Base

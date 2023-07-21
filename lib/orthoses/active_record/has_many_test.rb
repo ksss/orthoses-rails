@@ -2,6 +2,7 @@ module HasManyTest
   LOADER = ->(){
     class User < ActiveRecord::Base
       has_many :posts
+      has_many :nothings
     end
 
     class Post < ActiveRecord::Base

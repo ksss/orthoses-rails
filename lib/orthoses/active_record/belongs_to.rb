@@ -15,7 +15,19 @@ module Orthoses
 
             lines = base.reflect_on_all_associations(:belongs_to).flat_map do |ref|
               # FIXME: Can I get list of class for polymorphic?
-              type = ref.polymorphic? ? 'untyped' : ref.klass.to_s
+              type = if ref.polymorphic?
+                'untyped'
+              else
+                begin
+                  Utils.module_name(ref.klass) or next
+                rescue NameError => e
+                  while e
+                    Orthoses.logger.warn(e.message)
+                    e = e.cause
+                  end
+                  next
+                end
+              end
               opt = "#{type}?"
 
               [

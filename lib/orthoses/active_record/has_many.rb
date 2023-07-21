@@ -17,10 +17,20 @@ module Orthoses
 
             lines = base.reflect_on_all_associations(:has_many).flat_map do |ref|
               singular_name = ref.name.to_s.singularize
+              type =
+                begin
+                  Utils.module_name(ref.klass)
+                rescue NameError => e
+                  while e
+                    Orthoses.logger.warn(e.message)
+                    e = e.cause
+                  end
+                  next
+                end
 
               [
                 "def #{ref.name}: () -> #{collection_proxy}",
-                "def #{ref.name}=: (#{collection_proxy} | Array[#{ref.klass}]) -> (#{collection_proxy} | Array[#{ref.klass}])",
+                "def #{ref.name}=: (#{collection_proxy} | Array[#{type}]) -> (#{collection_proxy} | Array[#{type}])",
                 "def #{singular_name}_ids: () -> Array[Integer]",
                 "def #{singular_name}_ids=: (Array[Integer]) -> Array[Integer]",
               ]
