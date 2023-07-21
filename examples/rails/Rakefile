@@ -63,9 +63,12 @@ def generate(out_dir, version)
     ENV['RAILS_ENV'] = 'development'
     Rails.application.initialize!
   }
+
   Orthoses::Builder.new do
     use Orthoses::CreateFileByName,
+      depth: 2,
       base_dir: "#{out_dir}/#{version}",
+      rmtree: true,
       header: "# !!! GENERATED CODE !!!\n# Please see generators/rails-generator"
     use Orthoses::Filter do |name, content|
       # OMG, both ERB and Erb are exist...
@@ -304,6 +307,10 @@ tasks.each do |task|
 end
 GEMS = tasks.map { File.basename(_1).sub(/\.rake/, '') }
 Object.private_constant :GEMS
+
+file "_src" do
+  sh "git clone https://github.com/rails/rails.git _src"
+end
 
 task :clean do
   FileUtils.rm_rf("out")
