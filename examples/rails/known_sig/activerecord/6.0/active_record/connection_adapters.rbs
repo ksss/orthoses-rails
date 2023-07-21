@@ -1,0 +1,30 @@
+module ActiveRecord
+  module ConnectionAdapters
+    class SchemaDumper < ::ActiveRecord::SchemaDumper
+    end
+
+    module MySQL
+      class SchemaCreation < ::ActiveRecord::ConnectionAdapters::AbstractAdapter::SchemaCreation
+      end
+
+      class SchemaDumper < ::ActiveRecord::ConnectionAdapters::SchemaDumper
+      end
+    end
+
+    module PostgreSQL
+      class SchemaCreation < ::ActiveRecord::ConnectionAdapters::AbstractAdapter::SchemaCreation
+      end
+
+      class SchemaDumper < ::ActiveRecord::ConnectionAdapters::SchemaDumper
+      end
+    end
+
+    module SQLite3
+      class SchemaCreation < ::ActiveRecord::ConnectionAdapters::AbstractAdapter::SchemaCreation
+      end
+
+      class SchemaDumper < ::ActiveRecord::ConnectionAdapters::SchemaDumper
+      end
+    end
+  end
+end

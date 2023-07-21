@@ -72,14 +72,12 @@ gems:
   # - name: open3
   - name: pathname
   - name: prettyprint
-  - name: prime
   - name: pstore
   - name: pty
   - name: resolv
   # - name: racc
   # - name: rdoc
   - name: securerandom
-  - name: set
   - name: shellwords
   - name: singleton
   - name: socket

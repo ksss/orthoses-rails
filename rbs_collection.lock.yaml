@@ -2,7 +2,7 @@
 sources:
 - type: git
   name: ruby/gem_rbs_collection
-  revision: 87fba082504c606c03edf724cdf2e119bcd46c8c
+  revision: 38cd11a34996d8af780c25eaa52cb857d6b50483
   remote: https://github.com/ruby/gem_rbs_collection.git
   repo_dir: gems
 path: ".gem_rbs_collection"
@@ -20,7 +20,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 87fba082504c606c03edf724cdf2e119bcd46c8c
+    revision: 38cd11a34996d8af780c25eaa52cb857d6b50483
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: benchmark
@@ -84,7 +84,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 87fba082504c606c03edf724cdf2e119bcd46c8c
+    revision: 38cd11a34996d8af780c25eaa52cb857d6b50483
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: io-console
@@ -108,7 +108,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 87fba082504c606c03edf724cdf2e119bcd46c8c
+    revision: 38cd11a34996d8af780c25eaa52cb857d6b50483
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: minitest
@@ -136,7 +136,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 87fba082504c606c03edf724cdf2e119bcd46c8c
+    revision: 38cd11a34996d8af780c25eaa52cb857d6b50483
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: objspace
@@ -152,7 +152,7 @@ gems:
   source:
     type: stdlib
 - name: orthoses
-  version: 1.7.0
+  version: 1.8.0
   source:
     type: rubygems
 - name: pathname
@@ -160,10 +160,6 @@ gems:
   source:
     type: stdlib
 - name: prettyprint
-  version: '0'
-  source:
-    type: stdlib
-- name: prime
   version: '0'
   source:
     type: stdlib
@@ -180,7 +176,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 87fba082504c606c03edf724cdf2e119bcd46c8c
+    revision: 38cd11a34996d8af780c25eaa52cb857d6b50483
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: rbs

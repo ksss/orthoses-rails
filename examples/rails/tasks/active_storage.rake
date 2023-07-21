@@ -1,8 +1,8 @@
 require 'rbs'
 
-stdlib_dependencies = %w[time monitor singleton logger mutex_m json date benchmark digest forwardable did_you_mean openssl socket minitest]
-gem_dependencies = %w[nokogiri]
-rails_dependencies = %w[activesupport activemodel activejob activerecord]
+stdlib_dependencies = %w[time monitor singleton logger mutex_m json date benchmark digest forwardable did_you_mean openssl socket minitest uri cgi securerandom ipaddr]
+gem_dependencies = %w[nokogiri rack rails-dom-testing i18n]
+rails_dependencies = %w[activesupport activemodel activejob activerecord actionpack actionview]
 
 VERSIONS.each do |version|
   namespace version do
@@ -34,14 +34,6 @@ VERSIONS.each do |version|
         File.open("#{export}/active_record_base.rbs", "w+") do |f|
           RBS::Writer.new(out: f).write(decls)
         end
-
-        # TODO: remove after support action_controller
-        sh "rm -fr #{export}/active_storage/blobs"
-        sh "rm -fr #{export}/active_storage/representations"
-        Dir.glob("#{export}/active_storage/*_controller.rbs").each do |controller|
-          sh "rm -f #{controller}"
-        end
-        sh "rm -f #{export}/active_storage/streaming.rbs"
 
         generate_test_script(
           gem: :activestorage,
