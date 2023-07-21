@@ -32,7 +32,6 @@ module RelationTest
     RBS
     actual = store["RelationTest::User::ActiveRecord_Relation"].to_rbs
     unless expect == actual
-      binding.irb
       t.error("expect=\n```rbs\n#{expect}```\n, but got \n```rbs\n#{actual}```\n")
     end
 
