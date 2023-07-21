@@ -5,7 +5,7 @@ source "https://rubygems.org"
 # Specify your gem's dependencies in orthoses-rails.gemspec
 gemspec
 
-# gem "orthoses", path: "../orthoses"
+gem "orthoses"# , path: "../orthoses"
 gem "rbs"# , path: "../rbs"
 
 gem "rake", github: "ruby/rake"
