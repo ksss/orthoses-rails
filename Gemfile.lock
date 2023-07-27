@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    orthoses-rails (0.9.0)
+    orthoses-rails (1.0.0)
       orthoses (>= 1.8)
 
 GEM
