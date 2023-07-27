@@ -3,6 +3,20 @@
 [Orthoses](https://github.com/ksss/orthoses) extension for Ruby on Rails.
 Orthoses::Rails automatically generates RBS for methods added by Rails.
 
+## Usage
+
+Build your Rake task for RBS generation.
+
+```rb
+$ bin/rails generate orthoses:rails:install
+```
+
+Then run the rake task.
+
+```
+$ bin/rails orthoses:rails
+```
+
 ## Features
 
 ### Orthoses::ActiveModel
@@ -45,20 +59,6 @@ Install the gem and add to the application's Gemfile by executing:
 If bundler is not being used to manage dependencies, install the gem by executing:
 
     $ gem install orthoses-rails
-
-## Usage
-
-Build your Rake task for RBS generation.
-
-```rb
-$ bin/rails generate orthoses:rails
-```
-
-Then run the rake task.
-
-```
-$ bin/rails orthoses:rails
-```
 
 ## Development
 
