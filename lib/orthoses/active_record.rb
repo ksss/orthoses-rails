@@ -15,26 +15,28 @@ module Orthoses
     # Thanks https://github.com/pocke/rbs_rails/blob/8a128a8d29f0861aa2c25aa4110ff7c2ea674865/lib/rbs_rails/active_record.rb#L525-L551
     def self.sql_type_to_rbs(t)
       case t
-      when :integer
+      when :integer, :big_integer
         '::Integer'
       when :float
         '::Float'
       when :decimal
         '::BigDecimal'
-      when :string, :text, :citext, :uuid, :binary
+      when :string, :text, :citext, :uuid, :binary, :immutable_string
         '::String'
       when :datetime
         '::ActiveSupport::TimeWithZone'
       when :boolean
         "bool"
-      when :jsonb, :json
-        "untyped"
       when :date
         '::Date'
       when :time
         '::Time'
-      when :inet
+      when :cidr, :inet
         "::IPAddr"
+      when :bit, :bit_varying, :enum, :hstore,
+           :interval, :jsonb, :json, :legacy_point, :money, :point, :vector, :xml
+        # FIXME
+        'untyped'
       else
         # Unknown column type, give up
         'untyped'
