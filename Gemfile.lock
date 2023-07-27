@@ -8,7 +8,7 @@ PATH
   remote: .
   specs:
     orthoses-rails (0.9.0)
-      orthoses (>= 1.6)
+      orthoses (>= 1.8)
 
 GEM
   remote: https://rubygems.org/
@@ -116,8 +116,8 @@ GEM
     method_source (1.0.0)
     mini_mime (1.1.2)
     mini_portile2 (2.8.4)
-    minitest (5.18.1)
-    net-imap (0.3.6)
+    minitest (5.19.0)
+    net-imap (0.3.7)
       date
       net-protocol
     net-pop (0.1.2)
@@ -181,7 +181,7 @@ GEM
     sorted_set (1.0.3)
       rbtree
       set (~> 1.0)
-    steep (1.5.1)
+    steep (1.5.2)
       activesupport (>= 5.1)
       concurrent-ruby (>= 1.1.10)
       csv (>= 3.0.9)
@@ -204,10 +204,10 @@ GEM
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.4.2)
-    websocket-driver (0.7.5)
+    websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    zeitwerk (2.6.8)
+    zeitwerk (2.6.9)
 
 PLATFORMS
   ruby
