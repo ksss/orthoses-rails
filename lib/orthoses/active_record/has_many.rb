@@ -13,8 +13,6 @@ module Orthoses
             next if base.abstract_class?
             base_name = Utils.module_name(base) || next
 
-            collection_proxy = "#{base_name}::ActiveRecord_Associations_CollectionProxy"
-
             lines = base.reflect_on_all_associations(:has_many).flat_map do |ref|
               singular_name = ref.name.to_s.singularize
               type =
@@ -28,6 +26,7 @@ module Orthoses
                   next
                 end
 
+              collection_proxy = "::#{type}::ActiveRecord_Associations_CollectionProxy"
               [
                 "def #{ref.name}: () -> #{collection_proxy}",
                 "def #{ref.name}=: (#{collection_proxy} | Array[#{type}]) -> (#{collection_proxy} | Array[#{type}])",
