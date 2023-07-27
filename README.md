@@ -17,39 +17,6 @@ Then run the rake task.
 $ bin/rails orthoses:rails
 ```
 
-## Features
-
-### Orthoses::ActiveModel
-
-- `HasSecurePassword`
-  - Add signatures that generated form `has_secure_password`.
-
-### Orthoses::ActiveRecord
-
-- `BelongsTo`
-  - Add signatures that generated form `belongs_to`.
-- `DelegatedType`
-  - Add signatures that generated from `delegated_type`
-- `Enum`
-  - Add signatures that generated from `enum`
-- `HasMany`
-  - Add signatures that generated form `has_many`.
-- `HasOne`
-  - Add signatures that generated form `has_one`.
-- `Scope`
-  - Add signatures that generated form `scope`.
-
-### Orthoses::ActiveSupport
-
-- `ClassAttribute`
-  - Add signatures that generated form `class_attribute`.
-- `Configurable`
-  - Add signatures that generated from `config_accessor`
-- `Delegation`
-  - Add signatures that generated from `delegate`. The type definition of the method or instance variable specified by `to` is required.
-- `MattrAccessor`
-  - Add signatures that generated form `mattr_accessor`, `cattr_accessor`, `mattr_reader`, `cattr_reader`, `mattr_writer` and `cattr_writer`.
-
 ## Installation
 
 Install the gem and add to the application's Gemfile by executing:
