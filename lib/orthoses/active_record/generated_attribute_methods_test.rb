@@ -17,8 +17,7 @@ module GeneratedAttributeMethodsTest
 
     expected_keys = [
       "GeneratedAttributeMethodsTest::User",
-      "GeneratedAttributeMethodsTest::User::AttributeMethods",
-      "GeneratedAttributeMethodsTest::User::AttributeMethods::GeneratedAttributeMethods"
+      "GeneratedAttributeMethodsTest::User::GeneratedAttributeMethods"
     ]
     unless store.keys.filter{_1.start_with?("GeneratedAttributeMethodsTest")}.sort == expected_keys.sort
       t.error("found unexpected keys #{store.keys - expected_keys}")
@@ -26,7 +25,7 @@ module GeneratedAttributeMethodsTest
 
     expect = <<~RBS
       class GeneratedAttributeMethodsTest::User < ::ActiveRecord::Base
-        include GeneratedAttributeMethodsTest::User::AttributeMethods::GeneratedAttributeMethods
+        include GeneratedAttributeMethodsTest::User::GeneratedAttributeMethods
       end
     RBS
     actual = store["GeneratedAttributeMethodsTest::User"].to_rbs
@@ -34,7 +33,7 @@ module GeneratedAttributeMethodsTest
       t.error("expect=\n```rbs\n#{expect}```\n, but got \n```rbs\n#{actual}```\n")
     end
 
-    actual = store["GeneratedAttributeMethodsTest::User::AttributeMethods::GeneratedAttributeMethods"].to_rbs
+    actual = store["GeneratedAttributeMethodsTest::User::GeneratedAttributeMethods"].to_rbs
     [
       "def id: () -> ::Integer",
       "def name: () -> ::String",

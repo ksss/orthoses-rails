@@ -40,9 +40,9 @@ module HasManyTest
 
     expect = <<~RBS
       module HasManyTest::User::GeneratedAssociationMethods
-        def posts: () -> HasManyTest::User::ActiveRecord_Associations_CollectionProxy
+        def posts: () -> ::HasManyTest::Post::ActiveRecord_Associations_CollectionProxy
 
-        def posts=: (HasManyTest::User::ActiveRecord_Associations_CollectionProxy | Array[HasManyTest::Post]) -> (HasManyTest::User::ActiveRecord_Associations_CollectionProxy | Array[HasManyTest::Post])
+        def posts=: (::HasManyTest::Post::ActiveRecord_Associations_CollectionProxy | Array[HasManyTest::Post]) -> (::HasManyTest::Post::ActiveRecord_Associations_CollectionProxy | Array[HasManyTest::Post])
 
         def post_ids: () -> Array[Integer]
 
