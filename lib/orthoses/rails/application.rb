@@ -19,6 +19,7 @@ module Orthoses
           use Orthoses::ActiveRecord::HasOne
           use Orthoses::ActiveRecord::Relation
           use Orthoses::ActiveRecord::Scope
+          use Orthoses::ActiveRecord::SecureToken
 
           use Orthoses::ActiveSupport::ClassAttribute
           use Orthoses::ActiveSupport::Concern
