@@ -4,6 +4,7 @@ require 'orthoses'
 
 require_relative 'active_model'
 require_relative 'active_record'
+require_relative 'active_storage'
 require_relative 'active_support'
 require_relative 'railties'
 
