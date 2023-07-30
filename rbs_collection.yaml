@@ -51,7 +51,7 @@ gems:
   - name: did_you_mean
   - name: digest
   - name: erb
-  # - name: etc
+  - name: etc
   # - name: fiber
   - name: fileutils
   - name: find
@@ -74,9 +74,11 @@ gems:
   - name: prettyprint
   - name: pstore
   - name: pty
+  - name: rdoc
   - name: resolv
   # - name: racc
   # - name: rdoc
+  - name: ripper
   - name: securerandom
   - name: shellwords
   - name: singleton
