@@ -9,6 +9,7 @@ require_relative 'active_record/has_one'
 require_relative 'active_record/query_methods'
 require_relative 'active_record/relation'
 require_relative 'active_record/scope'
+require_relative 'active_record/secure_token'
 
 module Orthoses
   module ActiveRecord

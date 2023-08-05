@@ -2,7 +2,7 @@
 sources:
 - type: git
   name: ruby/gem_rbs_collection
-  revision: 513633a18f3686a0ffad7b10ab2d40c9ee9c345e
+  revision: '04470595f7a634757e160f61aafeb50536322bba'
   remote: https://github.com/ruby/gem_rbs_collection.git
   repo_dir: gems
 path: ".gem_rbs_collection"
@@ -20,7 +20,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 513633a18f3686a0ffad7b10ab2d40c9ee9c345e
+    revision: 9612e5e67697153dcc7464c01115db44d29b1e34
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: benchmark
@@ -67,6 +67,10 @@ gems:
   version: '0'
   source:
     type: stdlib
+- name: etc
+  version: '0'
+  source:
+    type: stdlib
 - name: fileutils
   version: '0'
   source:
@@ -84,7 +88,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 513633a18f3686a0ffad7b10ab2d40c9ee9c345e
+    revision: 9612e5e67697153dcc7464c01115db44d29b1e34
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: io-console
@@ -108,7 +112,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 513633a18f3686a0ffad7b10ab2d40c9ee9c345e
+    revision: 9612e5e67697153dcc7464c01115db44d29b1e34
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: minitest
@@ -136,7 +140,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 513633a18f3686a0ffad7b10ab2d40c9ee9c345e
+    revision: 9612e5e67697153dcc7464c01115db44d29b1e34
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: objspace
@@ -176,11 +180,11 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 513633a18f3686a0ffad7b10ab2d40c9ee9c345e
+    revision: 9612e5e67697153dcc7464c01115db44d29b1e34
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: rbs
-  version: 3.1.1
+  version: 3.1.3
   source:
     type: rubygems
 - name: rdoc
@@ -195,6 +199,10 @@ gems:
   version: 1.4.0
   source:
     type: rubygems
+- name: ripper
+  version: '0'
+  source:
+    type: stdlib
 - name: securerandom
   version: '0'
   source:

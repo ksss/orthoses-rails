@@ -6,7 +6,7 @@ gemspec path: '../../'
 
 gem "rails", path: "_src"
 gem "sqlite3"
-gem "orthoses"# , path: "../../../orthoses"
+gem "orthoses"#, path: "../../../orthoses"
 gem "rbs"
 gem "rgot"
 gem "rake", github: "ruby/rake"
