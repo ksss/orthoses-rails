@@ -11,6 +11,7 @@ module Orthoses
         loader = @loader
         Orthoses::Builder.new do
           use Orthoses::ActiveModel::HasSecurePassword
+
           use Orthoses::ActiveRecord::BelongsTo
           use Orthoses::ActiveRecord::DelegatedType
           use Orthoses::ActiveRecord::Enum
@@ -20,6 +21,8 @@ module Orthoses
           use Orthoses::ActiveRecord::Relation
           use Orthoses::ActiveRecord::Scope
           use Orthoses::ActiveRecord::SecureToken
+
+          use Orthoses::ActiveStorage::Attached::Model
 
           use Orthoses::ActiveSupport::ClassAttribute
           use Orthoses::ActiveSupport::Concern
