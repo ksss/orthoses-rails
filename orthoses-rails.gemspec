@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
   spec.files = Dir.chdir(File.expand_path(__dir__)) do
     [
       %w[CODE_OF_CONDUCT.md LICENSE.txt README.md],
-      Dir.glob("lib/**/*.rb").grep_v(/_test\.rb\z/),
+      Dir.glob("lib/**/*.*").grep_v(/_test\.rb\z/),
       Dir.glob("sig/**/*.rbs")
     ].flatten
   end
