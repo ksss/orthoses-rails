@@ -22,7 +22,9 @@ module Orthoses
           use Orthoses::ActiveRecord::Scope
           use Orthoses::ActiveRecord::SecureToken
 
-          use Orthoses::ActiveStorage::Attached::Model
+          if defined?(::ActiveStorage)
+            use Orthoses::ActiveStorage::Attached::Model
+          end
 
           use Orthoses::ActiveSupport::ClassAttribute
           use Orthoses::ActiveSupport::Concern
