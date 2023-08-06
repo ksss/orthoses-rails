@@ -5,9 +5,16 @@ Orthoses::Rails automatically generates RBS for methods added by Rails.
 
 ## Usage
 
+If you have never performed rbs collection initialization, you need to do it.
+
+```
+$ bundle exec rbs collection init
+$ bundle exec rbs collection install
+```
+
 Build your Rake task for RBS generation.
 
-```rb
+```
 $ bin/rails generate orthoses:rails:install
 ```
 
