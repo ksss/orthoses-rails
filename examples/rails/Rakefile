@@ -199,10 +199,7 @@ def generate(out_dir, version)
         header: "# !!! GENERATED CODE !!!\n# Please see generators/rails-generator"
       ).call
     }
-    use Orthoses::Mixin,
-      if: -> (base_mod, how, mod) {
-        mod != Enumerable # TODO
-      }
+    use Orthoses::Mixin
     use Orthoses::RBSPrototypeRB,
       paths: Dir.glob('_src/{railties,action{cable,mailbox,mailer,pack,text,view},active{job,model,record,storage,support}}/{app,lib}/**/*.rb'),
       method_definition_filter: -> (member) {
