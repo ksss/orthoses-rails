@@ -26,6 +26,7 @@ module Orthoses
             use Orthoses::ActiveStorage::Attached::Model
           end
 
+          use Orthoses::ActiveSupport::Aliasing
           use Orthoses::ActiveSupport::ClassAttribute
           use Orthoses::ActiveSupport::Concern
           use Orthoses::ActiveSupport::Delegation
