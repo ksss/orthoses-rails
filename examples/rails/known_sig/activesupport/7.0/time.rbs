@@ -1,4 +1,8 @@
 class Time
+  include DateAndTime::Zones
+  include DateAndTime::Calculations
+  include DateAndTime::Compatibility
+
   # Returns <tt>Time.zone.now</tt> when <tt>Time.zone</tt> or <tt>config.time_zone</tt> are set, otherwise just returns <tt>Time.now</tt>.
   def self.current: () -> ActiveSupport::TimeWithZone # strictly `(ActiveSupport::TimeWithZone | Time)` but it's inconvenient
   def self.zone: () -> ActiveSupport::TimeZone # strictly `ActiveSupport::TimeWithZone?` but it's inconvenient

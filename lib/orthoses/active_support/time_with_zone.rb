@@ -28,6 +28,13 @@ module Orthoses
         -
       ])
 
+      TIME_MODULES = [
+        TypeName("::Time"),
+        TypeName("::DateAndTime::Zones"),
+        TypeName("::DateAndTime::Calculations"),
+        TypeName("::DateAndTime::Compatibility")
+      ]
+
       def filter_decl(time_with_zone_store)
         writer = RBS::Writer.new(out: StringIO.new)
         time_with_zone_store.to_decl.members.each do |member|
@@ -64,8 +71,9 @@ module Orthoses
           next if twz_methods.has_key?(sym) && !TYPE_MERGE_METHODS.include?(sym)
           next if !definition_method.public?
 
-          definition_method.defs.reject! do |type_def|
-            type_def.implemented_in != type_name_time
+          # delegate to ::Time method
+          definition_method.defs.select! do |type_def|
+            TIME_MODULES.include?(type_def.implemented_in)
           end
           next if definition_method.defs.empty?
 
