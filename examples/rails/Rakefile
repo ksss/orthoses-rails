@@ -67,7 +67,7 @@ def generate(out_dir, version)
   Orthoses::Builder.new do
     use Orthoses::CreateFileByName,
       depth: 2,
-      base_dir: "#{out_dir}/#{version}",
+      to: "#{out_dir}/#{version}",
       rmtree: true,
       header: "# !!! GENERATED CODE !!!\n# Please see generators/rails-generator"
     use Orthoses::Filter do |name, content|
@@ -195,13 +195,24 @@ def generate(out_dir, version)
     use Orthoses::Railties::Mixin, callback: -> (railties_mixin) {
       Orthoses::CreateFileByName.new(
         ->{ railties_mixin },
-        base_dir: "#{out_dir}/#{version}/railties_mixin",
+        to: "#{out_dir}/#{version}/railties_mixin",
         header: "# !!! GENERATED CODE !!!\n# Please see generators/rails-generator"
       ).call
     }
     use Orthoses::Mixin
-    use Orthoses::RBSPrototypeRB,
-      paths: Dir.glob('_src/{railties,action{cable,mailbox,mailer,pack,text,view},active{job,model,record,storage,support}}/{app,lib}/**/*.rb'),
+    use Orthoses::RBSPrototypeRuntime,
+      patterns: %w[
+        AbstractController* ActionController* ActionDispatch* ActionPack* Mime*
+        ActionView* Erubi*
+        ActiveJob*
+        ActiveModel*
+        ActiveRecord* Arel*
+        ActiveStorage*
+        ActiveSupport*
+        Array* Benchmark* BigDecimal* Class* Date* DateAndTime* DateTime* Digest*
+        Enumerable* File* Hash* Integer* Kernel* LoadError* Marshal* Module* NameError* Numeric*
+        Object* Pathname* Range* Regexp* SecureRandom* String* Symbol* Time* URI*
+      ],
       method_definition_filter: -> (member) {
         ![
           :method_missing,
