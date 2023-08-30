@@ -21,27 +21,11 @@ namespace :orthoses do
       # use Orthoses::LoadRBS,
       #   paths: Dir.glob(Rails.root / "sig/hand-written/**/*.rbs")
 
-      # Auto detect const type in store.
-      use Orthoses::Constant
-
       # Middleware package for rails application.
       use Orthoses::Rails::Application
 
-      # You can also be customized to include output equivalent to `$ rbs prototype rb` command.
-      # However, you will have to deal with the problems inherent in static analysis.
-      # use Orthoses::RBSPrototypeRB,
-      #   paths: Dir.glob(Rails.root / "app/models/**/*.rb"),
-      #   method_definition_filter: nil,
-      #   alias_filter: nil,
-      #   constant_filter: ->(member) { false },
-      #   mixin_filter: ->(member) { false },
-      #   attribute_filter: ->(member) { false }
-
       # Application code loaded here is the target of the analysis.
-      run -> {
-        Rails.application.initialize!
-        Rails.application.eager_load!
-      }
+      run Orthoses::Rails::Application::Loader.new
     end.call
   end
 end

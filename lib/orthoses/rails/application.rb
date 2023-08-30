@@ -3,6 +3,13 @@
 module Orthoses
   module Rails
     class Application
+      class Loader
+        def call
+          ::Rails.application.initialize!
+          ::Rails.application.eager_load!
+        end
+      end
+
       def initialize(loader)
         @loader = loader
       end
