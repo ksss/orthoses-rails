@@ -8,7 +8,7 @@ PATH
   remote: ../..
   specs:
     orthoses-rails (1.0.0)
-      orthoses (>= 1.8)
+      orthoses (>= 1.10)
 
 PATH
   remote: _src
@@ -144,7 +144,7 @@ GEM
       racc (~> 1.4)
     nokogiri (1.15.3-x86_64-darwin)
       racc (~> 1.4)
-    orthoses (1.8.0)
+    orthoses (1.10.0)
       rbs (~> 3.0)
     psych (5.1.0)
       stringio
