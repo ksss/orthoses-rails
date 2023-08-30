@@ -43,5 +43,16 @@ module Orthoses
         'untyped'
       end
     end
+
+    def self.reflection_klass_name(ref)
+      Utils.module_name(ref.klass)
+    rescue NameError, ArgumentError => e
+      while e
+        Orthoses.logger.warn(e.message)
+        e = e.cause
+      end
+
+      nil
+    end
   end
 end

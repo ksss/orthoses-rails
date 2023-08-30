@@ -15,16 +15,7 @@ module Orthoses
 
             lines = base.reflect_on_all_associations(:has_many).flat_map do |ref|
               singular_name = ref.name.to_s.singularize
-              type =
-                begin
-                  Utils.module_name(ref.klass)
-                rescue NameError => e
-                  while e
-                    Orthoses.logger.warn(e.message)
-                    e = e.cause
-                  end
-                  next
-                end
+              type = Orthoses::ActiveRecord.reflection_klass_name(ref) or next
 
               collection_proxy = "::#{type}::ActiveRecord_Associations_CollectionProxy"
               [

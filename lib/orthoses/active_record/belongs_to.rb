@@ -18,15 +18,7 @@ module Orthoses
               type = if ref.polymorphic?
                 'untyped'
               else
-                begin
-                  Utils.module_name(ref.klass) or next
-                rescue NameError => e
-                  while e
-                    Orthoses.logger.warn(e.message)
-                    e = e.cause
-                  end
-                  next
-                end
+                Orthoses::ActiveRecord.reflection_klass_name(ref) or next
               end
               opt = "#{type}?"
 

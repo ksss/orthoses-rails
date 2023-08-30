@@ -14,16 +14,7 @@ module Orthoses
             base_name = Utils.module_name(base) || next
 
             lines = base.reflect_on_all_associations(:has_one).flat_map do |ref|
-              type =
-                begin
-                  Utils.module_name(ref.klass) or next
-                rescue NameError => e
-                  while e
-                    Orthoses.logger.warn(e.message)
-                    e = e.cause
-                  end
-                  next
-                end
+              type = Orthoses::ActiveRecord.reflection_klass_name(ref) or next
               opt = "#{type}?"
 
               [
