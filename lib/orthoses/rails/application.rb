@@ -17,6 +17,7 @@ module Orthoses
       def call
         loader = @loader
         Orthoses::Builder.new do
+          use Orthoses::ActiveModel::Attributes
           use Orthoses::ActiveModel::HasSecurePassword
 
           use Orthoses::ActiveRecord::BelongsTo
