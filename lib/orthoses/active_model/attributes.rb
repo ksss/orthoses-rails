@@ -33,7 +33,7 @@ module Orthoses
         attribute.captures.each do |capture|
           receiver_name = Utils.module_name(capture.method.receiver) or next
           name = capture.argument[:name]
-          cast_type = capture.argument[:cast_type]
+          cast_type = capture.argument[:cast_type] || capture.argument[:type]
 
           return_type = DEFAULT_TYPES[cast_type] || 'untyped'
 
