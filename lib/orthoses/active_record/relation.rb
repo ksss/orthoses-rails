@@ -19,7 +19,16 @@ module Orthoses
             class_specific_proxy = "#{model_name}::ActiveRecord_Associations_CollectionProxy"
             class_specific_generated_relation_methods = "#{model_name}::GeneratedRelationMethods"
 
+            # Expressing delegation.
             store[class_specific_generated_relation_methods].tap do |c|
+              klass.singleton_methods(false).each do |singleton_method|
+                c << "def #{singleton_method}: (*untyped, **untyped) -> untyped"
+              end
+              (klass.singleton_class.included_modules - ::ActiveRecord::Relation.included_modules).each do |mod|
+                mname = Utils.module_name(mod) or next
+                store[mname].header = "module #{mname}"
+                c << "include #{mname}"
+              end
             end
 
             store[class_specific_relation].tap do |c|
