@@ -67,15 +67,35 @@ module Orthoses
 
         return_type_param = Hash === values ? "[String, String]" : "[String, Integer]"
         store[base_name] << "def self.#{name.pluralize}: () -> ActiveSupport::HashWithIndifferentAccess#{return_type_param}"
+        enum_methods_content = store["#{base_name}::ActiveRecord_Enum_EnumMethods"]
+        enum_methods_content.header = "module #{base_name}::ActiveRecord_Enum_EnumMethods"
 
-        pairs = values.respond_to?(:each_pair) ? values.each_pair : values.each_with_index
+        pairs = (values.respond_to?(:each_pair) ? values.each_pair : values.each_with_index).to_h
         pairs.each do |label, value|
           value_method_name = "#{prefix}#{label}#{suffix}"
-          enum_methods_content = store["#{base_name}::ActiveRecord_Enum_EnumMethods"]
-          enum_methods_content.header = "module #{base_name}::ActiveRecord_Enum_EnumMethods"
           enum_methods_content << "def #{value_method_name}?: () -> bool"
           enum_methods_content << "def #{value_method_name}!: () -> bool"
+
+          value_method_alias = "#{prefix}#{label.to_s.gsub(/[\W&&[:ascii:]]+/, "_")}#{suffix}"
+          if value_method_alias != value_method_name
+            enum_methods_content << "def #{value_method_alias}?: () -> bool"
+            enum_methods_content << "def #{value_method_alias}!: () -> bool"
+          end
         end
+
+        # Expressing type casting.
+        store[base_name] << "def #{name}: () -> (#{pairs.keys.map { |k| "\"#{k}\"" }.join(" | ")})"
+        symbol_pattern = if pairs.keys.any? { |key| key.match?(/[^a-zA-Z_]/) }
+          "(Symbol) -> void"
+        else
+          "(#{pairs.keys.map{|key|key.to_sym.inspect}.join(" | ")}) -> void"
+        end
+        overloads = [
+          symbol_pattern,
+          "(#{pairs.keys.map{|key|key.to_s.inspect}.join(" | ")}) -> void",
+          "(#{pairs.values.map(&:inspect).join(" | ")}) -> void",
+        ]
+        store[base_name] << "def #{name}=: #{overloads.join(" | ")}"
       end
     end
   end
