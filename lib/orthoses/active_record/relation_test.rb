@@ -1,10 +1,18 @@
 # frozen_string_literal: true
 
+begin
+  require 'test_helper'
+rescue LoadError
+end
 require_relative '../../../test/fake_schema'
 
 module RelationTest
   LOADER = ->(){
     class User < ActiveRecord::Base
+      class << self
+        def singleton!
+        end
+      end
     end
   }
 
@@ -53,6 +61,15 @@ module RelationTest
     actual = store["RelationTest::User"].to_rbs
     unless expect == actual
       t.error("expect=\n```rbs\n#{expect}```\n, but got \n```rbs\n#{actual}```\n")
+    end
+
+    expect = [
+      'def singleton!:',
+      'include ActiveRecord::Core::ClassMethods'
+    ]
+    actual = store["RelationTest::User::GeneratedRelationMethods"].to_rbs
+    unless expect.all? { |e| actual.include?(e) }
+      t.error("expect has #{expect}, but got \n```rbs\n#{actual}```\n")
     end
   end
 end
