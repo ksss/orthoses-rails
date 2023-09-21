@@ -223,7 +223,7 @@ DEPENDENCIES
   debug
   orthoses
   orthoses-rails!
-  rails (>= 7.0, < 7.1)
+  rails
   rake!
   rbs
   rgot (~> 1.4)
