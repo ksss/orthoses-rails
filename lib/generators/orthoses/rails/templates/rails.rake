@@ -17,6 +17,13 @@ namespace :orthoses do
       # Complement missing const name.
       use Orthoses::MissingName
 
+      # You can use other publicly available middleware.
+      # `Orthoses::YARD` is available at https://github.com/ksss/orthoses-yard.
+      # By using this middleware, you can add the capability
+      # to generate type information from YARD documentation.
+      # use Orthoses::YARD,
+      #   parse: ['{app/lib}/**/*.rb']
+
       # You can load hand written RBS.
       # use Orthoses::LoadRBS,
       #   paths: Dir.glob(Rails.root / "sig/hand-written/**/*.rbs")
