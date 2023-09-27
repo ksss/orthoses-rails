@@ -50,10 +50,7 @@ module Orthoses
 
               lines << "attr_accessor #{name}: #{type}"
               ::ActiveRecord::Base.attribute_method_matchers.each do |matcher|
-                next if matcher.target == "attribute"
-                next if matcher.target == "attribute="
-
-                tmpl = TARGET_TYPE_MAP[matcher.target]
+                tmpl = TARGET_TYPE_MAP[matcher.target] or next
                 lines << "def #{matcher.method_name(name)}: #{tmpl % {type: type, opt: opt}}"
               end
             end
