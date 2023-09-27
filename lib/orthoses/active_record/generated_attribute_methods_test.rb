@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+begin
+  require 'test_helper'
+rescue LoadError
+end
 require_relative '../../../test/fake_schema'
 
 module GeneratedAttributeMethodsTest
@@ -35,13 +39,13 @@ module GeneratedAttributeMethodsTest
 
     actual = store["GeneratedAttributeMethodsTest::User::GeneratedAttributeMethods"].to_rbs
     [
-      "def id: () -> ::Integer",
-      "def name: () -> ::String",
-      "def confirmed: () -> bool?",
+      "attr_accessor id: ::Integer",
+      "attr_accessor name: ::String",
+      "attr_accessor confirmed: bool?",
       "alias nickname name"
     ].each do |check|
       unless actual.include?(check)
-        t.error("should include `#{check}`. But, not.")
+        t.error("should include `#{check}`. But, nothing.")
       end
     end
   end

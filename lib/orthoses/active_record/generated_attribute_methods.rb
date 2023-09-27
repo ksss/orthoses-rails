@@ -4,8 +4,6 @@ module Orthoses
   module ActiveRecord
     class GeneratedAttributeMethods
       TARGET_TYPE_MAP = {
-        "attribute" => "() -> %<type>s",
-        "attribute=" => "(%<type>s) -> %<type>s",
         "attribute?" => "() -> bool",
         "attribute_before_last_save" => "() -> %<opt>s",
         "attribute_before_type_cast" => "() -> %<type>s",
@@ -50,7 +48,11 @@ module Orthoses
               opt = "#{req}?"
               type = col.null ? opt : req
 
+              lines << "attr_accessor #{name}: #{type}"
               ::ActiveRecord::Base.attribute_method_matchers.each do |matcher|
+                next if matcher.target == "attribute"
+                next if matcher.target == "attribute="
+
                 tmpl = TARGET_TYPE_MAP[matcher.target]
                 lines << "def #{matcher.method_name(name)}: #{tmpl % {type: type, opt: opt}}"
               end
