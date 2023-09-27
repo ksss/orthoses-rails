@@ -131,7 +131,7 @@ GEM
     nokogiri (1.15.4)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
-    orthoses (1.11.0)
+    orthoses (1.12.0)
       rbs (~> 3.0)
     parser (3.2.2.3)
       ast (~> 2.4.1)
