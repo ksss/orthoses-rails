@@ -6,10 +6,7 @@ require "rgot/cli"
 task :test do
   require 'orthoses/rails'
 
-  # Create cache for performance
-  Orthoses::Utils.rbs_environment(collection: true)
-
-  exit Rgot::Cli.new(%w[-v --require active_record --require active_support/all lib]).run
+  exit Rgot::Cli.new(%w[-v --require active_record --require active_support/all --require action_mailer lib]).run
 end
 
 task default: :test
