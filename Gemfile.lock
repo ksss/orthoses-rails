@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/ruby/rake.git
-  revision: b17e0a14d6a24022c92bed22fbdc7924f85478b0
+  revision: 191a9d770caef530f68fbcf1f6d090e8872d31cb
   specs:
     rake (13.0.6)
 
@@ -89,7 +89,7 @@ GEM
       irb (>= 1.5.0)
       reline (>= 0.3.1)
     erubi (1.12.0)
-    ffi (1.15.5)
+    ffi (1.16.2)
     fileutils (1.7.1)
     globalid (1.2.1)
       activesupport (>= 6.1)
@@ -174,7 +174,7 @@ GEM
     rb-fsevent (0.11.2)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
-    rbs (3.2.1)
+    rbs (3.2.2)
     rbtree (0.4.6)
     rdoc (6.5.0)
       psych (>= 4.0.0)
@@ -209,11 +209,11 @@ GEM
     timeout (0.4.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    unicode-display_width (2.4.2)
+    unicode-display_width (2.5.0)
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    zeitwerk (2.6.11)
+    zeitwerk (2.6.12)
 
 PLATFORMS
   ruby
