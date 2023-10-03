@@ -1,5 +1,6 @@
 require 'orthoses-rails'
 require 'rgot/cli'
+require 'action_mailer'
 require 'active_record'
 require 'active_support/all'
 

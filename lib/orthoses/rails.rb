@@ -2,6 +2,7 @@
 
 require 'orthoses'
 
+require_relative 'action_mailer'
 require_relative 'active_model'
 require_relative 'active_record'
 require_relative 'active_storage'
