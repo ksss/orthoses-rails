@@ -2,7 +2,7 @@
 sources:
 - type: git
   name: ruby/gem_rbs_collection
-  revision: 267dd270bb5aabcc1e21c87f44360f0680a8501c
+  revision: c69c46f012a6a0263006eef0f84ca59ac0c5043e
   remote: https://github.com/ruby/gem_rbs_collection.git
   repo_dir: gems
 path: ".gem_rbs_collection"
@@ -20,7 +20,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 267dd270bb5aabcc1e21c87f44360f0680a8501c
+    revision: c69c46f012a6a0263006eef0f84ca59ac0c5043e
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: benchmark
@@ -88,7 +88,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 267dd270bb5aabcc1e21c87f44360f0680a8501c
+    revision: c69c46f012a6a0263006eef0f84ca59ac0c5043e
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: io-console
@@ -112,7 +112,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 267dd270bb5aabcc1e21c87f44360f0680a8501c
+    revision: c69c46f012a6a0263006eef0f84ca59ac0c5043e
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: minitest
@@ -140,7 +140,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 267dd270bb5aabcc1e21c87f44360f0680a8501c
+    revision: c69c46f012a6a0263006eef0f84ca59ac0c5043e
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: objspace
@@ -180,11 +180,11 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 267dd270bb5aabcc1e21c87f44360f0680a8501c
+    revision: c69c46f012a6a0263006eef0f84ca59ac0c5043e
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: rbs
-  version: 3.2.1
+  version: 3.2.2
   source:
     type: rubygems
 - name: rdoc
