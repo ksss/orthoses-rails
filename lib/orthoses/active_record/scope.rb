@@ -20,7 +20,7 @@ module Orthoses
           name = capture.argument[:name]
           body = capture.argument[:body]
 
-          definition = "#{name}: #{parameters_to_type(body.parameters)} -> #{base_name}::ActiveRecord_Relation"
+          definition = "#{name}: #{parameters_to_type(parameters(body))} -> #{base_name}::ActiveRecord_Relation"
           store[base_name] << "def self.#{definition}"
           store["#{base_name}::GeneratedRelationMethods"].header = "module #{base_name}::GeneratedRelationMethods"
           store["#{base_name}::GeneratedRelationMethods"] << "def #{definition}"
@@ -57,6 +57,16 @@ module Orthoses
           end
         end
         "(#{res.join(", ")})#{block}"
+      end
+
+      def parameters(body)
+        if body.is_a?(Proc)
+          body.parameters
+        elsif body.respond_to?(:call)
+          body.method(:call).parameters
+        else
+          raise "unexpected: #{body} passed to scope"
+        end
       end
     end
   end
