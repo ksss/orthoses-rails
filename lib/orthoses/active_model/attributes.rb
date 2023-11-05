@@ -35,10 +35,10 @@ module Orthoses
           name = capture.argument[:name]
           active_model_version = Gem::Version.new(::ActiveModel::VERSION::STRING)
           cast_type =
-            if active_model_version >= '7.1'
+            if active_model_version >= Gem::Version.new('7.1')
               # https://github.com/rails/rails/commit/608cbfae36b125d7962b7ed9083c9e9e6ce70b88
               capture.argument[:*].first
-            elsif active_model_version >= '7.0'
+            elsif active_model_version >= Gem::Version.new('7.0')
               capture.argument[:cast_type]
             else
               capture.argument[:type]
