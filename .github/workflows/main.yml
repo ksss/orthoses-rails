@@ -21,6 +21,7 @@ jobs:
           - '6.0'
           - '6.1'
           - '7.0'
+          - '7.1'
     env:
       RAILS_VERSION: ${{ matrix.rails_version }}
     steps:
