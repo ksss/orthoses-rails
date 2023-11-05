@@ -33,7 +33,16 @@ module Orthoses
         attribute.captures.each do |capture|
           receiver_name = Utils.module_name(capture.method.receiver) or next
           name = capture.argument[:name]
-          cast_type = capture.argument[:cast_type] || capture.argument[:type]
+          active_model_version = Gem::Version.new(::ActiveModel::VERSION::STRING)
+          cast_type =
+            if active_model_version >= '7.1'
+              # https://github.com/rails/rails/commit/608cbfae36b125d7962b7ed9083c9e9e6ce70b88
+              capture.argument[:*].first
+            elsif active_model_version >= '7.0'
+              capture.argument[:cast_type]
+            else
+              capture.argument[:type]
+            end
 
           return_type = DEFAULT_TYPES[cast_type] || 'untyped'
 

@@ -49,13 +49,13 @@ module Orthoses
               type = col.null ? opt : req
 
               lines << "attr_accessor #{name}: #{type}"
-              ::ActiveRecord::Base.attribute_method_matchers.each do |matcher|
-                tmpl = TARGET_TYPE_MAP[matcher.target] or next
+              attribute_method_patterns(::ActiveRecord::Base).each do |matcher|
+                tmpl = TARGET_TYPE_MAP[matcher.proxy_target] or next
                 lines << "def #{matcher.method_name(name)}: #{tmpl % {type: type, opt: opt}}"
               end
             end
             klass.attribute_aliases.each do |alias_name, column_name|
-              ::ActiveRecord::Base.attribute_method_matchers.each do |matcher|
+              attribute_method_patterns(::ActiveRecord::Base).each do |matcher|
                 lines << "alias #{matcher.method_name(alias_name)} #{matcher.method_name(column_name)}"
               end
             end
@@ -65,6 +65,20 @@ module Orthoses
 
             store[generated_attribute_methods].header = "module #{generated_attribute_methods}"
             store[generated_attribute_methods].concat(lines)
+          end
+        end
+      end
+
+      private
+
+      def attribute_method_patterns(const)
+        if const.respond_to?(:attribute_method_patterns)
+          const.attribute_method_patterns
+        else
+          const.attribute_method_matchers.each do |matcher|
+            def matcher.proxy_target
+              target
+            end
           end
         end
       end
