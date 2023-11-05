@@ -36,7 +36,7 @@ module Orthoses
       def members_prototype_of(mod_name)
         mod = Object.const_get(mod_name)
         runtime = ::RBS::Prototype::Runtime.new(patterns: nil, env: nil, merge: false)
-        type_name = runtime.to_type_name(mod_name)
+        type_name = TypeName(mod_name)
         [].tap do |members|
           runtime.generate_methods(mod, type_name, members)
         end

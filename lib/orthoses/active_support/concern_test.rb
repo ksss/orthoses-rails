@@ -1,3 +1,8 @@
+begin
+  require 'test_helper'
+rescue LoadError
+end
+
 module ConcernTest
   LOADER = -> {
     module Mod
