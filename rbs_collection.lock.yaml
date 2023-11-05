@@ -1,10 +1,4 @@
 ---
-sources:
-- type: git
-  name: ruby/gem_rbs_collection
-  revision: c69c46f012a6a0263006eef0f84ca59ac0c5043e
-  remote: https://github.com/ruby/gem_rbs_collection.git
-  repo_dir: gems
 path: ".gem_rbs_collection"
 gems:
 - name: abbrev
@@ -20,7 +14,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: c69c46f012a6a0263006eef0f84ca59ac0c5043e
+    revision: 2de2d4535caba275f3b8533684aab110d921f553
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: benchmark
@@ -88,7 +82,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: c69c46f012a6a0263006eef0f84ca59ac0c5043e
+    revision: 2de2d4535caba275f3b8533684aab110d921f553
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: io-console
@@ -112,7 +106,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: c69c46f012a6a0263006eef0f84ca59ac0c5043e
+    revision: 2de2d4535caba275f3b8533684aab110d921f553
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: minitest
@@ -131,6 +125,10 @@ gems:
   version: '0'
   source:
     type: stdlib
+- name: net-protocol
+  version: '0'
+  source:
+    type: stdlib
 - name: nkf
   version: '0'
   source:
@@ -140,7 +138,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: c69c46f012a6a0263006eef0f84ca59ac0c5043e
+    revision: 2de2d4535caba275f3b8533684aab110d921f553
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: objspace
@@ -156,7 +154,7 @@ gems:
   source:
     type: stdlib
 - name: orthoses
-  version: 1.12.0
+  version: 1.13.0
   source:
     type: rubygems
 - name: pathname
@@ -171,6 +169,10 @@ gems:
   version: '0'
   source:
     type: stdlib
+- name: psych
+  version: '0'
+  source:
+    type: stdlib
 - name: pty
   version: '0'
   source:
@@ -180,7 +182,15 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: c69c46f012a6a0263006eef0f84ca59ac0c5043e
+    revision: 2de2d4535caba275f3b8533684aab110d921f553
+    remote: https://github.com/ruby/gem_rbs_collection.git
+    repo_dir: gems
+- name: rake
+  version: '13.0'
+  source:
+    type: git
+    name: ruby/gem_rbs_collection
+    revision: 2de2d4535caba275f3b8533684aab110d921f553
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: rbs
