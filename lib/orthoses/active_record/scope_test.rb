@@ -1,8 +1,33 @@
+begin
+  require 'test_helper'
+rescue LoadError
+end
+
 module ScopeTest
   LOADER = ->(){
+    class FilterByStatusQuery
+      private attr_reader :relation, :options
+
+      def self.call(*args)
+        new(*args).send(:query)
+      end
+
+      def initialize(*args)
+        @options = args.extract_options!
+        @relation = Blog
+      end
+
+      private
+
+      def query
+        relation.where(status: options[:status])
+      end
+    end
+
     class User < ActiveRecord::Base
       scope :empty, -> () { }
       scope :params, -> (a, b = 1, *c, d:, e: 2, **f) { }
+      scope :by_status, FilterByStatusQuery
     end
   }
 
@@ -16,12 +41,15 @@ module ScopeTest
       class ScopeTest::User < ::ActiveRecord::Base
         def self.empty: () -> ScopeTest::User::ActiveRecord_Relation
         def self.params: (untyped a, ?untyped b, *untyped c, d: untyped, ?e: untyped, **untyped f) -> ScopeTest::User::ActiveRecord_Relation
+        def self.by_status: (*untyped args) -> ScopeTest::User::ActiveRecord_Relation
       end
 
       module ScopeTest::User::GeneratedRelationMethods
         def empty: () -> ScopeTest::User::ActiveRecord_Relation
 
         def params: (untyped a, ?untyped b, *untyped c, d: untyped, ?e: untyped, **untyped f) -> ScopeTest::User::ActiveRecord_Relation
+
+        def by_status: (*untyped args) -> ScopeTest::User::ActiveRecord_Relation
       end
     RBS
     unless expect == actual
