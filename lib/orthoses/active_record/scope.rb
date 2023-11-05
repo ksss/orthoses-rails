@@ -60,12 +60,10 @@ module Orthoses
       end
 
       def parameters(body)
-        if body.is_a?(Proc)
-          body.parameters
-        elsif body.respond_to?(:call)
-          body.method(:call).parameters
+        if body.respond_to?(:to_proc)
+          body.to_proc.parameters
         else
-          raise "unexpected: #{body} passed to scope"
+          body.method(:call).parameters
         end
       end
     end
