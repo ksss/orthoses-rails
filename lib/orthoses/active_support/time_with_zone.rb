@@ -28,12 +28,26 @@ module Orthoses
         -
       ])
 
-      TIME_MODULES = [
+      TIME_MODULES = Set.new([
         TypeName("::Time"),
         TypeName("::DateAndTime::Zones"),
         TypeName("::DateAndTime::Calculations"),
         TypeName("::DateAndTime::Compatibility")
-      ]
+      ])
+
+      NONEED_METHODS = Set.new(%i[
+        freeze
+        hash
+        eql?
+        method_missing
+        respond_to?
+        respond_to_missing?
+        is_a?
+        marshal_dump
+        marshal_load
+        to_json
+        < > <= >=
+      ])
 
       def filter_decl(time_with_zone_store)
         writer = RBS::Writer.new(out: StringIO.new)
@@ -68,7 +82,7 @@ module Orthoses
         builder = RBS::DefinitionBuilder.new(env: env.resolve_type_names)
         twz_methods = builder.build_instance(type_name_time_with_zone).methods
         builder.build_instance(type_name_time).methods.each do |sym, definition_method|
-          next if twz_methods.has_key?(sym) && !TYPE_MERGE_METHODS.include?(sym)
+          next if NONEED_METHODS.include?(sym)
           next if !definition_method.public?
 
           # delegate to ::Time method

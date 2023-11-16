@@ -1,12 +1,12 @@
 class ActiveSupport::TimeWithZone
-  def +: (Time | self other) -> self
-  def -: (self other) -> Float
+  def +: (::Time | self other) -> self
+  def -: (self other) -> ::Float
 
   # Returns a <tt>Time</tt> instance that represents the time in +time_zone+.
-  def time: () -> Time
+  def time: () -> ::Time
 
   # Returns a <tt>Time</tt> instance of the simultaneous time in the UTC timezone.
-  def utc: () -> Time
+  def utc: () -> ::Time
 
   # Returns the simultaneous time in <tt>Time.zone</tt>, or the specified zone.
   def in_time_zone: (?(ActiveSupport::TimeZone | String) new_zone) -> self
@@ -81,5 +81,131 @@ class ActiveSupport::TimeWithZone
   # * <tt>:default</tt> - default value, mimics Ruby Time#to_s format.
   # * <tt>:db</tt> - format outputs time in UTC :db time. See Time#to_fs(:db).
   # * Any key in <tt>Time::DATE_FORMATS</tt> can be used. See active_support/core_ext/time/conversions.rb.
-  def to_fs: (?Symbol format) -> String
+  def to_fs: (?::Symbol format) -> ::String
+
+  # Returns a string of the object's date and time.
+  # Accepts an optional <tt>format</tt>:
+  # * <tt>:default</tt> - default value, mimics Ruby Time#to_s format.
+  # * <tt>:db</tt> - format outputs time in UTC :db time. See Time#to_formatted_s(:db).
+  # * Any key in <tt>Time::DATE_FORMATS</tt> can be used. See active_support/core_ext/time/conversions.rb.
+  def to_s: (?::Symbol format) -> ::String
+
+  # Returns an instance of DateTime with the timezone's UTC offset
+  #
+  #   Time.zone.now.to_datetime                         # => Tue, 18 Aug 2015 02:32:20 +0000
+  #   Time.current.in_time_zone('Hawaii').to_datetime   # => Mon, 17 Aug 2015 16:32:20 -1000
+  def to_datetime: () -> ::DateTime
+
+  # Returns an instance of +Time+, either with the same UTC offset
+  # as +self+ or in the local system timezone depending on the setting
+  # of +ActiveSupport.to_time_preserves_timezone+.
+  def to_time: () -> ::Time
+
+  # So that +self+ <tt>acts_like?(:time)</tt>.
+  def acts_like_time?: () -> true
+
+  # An instance of ActiveSupport::TimeWithZone is never blank
+  def blank?: () -> false
+
+  def year: () -> ::Integer
+  def mon: () -> ::Integer
+  def month: () -> ::Integer
+  def day: () -> ::Integer
+  def mday: () -> ::Integer
+  def wday: () -> ::Integer
+  def yday: () -> ::Integer
+  def hour: () -> ::Integer
+  def min: () -> ::Integer
+  def sec: () -> ::Integer
+  def usec: () -> ::Integer
+  def nsec: () -> ::Integer
+  def to_date: () -> ::Date
+
+  # delegation of active_support/core_ext/time/calculations.rb
+
+  # Returns the number of seconds since 00:00:00.
+  #
+  #   Time.new(2012, 8, 29,  0,  0,  0).seconds_since_midnight # => 0.0
+  #   Time.new(2012, 8, 29, 12, 34, 56).seconds_since_midnight # => 45296.0
+  #   Time.new(2012, 8, 29, 23, 59, 59).seconds_since_midnight # => 86399.0
+  def seconds_since_midnight: () -> Float
+
+  # Returns the number of seconds until 23:59:59.
+  #
+  #   Time.new(2012, 8, 29,  0,  0,  0).seconds_until_end_of_day # => 86399
+  #   Time.new(2012, 8, 29, 12, 34, 56).seconds_until_end_of_day # => 41103
+  #   Time.new(2012, 8, 29, 23, 59, 59).seconds_until_end_of_day # => 0
+  def seconds_until_end_of_day: () -> Integer
+
+  # Returns the fraction of a second as a +Rational+
+  #
+  #   Time.new(2012, 8, 29, 0, 0, 0.5).sec_fraction # => (1/2)
+  def sec_fraction: () -> (0 | ::Rational)
+
+  # Returns a new Time representing the start of the day (0:00)
+  def beginning_of_day: () -> self
+
+  # Returns a new Time representing the middle of the day (12:00)
+  def middle_of_day: () -> self
+
+  # Returns a new Time representing the end of the day, 23:59:59.999999
+  def end_of_day: () -> self
+
+  # Returns a new Time representing the start of the hour (x:00)
+  def beginning_of_hour: () -> self
+
+  # Returns a new Time representing the end of the hour, x:59:59.999999
+  def end_of_hour: () -> self
+
+  # Returns a new Time representing the start of the minute (x:xx:00)
+  def beginning_of_minute: () -> self
+
+  # Returns a new Time representing the end of the minute, x:xx:59.999999
+  def end_of_minute: () -> self
+
+  # Time#- can also be used to determine the number of seconds between two Time instances.
+  # We're layering on additional behavior so that ActiveSupport::TimeWithZone instances
+  # are coerced into values that Time#- will recognize
+  def minus_with_coercion: (Time | self arg0) -> Float
+                         | (Numeric arg0) -> self
+  def minus_without_coercion: (Time | self arg0) -> Float
+                            | (Numeric arg0) -> self
+  def minus_with_duration: (Time | self arg0) -> Float
+                         | (Numeric arg0) -> self
+  def minus_without_duration: (Time | self arg0) -> Float
+                            | (Numeric arg0) -> self
+  def plus_with_duration: (Time | self arg0) -> Float
+                        | (Numeric arg0) -> self
+  def plus_without_duration: (Time | self arg0) -> Float
+                           | (Numeric arg0) -> self
+
+  # Layers additional behavior on Time#<=> so that DateTime and ActiveSupport::TimeWithZone instances
+  # can be chronologically compared with a Time
+  def compare_with_coercion: (untyped other) -> (-1 | 0 | 1 | nil)
+
+  def compare_without_coercion: (untyped other) -> (-1 | 0 | 1 | nil)
+
+  # Layers additional behavior on Time#eql? so that ActiveSupport::TimeWithZone instances
+  # can be eql? to an equivalent Time
+  def eql_with_coercion: (untyped other) -> bool
+
+  def eql_without_coercion: (untyped other) -> bool
+
+  # Returns a new time the specified number of days ago.
+  def prev_day: () -> self
+
+  # Returns a new time the specified number of days in the future.
+  def next_day: () -> self
+
+  # Returns a new time the specified number of months ago.
+  def prev_month: () -> self
+
+  # Returns a new time the specified number of months in the future.
+  def next_month: () -> self
+
+  # Returns a new time the specified number of years ago.
+  def prev_year: () -> self
+
+  # Returns a new time the specified number of years in the future.
+  def next_year: () -> self
 end
