@@ -9,7 +9,7 @@ gem "sqlite3"
 gem "orthoses"#, path: "../../../orthoses"
 gem "rbs"#, path: "../../../rbs"
 gem "rgot"
-gem "rake", github: "ruby/rake"
+gem "rake"
 gem "debug"
 
 if RUBY_VERSION >= "3.1"

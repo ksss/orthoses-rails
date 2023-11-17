@@ -36,6 +36,7 @@ gems:
   # load gems
   - name: rack
   - name: nokogiri
+  - name: i18n
 
   # load all stdlib
   - name: abbrev
