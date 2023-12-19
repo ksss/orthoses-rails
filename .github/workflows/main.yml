@@ -34,5 +34,5 @@ jobs:
         bundler-cache: true
     - name: Run the default task
       run: |
-        bundle exec rbs collection install
+        bundle exec rbs collection update
         bundle exec rake
