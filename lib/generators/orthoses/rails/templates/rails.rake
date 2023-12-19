@@ -22,7 +22,7 @@ namespace :orthoses do
       # By using this middleware, you can add the capability
       # to generate type information from YARD documentation.
       # use Orthoses::YARD,
-      #   parse: ['{app/lib}/**/*.rb']
+      #   parse: ['{app,lib}/**/*.rb']
 
       # You can load hand written RBS.
       # use Orthoses::LoadRBS,
