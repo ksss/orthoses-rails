@@ -1,0 +1,15 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+gemspec path: '../'
+
+gem "rake"
+gem "rgot", "~> 1.4"
+
+gem "set"
+gem "sorted_set"
+gem "bcrypt"
+gem "steep"
+
+gem "rails", ">= 7.1", "< 7.2"
