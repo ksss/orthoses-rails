@@ -1,3 +1,8 @@
+begin
+  require 'test_helper'
+rescue LoadError
+end
+
 module DelegationTest
   LOADER = -> {
     class Foo
@@ -7,7 +12,7 @@ module DelegationTest
       delegate :ref_no_type, to: :no_type
       delegate :skip, to: :nothing
       delegate :nothing, to: :string
-      delegate :gsub, to: :string
+      delegate :empty?, to: :string
       delegate :to_int, to: "@single_var"
       delegate :to_f, to: "@@single_cvar"
       delegate :to_r, to: :SINGLE_CONST
@@ -57,10 +62,7 @@ module DelegationTest
         def name: () -> ::String?
         def ref_no_type: (*untyped, **untyped) -> untyped
         def skip: (*untyped, **untyped) -> untyped
-        def gsub: (::Regexp | ::string pattern, ::string replacement) -> ::String
-                | (::Regexp | ::string pattern, ::Hash[::String, ::String] hash) -> ::String
-                | (::Regexp | ::string pattern) { (::String match) -> ::_ToS } -> ::String
-                | (::Regexp | ::string pattern) -> ::Enumerator[::String, self]
+        def empty?: () -> bool
         def to_int: () -> ::Integer
         def to_f: () -> ::Float
         def to_r: () -> ::Rational
