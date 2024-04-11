@@ -8,8 +8,8 @@ module ScopeTest
     class FilterByStatusQuery
       private attr_reader :relation, :options
 
-      def self.call(*args)
-        new(*args).send(:query)
+      def self.call(...)
+        new(...).send(:query)
       end
 
       def initialize(*args)
@@ -40,16 +40,16 @@ module ScopeTest
     expect = <<~RBS
       class ScopeTest::User < ::ActiveRecord::Base
         def self.empty: () -> ScopeTest::User::ActiveRecord_Relation
-        def self.params: (untyped a, ?untyped b, *untyped c, d: untyped, ?e: untyped, **untyped f) -> ScopeTest::User::ActiveRecord_Relation
-        def self.by_status: (*untyped args) -> ScopeTest::User::ActiveRecord_Relation
+        def self.params: (untyped a, ?untyped b, *untyped, d: untyped, ?e: untyped, **untyped) -> ScopeTest::User::ActiveRecord_Relation
+        def self.by_status: (*untyped, **untyped) { (*untyped) -> untyped } -> ScopeTest::User::ActiveRecord_Relation
       end
 
       module ScopeTest::User::GeneratedRelationMethods
         def empty: () -> ScopeTest::User::ActiveRecord_Relation
 
-        def params: (untyped a, ?untyped b, *untyped c, d: untyped, ?e: untyped, **untyped f) -> ScopeTest::User::ActiveRecord_Relation
+        def params: (untyped a, ?untyped b, *untyped, d: untyped, ?e: untyped, **untyped) -> ScopeTest::User::ActiveRecord_Relation
 
-        def by_status: (*untyped args) -> ScopeTest::User::ActiveRecord_Relation
+        def by_status: (*untyped, **untyped) { (*untyped) -> untyped } -> ScopeTest::User::ActiveRecord_Relation
       end
     RBS
     unless expect == actual
