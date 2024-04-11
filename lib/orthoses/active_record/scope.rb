@@ -47,9 +47,9 @@ module Orthoses
           when :key
             res << "?#{name}: untyped"
           when :rest
-            res << "*untyped #{name}"
+            res << "*untyped"
           when :keyrest
-            res << "**untyped #{name}"
+            res << "**untyped"
           when :block
             block = " { (*untyped) -> untyped }"
           else
