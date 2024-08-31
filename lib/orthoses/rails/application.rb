@@ -28,6 +28,7 @@ module Orthoses
           use Orthoses::ActiveRecord::GeneratedAttributeMethods
           use Orthoses::ActiveRecord::HasMany
           use Orthoses::ActiveRecord::HasOne
+          use Orthoses::ActiveRecord::Persistence
           use Orthoses::ActiveRecord::Relation
           use Orthoses::ActiveRecord::Scope
           use Orthoses::ActiveRecord::SecureToken
