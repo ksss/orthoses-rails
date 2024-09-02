@@ -34,7 +34,7 @@ module RelationTest
     expect = <<~RBS
       class RelationTest::User::ActiveRecord_Relation < ::ActiveRecord::Relation
         include RelationTest::User::GeneratedRelationMethods
-        include _ActiveRecord_Relation[RelationTest::User, untyped]
+        include _ActiveRecord_Relation[RelationTest::User, ::Integer]
         include Enumerable[RelationTest::User]
       end
     RBS
@@ -45,7 +45,7 @@ module RelationTest
 
     expect = <<~RBS
       class RelationTest::User::ActiveRecord_Associations_CollectionProxy < ::ActiveRecord::Associations::CollectionProxy
-        include _ActiveRecord_Relation[RelationTest::User, untyped]
+        include _ActiveRecord_Relation[RelationTest::User, ::Integer]
       end
     RBS
     actual = store["RelationTest::User::ActiveRecord_Associations_CollectionProxy"].to_rbs
@@ -55,7 +55,7 @@ module RelationTest
 
     expect = <<~RBS
       class RelationTest::User < ::ActiveRecord::Base
-        extend _ActiveRecord_Relation_ClassMethods[RelationTest::User, RelationTest::User::ActiveRecord_Relation, untyped]
+        extend _ActiveRecord_Relation_ClassMethods[RelationTest::User, RelationTest::User::ActiveRecord_Relation, ::Integer]
       end
     RBS
     actual = store["RelationTest::User"].to_rbs
