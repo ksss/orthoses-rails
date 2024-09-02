@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    orthoses-rails (1.5.0)
+    orthoses-rails (1.6.0)
       orthoses (>= 1.13)
 
 GEM
