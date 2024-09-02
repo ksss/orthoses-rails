@@ -5,9 +5,16 @@ end
 
 require "active_storage/attached"
 require "active_storage/reflection"
+
 ActiveRecord::Base.include(ActiveStorage::Attached::Model)
 ActiveRecord::Base.include(ActiveStorage::Reflection::ActiveRecordExtensions)
 ActiveRecord::Reflection.singleton_class.prepend(ActiveStorage::Reflection::ReflectionExtension)
+
+if ActiveRecord.version >= Gem::Version.new("7.2")
+  class ::ActiveStorage::Blob
+    def self.validate_service_configuration(*); end
+  end
+end
 
 module ModelTest
   LOADER = ->(){

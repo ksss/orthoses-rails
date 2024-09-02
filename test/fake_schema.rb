@@ -1,5 +1,5 @@
 FakeColumn = Struct.new(:type, :name, :null, keyword_init: true)
-def FakeColumn.attribute_types
+def FakeColumn.columns_hash
   {
     "id" => FakeColumn.new(
       name: :id,
@@ -27,18 +27,25 @@ module ::ActiveRecord
   end
 
   module ModelSchema::ClassMethods
+    def load_schema
+    end
+
+    def columns_hash
+      FakeColumn.columns_hash
+    end
 
     def attribute_types
-      FakeColumn.attribute_types
+      FakeColumn.columns_hash
     end
   end
 end
 
+# for rails v7.2
 module ActiveModel
   module AttributeRegistration
     module ClassMethods
       def attribute_types
-        FakeColumn.attribute_types
+        FakeColumn.columns_hash
       end
     end
   end
