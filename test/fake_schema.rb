@@ -37,6 +37,10 @@ module ::ActiveRecord
     def attribute_types
       FakeColumn.columns_hash
     end
+
+    def table_exists?
+      true
+    end
   end
 end
 

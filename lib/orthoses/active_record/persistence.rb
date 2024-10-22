@@ -11,6 +11,7 @@ module Orthoses
         @loader.call.tap do |store|
           ::ActiveRecord::Base.descendants.each do |klass|
             next if klass.abstract_class?
+            next unless klass.table_exists?
             base_name = Utils.module_name(klass) or next
 
             attributes = klass.columns_hash.map do |key, col|
