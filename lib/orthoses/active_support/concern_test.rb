@@ -22,8 +22,6 @@ module ConcernTest
 
     expect = <<~RBS
       module ConcernTest::Mod::ClassMethods
-        public
-
         def class_m: () -> untyped
       end
     RBS
