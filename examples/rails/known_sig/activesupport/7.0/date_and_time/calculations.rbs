@@ -1,0 +1,19 @@
+module DateAndTime
+  module Calculations
+    # Returns a Range representing the whole day of the current date/time.
+    def all_day: () -> ::Range[untyped]
+
+    # Returns a Range representing the whole week of the current date/time.
+    # Week starts on start_day, default is <tt>Date.beginning_of_week</tt> or <tt>config.beginning_of_week</tt> when set.
+    def all_week: (?untyped start_day) -> ::Range[untyped]
+
+    # Returns a Range representing the whole month of the current date/time.
+    def all_month: () -> ::Range[untyped]
+
+    # Returns a Range representing the whole quarter of the current date/time.
+    def all_quarter: () -> ::Range[untyped]
+
+    # Returns a Range representing the whole year of the current date/time.
+    def all_year: () -> ::Range[untyped]
+  end
+end
