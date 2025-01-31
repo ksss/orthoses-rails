@@ -1,3 +1,8 @@
+begin
+  require 'test_helper'
+rescue LoadError
+end
+
 module BelongsToTest
   LOADER = ->(){
     class User < ActiveRecord::Base
@@ -40,7 +45,8 @@ module BelongsToTest
 
     expect = <<~RBS
       module BelongsToTest::Post::GeneratedAssociationMethods
-        def user: () -> BelongsToTest::User?
+        %a{implicitly-returns-nil}
+        def user: () -> BelongsToTest::User
 
         def user=: (BelongsToTest::User?) -> BelongsToTest::User?
 

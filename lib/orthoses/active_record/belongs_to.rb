@@ -23,7 +23,7 @@ module Orthoses
               opt = "#{type}?"
 
               [
-                "def #{ref.name}: () -> #{opt}",
+                "%a{implicitly-returns-nil} def #{ref.name}: () -> #{type}",
                 "def #{ref.name}=: (#{opt}) -> #{opt}",
                 "def reload_#{ref.name}: () -> #{opt}",
               ].tap do |ary|
