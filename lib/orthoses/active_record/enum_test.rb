@@ -13,9 +13,10 @@ module EnumTest
       enum :escape, [:"a-b-c", :"e_[]_f"]
     end
   }
+
   def test_enum(t)
     store = Orthoses::ActiveRecord::Enum.new(
-      Orthoses::Store.new(LOADER1)
+      Orthoses::Store.new(LOADER1),
     ).call
 
     actual = store["EnumTest::User1"].to_rbs
@@ -103,6 +104,76 @@ module EnumTest
         def e___f?: () -> bool
 
         def e___f!: () -> bool
+      end
+    RBS
+    unless expect == actual
+      t.error("expect=\n```rbs\n#{expect}```\n, but got \n```rbs\n#{actual}```\n")
+    end
+  end
+
+  LOADER2 = ->(){
+    class User2 < ActiveRecord::Base
+      enum :array, %i[a b c d e f g h i]
+    end
+  }
+
+  def test_enum_unstrict(t)
+    store = Orthoses::ActiveRecord::Enum.new(
+      Orthoses::Store.new(LOADER2),
+    ).call
+
+    actual = store["EnumTest::User2"].to_rbs
+    expect = <<~RBS
+      class EnumTest::User2 < ::ActiveRecord::Base
+        include EnumTest::User2::ActiveRecord_Enum_EnumMethods
+        def self.arrays: () -> ActiveSupport::HashWithIndifferentAccess[String, Integer]
+        def array: () -> String
+        def array=: (Symbol | String) -> void
+                  | (Integer) -> void
+      end
+    RBS
+    unless expect == actual
+      t.error("expect=\n```rbs\n#{expect}```\n, but got \n```rbs\n#{actual}```\n")
+    end
+
+    actual = store["EnumTest::User2::ActiveRecord_Enum_EnumMethods"].to_rbs
+    expect = <<~RBS
+      module EnumTest::User2::ActiveRecord_Enum_EnumMethods
+        def a?: () -> bool
+
+        def a!: () -> bool
+
+        def b?: () -> bool
+
+        def b!: () -> bool
+
+        def c?: () -> bool
+
+        def c!: () -> bool
+
+        def d?: () -> bool
+
+        def d!: () -> bool
+
+        def e?: () -> bool
+
+        def e!: () -> bool
+
+        def f?: () -> bool
+
+        def f!: () -> bool
+
+        def g?: () -> bool
+
+        def g!: () -> bool
+
+        def h?: () -> bool
+
+        def h!: () -> bool
+
+        def i?: () -> bool
+
+        def i!: () -> bool
       end
     RBS
     unless expect == actual

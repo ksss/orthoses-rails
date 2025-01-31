@@ -7,8 +7,9 @@ module Orthoses
     # >= 7.0
     #   def enum(name = nil, values = nil, **options)
     class Enum
-      def initialize(loader)
+      def initialize(loader, strict_limit: 8)
         @loader = loader
+        @strict_limit = strict_limit
       end
 
       def call
@@ -84,18 +85,23 @@ module Orthoses
         end
 
         # Expressing type casting.
-        store[base_name] << "def #{name}: () -> (#{pairs.keys.map { |k| "\"#{k}\"" }.join(" | ")})"
-        symbol_pattern = if pairs.keys.any? { |key| key.match?(/[^a-zA-Z_]/) }
-          "(Symbol) -> void"
+        overloads = [] #: Array[String]
+        if pairs.length <= @strict_limit
+          if pairs.keys.any? { |key| key.match?(/[^a-zA-Z_]/) }
+            overloads << "(Symbol) -> void"
+          else
+            overloads << "(#{pairs.keys.map{|key|key.to_sym.inspect}.join(" | ")}) -> void"
+          end
+          overloads << "(#{pairs.keys.map{|key|key.to_s.inspect}.join(" | ")}) -> void"
+          overloads << "(#{pairs.values.map(&:inspect).join(" | ")}) -> void"
+          store[base_name] << "def #{name}: () -> (#{pairs.keys.map { |k| "\"#{k}\"" }.join(" | ")})"
+          store[base_name] << "def #{name}=: #{overloads.join(" | ")}"
         else
-          "(#{pairs.keys.map{|key|key.to_sym.inspect}.join(" | ")}) -> void"
+          overloads << "(Symbol | String) -> void"
+          overloads << "(#{pairs.values.map { |v| Orthoses::Utils.object_to_rbs(v) }.uniq.join(" | ")}) -> void"
+          store[base_name] << "def #{name}: () -> String"
+          store[base_name] << "def #{name}=: #{overloads.join(" | ")}"
         end
-        overloads = [
-          symbol_pattern,
-          "(#{pairs.keys.map{|key|key.to_s.inspect}.join(" | ")}) -> void",
-          "(#{pairs.values.map(&:inspect).join(" | ")}) -> void",
-        ]
-        store[base_name] << "def #{name}=: #{overloads.join(" | ")}"
       end
     end
   end
