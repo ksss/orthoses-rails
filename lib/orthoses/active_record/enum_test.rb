@@ -14,17 +14,9 @@ module EnumTest
     end
   }
 
-  LOADER2 = ->(){
-    class User2 < ActiveRecord::Base
-      enum :array, [ :array_active, :array_archived ]
-      enum :map, { map_active: "active", map_archived: "archived" }
-    end
-  }
-
   def test_enum(t)
     store = Orthoses::ActiveRecord::Enum.new(
       Orthoses::Store.new(LOADER1),
-      strict: false
     ).call
 
     actual = store["EnumTest::User1"].to_rbs
@@ -32,25 +24,30 @@ module EnumTest
       class EnumTest::User1 < ::ActiveRecord::Base
         include EnumTest::User1::ActiveRecord_Enum_EnumMethods
         def self.arrays: () -> ActiveSupport::HashWithIndifferentAccess[String, Integer]
-        def array: () -> String
-        def array=: (Symbol | String) -> void
-                  | (Integer) -> void
+        def array: () -> ("array_active" | "array_archived")
+        def array=: (:array_active | :array_archived) -> void
+                  | ("array_active" | "array_archived") -> void
+                  | (0 | 1) -> void
         def self.maps: () -> ActiveSupport::HashWithIndifferentAccess[String, String]
-        def map: () -> String
-        def map=: (Symbol | String) -> void
-                | (String) -> void
+        def map: () -> ("map_active" | "map_archived")
+        def map=: (:map_active | :map_archived) -> void
+                | ("map_active" | "map_archived") -> void
+                | ("active" | "archived") -> void
         def self.prefs: () -> ActiveSupport::HashWithIndifferentAccess[String, Integer]
-        def pref: () -> String
-        def pref=: (Symbol | String) -> void
-                 | (Integer) -> void
+        def pref: () -> ("active" | "archived")
+        def pref=: (:active | :archived) -> void
+                 | ("active" | "archived") -> void
+                 | (0 | 1) -> void
         def self.suffs: () -> ActiveSupport::HashWithIndifferentAccess[String, Integer]
-        def suff: () -> String
-        def suff=: (Symbol | String) -> void
-                 | (Integer) -> void
+        def suff: () -> ("active" | "archived")
+        def suff=: (:active | :archived) -> void
+                 | ("active" | "archived") -> void
+                 | (0 | 1) -> void
         def self.escapes: () -> ActiveSupport::HashWithIndifferentAccess[String, Integer]
-        def escape: () -> String
-        def escape=: (Symbol | String) -> void
-                   | (Integer) -> void
+        def escape: () -> ("a-b-c" | "e_[]_f")
+        def escape=: (Symbol) -> void
+                   | ("a-b-c" | "e_[]_f") -> void
+                   | (0 | 1) -> void
       end
     RBS
     unless expect == actual
@@ -112,10 +109,17 @@ module EnumTest
     unless expect == actual
       t.error("expect=\n```rbs\n#{expect}```\n, but got \n```rbs\n#{actual}```\n")
     end
+  end
 
+  LOADER2 = ->(){
+    class User2 < ActiveRecord::Base
+      enum :array, %i[a b c d e f g h i]
+    end
+  }
+
+  def test_enum_unstrict(t)
     store = Orthoses::ActiveRecord::Enum.new(
       Orthoses::Store.new(LOADER2),
-      strict: true
     ).call
 
     actual = store["EnumTest::User2"].to_rbs
@@ -123,15 +127,9 @@ module EnumTest
       class EnumTest::User2 < ::ActiveRecord::Base
         include EnumTest::User2::ActiveRecord_Enum_EnumMethods
         def self.arrays: () -> ActiveSupport::HashWithIndifferentAccess[String, Integer]
-        def array: () -> ("array_active" | "array_archived")
-        def array=: (:array_active | :array_archived) -> void
-                  | ("array_active" | "array_archived") -> void
-                  | (0 | 1) -> void
-        def self.maps: () -> ActiveSupport::HashWithIndifferentAccess[String, String]
-        def map: () -> ("map_active" | "map_archived")
-        def map=: (:map_active | :map_archived) -> void
-                | ("map_active" | "map_archived") -> void
-                | ("active" | "archived") -> void
+        def array: () -> String
+        def array=: (Symbol | String) -> void
+                  | (Integer) -> void
       end
     RBS
     unless expect == actual
@@ -141,21 +139,41 @@ module EnumTest
     actual = store["EnumTest::User2::ActiveRecord_Enum_EnumMethods"].to_rbs
     expect = <<~RBS
       module EnumTest::User2::ActiveRecord_Enum_EnumMethods
-        def array_active?: () -> bool
+        def a?: () -> bool
 
-        def array_active!: () -> bool
+        def a!: () -> bool
 
-        def array_archived?: () -> bool
+        def b?: () -> bool
 
-        def array_archived!: () -> bool
+        def b!: () -> bool
 
-        def map_active?: () -> bool
+        def c?: () -> bool
 
-        def map_active!: () -> bool
+        def c!: () -> bool
 
-        def map_archived?: () -> bool
+        def d?: () -> bool
 
-        def map_archived!: () -> bool
+        def d!: () -> bool
+
+        def e?: () -> bool
+
+        def e!: () -> bool
+
+        def f?: () -> bool
+
+        def f!: () -> bool
+
+        def g?: () -> bool
+
+        def g!: () -> bool
+
+        def h?: () -> bool
+
+        def h!: () -> bool
+
+        def i?: () -> bool
+
+        def i!: () -> bool
       end
     RBS
     unless expect == actual

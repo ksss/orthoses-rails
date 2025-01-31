@@ -7,9 +7,9 @@ module Orthoses
     # >= 7.0
     #   def enum(name = nil, values = nil, **options)
     class Enum
-      def initialize(loader, strict: false)
+      def initialize(loader, strict_limit: 8)
         @loader = loader
-        @strict = strict
+        @strict_limit = strict_limit
       end
 
       def call
@@ -86,7 +86,7 @@ module Orthoses
 
         # Expressing type casting.
         overloads = [] #: Array[String]
-        if @strict
+        if pairs.length <= @strict_limit
           if pairs.keys.any? { |key| key.match?(/[^a-zA-Z_]/) }
             overloads << "(Symbol) -> void"
           else
