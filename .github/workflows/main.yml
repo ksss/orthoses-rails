@@ -25,8 +25,14 @@ jobs:
         exclude:
           - ruby: '3.1'
             rails_version: '8.0'
+        include:
+          - ruby: '3.4'
+            rails_version: '7.2'
+          - ruby: '3.4'
+            rails_version: '8.0'
     env:
       RAILS_VERSION: ${{ matrix.rails_version }}
+      RUBYOPT: ${{ matrix.ruby == '3.4' && '--parser=parse.y' || '' }}
     steps:
     - uses: actions/checkout@v2
     - name: Remove Gemfile.lock for CI
