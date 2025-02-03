@@ -38,14 +38,14 @@ module TimeWithZoneTest
 
     definetion_builder = RBS::DefinitionBuilder.new(env: env.resolve_type_names)
     begin
-      unless definetion_builder.build_instance(TypeName("::Time")).methods[:defined_method].instance_of?(RBS::Definition::Method)
+      unless definetion_builder.build_instance(::RBS::TypeName.parse("::Time")).methods[:defined_method].instance_of?(RBS::Definition::Method)
         t.error("#defined_method was dropped.")
       end
     rescue => err
       t.error("\n```rbs\n#{store["Time"].to_rbs}```\n#{err.inspect}")
     end
     begin
-      definetion_builder.build_instance(TypeName("::ActiveSupport::TimeWithZone"))
+      definetion_builder.build_instance(::RBS::TypeName.parse("::ActiveSupport::TimeWithZone"))
     rescue => err
       t.error("\n```rbs\n#{store["ActiveSupport::TimeWithZone"].to_rbs}```\n#{err.inspect}")
     end

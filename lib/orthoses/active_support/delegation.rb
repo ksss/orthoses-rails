@@ -80,7 +80,7 @@ module Orthoses
         end
 
         def find(mod_name, name, kind, argument)
-          typename = TypeName(mod_name).absolute!
+          typename = ::RBS::TypeName.parse(mod_name).absolute!
 
           if definition_method = build_definition(typename, kind)&.methods&.[](name)
             # found in env
