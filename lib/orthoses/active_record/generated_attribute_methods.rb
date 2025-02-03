@@ -25,8 +25,9 @@ module Orthoses
         "will_save_change_to_attribute?" => "() -> bool",
       }
 
-      def initialize(loader)
+      def initialize(loader, target_type_map: TARGET_TYPE_MAP)
         @loader = loader
+        @target_type_map = target_type_map
       end
 
       def call
@@ -50,7 +51,7 @@ module Orthoses
 
               lines << "attr_accessor #{name}: #{type}"
               attribute_method_patterns(::ActiveRecord::Base).each do |matcher|
-                tmpl = TARGET_TYPE_MAP[matcher.proxy_target] or next
+                tmpl = @target_type_map[matcher.proxy_target] or next
                 lines << "def #{matcher.method_name(name)}: #{tmpl % {type: type, opt: opt}}"
               end
             end
