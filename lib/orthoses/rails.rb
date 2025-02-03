@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'orthoses'
+require_relative 'shims'
 
 require_relative 'action_mailer'
 require_relative 'active_model'

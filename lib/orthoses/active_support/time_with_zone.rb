@@ -29,10 +29,10 @@ module Orthoses
       ])
 
       TIME_MODULES = Set.new([
-        TypeName("::Time"),
-        TypeName("::DateAndTime::Zones"),
-        TypeName("::DateAndTime::Calculations"),
-        TypeName("::DateAndTime::Compatibility")
+        ::RBS::TypeName.parse("::Time"),
+        ::RBS::TypeName.parse("::DateAndTime::Zones"),
+        ::RBS::TypeName.parse("::DateAndTime::Calculations"),
+        ::RBS::TypeName.parse("::DateAndTime::Compatibility")
       ])
 
       NONEED_METHODS = Set.new(%i[
@@ -65,8 +65,8 @@ module Orthoses
       end
 
       def each_line_from_core_time_definition(store)
-        type_name_time = TypeName("::Time")
-        type_name_time_with_zone = TypeName("::ActiveSupport::TimeWithZone")
+        type_name_time = ::RBS::TypeName.parse("::Time")
+        type_name_time_with_zone = ::RBS::TypeName.parse("::ActiveSupport::TimeWithZone")
         env = Utils.rbs_environment(collection: true, cache: false)
 
         add_signature(env, store["Time"])
