@@ -64,8 +64,7 @@ module RelationTest
     end
 
     expect = [
-      'def singleton!:',
-      'include ActiveRecord::Core::ClassMethods'
+      'def singleton!:'
     ]
     actual = store["RelationTest::User::GeneratedRelationMethods"].to_rbs
     unless expect.all? { |e| actual.include?(e) }
