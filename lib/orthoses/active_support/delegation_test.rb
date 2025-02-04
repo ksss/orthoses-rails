@@ -51,7 +51,7 @@ module DelegationTest
       c.body.delete_if {|line| line.start_with?('#') }
     }.to_rbs
     expect = <<~RBS
-      class Foo
+      class DelegationTest::Foo
         def no_type: () -> untyped
         def string: () -> String
         @single_var: Integer
