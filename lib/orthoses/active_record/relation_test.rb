@@ -63,13 +63,14 @@ module RelationTest
       t.error("expect=\n```rbs\n#{expect}```\n, but got \n```rbs\n#{actual}```\n")
     end
 
-    expect = [
-      'def singleton!:',
-      'include ActiveRecord::Core::ClassMethods'
-    ]
     actual = store["RelationTest::User::GeneratedRelationMethods"].to_rbs
-    unless expect.all? { |e| actual.include?(e) }
-      t.error("expect has #{expect}, but got \n```rbs\n#{actual}```\n")
+    expect = <<~RBS
+      module RelationTest::User::GeneratedRelationMethods
+        def singleton!: (*untyped, **untyped) -> untyped
+      end
+    RBS
+    unless expect == actual
+      t.error("expect=\n```rbs\n#{expect}```\n, but got \n```rbs\n#{actual}```\n")
     end
   end
 end

@@ -3,8 +3,9 @@
 module Orthoses
   module ActiveRecord
     class Relation
-      def initialize(loader)
+      def initialize(loader, strict: false)
         @loader = loader
+        @strict = strict
       end
 
       def call
@@ -24,10 +25,12 @@ module Orthoses
               klass.singleton_methods(false).each do |singleton_method|
                 c << "def #{singleton_method}: (*untyped, **untyped) -> untyped"
               end
-              (klass.singleton_class.included_modules - ::ActiveRecord::Relation.included_modules).each do |mod|
-                mname = Utils.module_name(mod) or next
-                store[mname].header = "module #{mname}"
-                c << "include #{mname}"
+              if @strict
+                (klass.singleton_class.included_modules - ::ActiveRecord::Relation.included_modules).each do |mod|
+                  mname = Utils.module_name(mod) or next
+                  store[mname].header = "module #{mname}"
+                  c << "include #{mname}"
+                end
               end
             end
 
