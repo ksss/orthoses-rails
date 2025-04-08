@@ -51,7 +51,7 @@ module DelegationTest
       c.body.delete_if {|line| line.start_with?('#') }
     }.to_rbs
     expect = <<~RBS
-      class DelegationTest::Foo
+      class ::DelegationTest::Foo
         def no_type: () -> untyped
         def string: () -> String
         @single_var: Integer
@@ -59,7 +59,7 @@ module DelegationTest
         alias single_alias string
         SINGLE_CONST: Integer
         def to_bar: () -> DelegationTest::Bar
-        def name: () -> ::String?
+        def name: () -> ::String
         def ref_no_type: (*untyped, **untyped) -> untyped
         def skip: (*untyped, **untyped) -> untyped
         def empty?: () -> bool
