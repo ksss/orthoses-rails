@@ -46,6 +46,7 @@ module RelationTest
     expect = <<~RBS
       class RelationTest::User::ActiveRecord_Associations_CollectionProxy < ::ActiveRecord::Associations::CollectionProxy
         include _ActiveRecord_Relation[RelationTest::User, ::Integer]
+        include Enumerable[RelationTest::User]
       end
     RBS
     actual = store["RelationTest::User::ActiveRecord_Associations_CollectionProxy"].to_rbs
