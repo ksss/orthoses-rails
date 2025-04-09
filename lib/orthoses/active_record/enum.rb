@@ -2,8 +2,6 @@
 
 module Orthoses
   module ActiveRecord
-    # <= 6.1
-    #   def enum(definitions)
     # >= 7.0
     #   def enum(name = nil, values = nil, **options)
     class Enum
@@ -26,27 +24,19 @@ module Orthoses
             store[base_name] << sig
           end
 
-          if capture.argument[:definitions]
-            # on rails 6
-            definitions = capture.argument[:definitions].slice!(:_prefix, :_suffix, :_scopes, :_default)
-            options = capture.argument[:definitions].transform_keys { |key| :"#{key[1..-1]}" }
-            definitions.each { |name, values| _enum(store, base_name, name, values, **options) }
+          name = capture.argument[:name]
+          values = capture.argument[:values]
+          options = capture.argument[:options]
+          if name
+            # rails 7 style
+            values, options = options, {} unless values
+            _enum(store, base_name, name, values, **options)
           else
-            # on rails 7
-            name = capture.argument[:name]
-            values = capture.argument[:values]
-            options = capture.argument[:options]
-            if name
-              # rails 7 style
-              values, options = options, {} unless values
-              _enum(store, base_name, name, values, **options)
-            else
-              # rails 6 style
-              definitions = options.slice!(:_prefix, :_suffix, :_scopes, :_default)
-              options.transform_keys! { |key| :"#{key[1..-1]}" }
+            # rails 6 style (will remove rails 8)
+            definitions = options.slice!(:_prefix, :_suffix, :_scopes, :_default)
+            options.transform_keys! { |key| :"#{key[1..-1]}" }
 
-              definitions.each { |name, values| _enum(store, base_name, name, values, **options) }
-            end
+            definitions.each { |name, values| _enum(store, base_name, name, values, **options) }
           end
         end
 
