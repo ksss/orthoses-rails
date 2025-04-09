@@ -32,6 +32,10 @@ module Orthoses
       private
 
       def parameters_to_type(parameters)
+        # foo(...)
+        if parameters in [[:rest, :*], [:keyrest, :**], [:block, :&]]
+          return "(?)"
+        end
         # @type var res: Array[String]
         res = []
         # @type var block: String?

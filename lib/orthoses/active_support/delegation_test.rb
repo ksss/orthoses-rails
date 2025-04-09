@@ -60,8 +60,8 @@ module DelegationTest
         SINGLE_CONST: Integer
         def to_bar: () -> DelegationTest::Bar
         def name: () -> ::String
-        def ref_no_type: (*untyped, **untyped) -> untyped
-        def skip: (*untyped, **untyped) -> untyped
+        def ref_no_type: (?) -> untyped
+        def skip: (?) -> untyped
         def empty?: () -> bool
         def to_int: () -> ::Integer
         def to_f: () -> ::Float

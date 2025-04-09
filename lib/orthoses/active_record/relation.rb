@@ -23,7 +23,7 @@ module Orthoses
             # Expressing delegation.
             store[class_specific_generated_relation_methods].tap do |c|
               klass.singleton_methods(false).each do |singleton_method|
-                c << "def #{singleton_method}: (*untyped, **untyped) -> untyped"
+                c << "def #{singleton_method}: (?) -> untyped"
               end
               if @strict
                 (klass.singleton_class.included_modules - ::ActiveRecord::Relation.included_modules).each do |mod|
