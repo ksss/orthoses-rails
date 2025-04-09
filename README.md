@@ -15,14 +15,121 @@ $ bundle exec rbs collection install
 Build your Rake task for RBS generation.
 
 ```
-$ bin/rails generate orthoses:rails:install
+$ bundle exec rails generate orthoses:rails:install
 ```
 
 Then run the rake task.
 
 ```
-$ bin/rails orthoses:rails
+$ bundle exec rails orthoses:rails
 ```
+
+Output is stored in the `sig/orthoses` directory.
+
+## Output example
+
+```rb
+class User < ApplicationRecord
+  has_one :email_account, dependent: :destroy
+end
+```
+
+```rbs
+class User < ::ApplicationRecord
+  include User::GeneratedAssociationMethods
+  include User::GeneratedAttributeMethods
+  extend User::ActiveRecord_Persistence_ClassMethods
+  extend _ActiveRecord_Relation_ClassMethods[User, User::ActiveRecord_Relation, Integer]
+end
+
+class User::ActiveRecord_Associations_CollectionProxy < ::ActiveRecord::Associations::CollectionProxy
+  include _ActiveRecord_Relation[User, Integer]
+  include Enumerable[User]
+end
+
+module User::ActiveRecord_Persistence_ClassMethods
+  def build: (?id: Integer, ?created_at: ActiveSupport::TimeWithZone?, ?updated_at: ActiveSupport::TimeWithZone?, ?nickname: String?, **untyped) ?{ (User) -> void } -> User
+           | (Array[Hash[Symbol, untyped]]) ?{ (User) -> void } -> Array[User]
+
+  def create: (?id: Integer, ?created_at: ActiveSupport::TimeWithZone?, ?updated_at: ActiveSupport::TimeWithZone?, ?nickname: String?, **untyped) ?{ (User) -> void } -> User
+            | (Array[Hash[Symbol, untyped]]) ?{ (User) -> void } -> Array[User]
+
+  def create!: (?id: Integer, ?created_at: ActiveSupport::TimeWithZone?, ?updated_at: ActiveSupport::TimeWithZone?, ?nickname: String?, **untyped) ?{ (User) -> void } -> User
+             | (Array[Hash[Symbol, untyped]]) ?{ (User) -> void } -> Array[User]
+end
+
+class User::ActiveRecord_Relation < ::ActiveRecord::Relation
+  include Enumerable[User]
+  include User::GeneratedRelationMethods
+  include _ActiveRecord_Relation[User, Integer]
+end
+
+module ::User::GeneratedAssociationMethods
+  def build_email_account: (?untyped attributes) ?{ (EmailAccount) -> void } -> EmailAccount
+
+  def create_email_account: (?untyped attributes) ?{ (EmailAccount) -> void } -> EmailAccount
+
+  def create_email_account!: (?untyped attributes) ?{ (EmailAccount) -> void } -> EmailAccount
+
+  def email_account: () -> EmailAccount?
+
+  def email_account=: (EmailAccount?) -> EmailAccount?
+
+  # ...snip...
+end
+
+module ::User::GeneratedAttributeMethods
+  attr_accessor id: ::Integer
+
+  attr_accessor nickname: ::String?
+
+  attr_accessor updated_at: ::ActiveSupport::TimeWithZone?
+
+  attr_accessor created_at: ::ActiveSupport::TimeWithZone?
+
+  # ...snip...
+end
+
+module ::User::GeneratedRelationMethods
+  # ...snip...
+end
+```
+
+## Supported methods
+
+### ActionMailer
+
+- Action methods
+
+### ActiveModel
+
+- `attribute`
+- `has_secure_password`
+
+### ActiveRecord
+
+- Column attribute methods
+- `belongs_to`
+- `delegated_type`
+- `enum`
+- `has_many`
+- `has_one`
+- Relation and CollectionProxy methods
+- `scope`
+- `secure_token`
+
+### ActiveStorage
+
+- `has_one_attached`
+
+### ActiveSupport
+
+- `alias_attribute`
+- `class_attribute`
+- `class_methods`
+- `config_accessor`
+- `delegate`
+- `mattr_accessor`
 
 ## Installation
 
