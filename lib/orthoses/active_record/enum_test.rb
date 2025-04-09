@@ -24,27 +24,32 @@ module EnumTest
       class EnumTest::User1 < ::ActiveRecord::Base
         include EnumTest::User1::ActiveRecord_Enum_EnumMethods
         def self.arrays: () -> ActiveSupport::HashWithIndifferentAccess[String, Integer]
-        def array: () -> ("array_active" | "array_archived")
+        type array_return = "array_active" | "array_archived"
+        def array: () -> array_return
         def array=: (:array_active | :array_archived) -> void
                   | ("array_active" | "array_archived") -> void
                   | (0 | 1) -> void
         def self.maps: () -> ActiveSupport::HashWithIndifferentAccess[String, String]
-        def map: () -> ("map_active" | "map_archived")
+        type map_return = "map_active" | "map_archived"
+        def map: () -> map_return
         def map=: (:map_active | :map_archived) -> void
                 | ("map_active" | "map_archived") -> void
                 | ("active" | "archived") -> void
         def self.prefs: () -> ActiveSupport::HashWithIndifferentAccess[String, Integer]
-        def pref: () -> ("active" | "archived")
+        type pref_return = "active" | "archived"
+        def pref: () -> pref_return
         def pref=: (:active | :archived) -> void
                  | ("active" | "archived") -> void
                  | (0 | 1) -> void
         def self.suffs: () -> ActiveSupport::HashWithIndifferentAccess[String, Integer]
-        def suff: () -> ("active" | "archived")
+        type suff_return = "active" | "archived"
+        def suff: () -> suff_return
         def suff=: (:active | :archived) -> void
                  | ("active" | "archived") -> void
                  | (0 | 1) -> void
         def self.escapes: () -> ActiveSupport::HashWithIndifferentAccess[String, Integer]
-        def escape: () -> ("a-b-c" | "e_[]_f")
+        type escape_return = "a-b-c" | "e_[]_f"
+        def escape: () -> escape_return
         def escape=: (Symbol) -> void
                    | ("a-b-c" | "e_[]_f") -> void
                    | (0 | 1) -> void
@@ -127,7 +132,8 @@ module EnumTest
       class EnumTest::User2 < ::ActiveRecord::Base
         include EnumTest::User2::ActiveRecord_Enum_EnumMethods
         def self.arrays: () -> ActiveSupport::HashWithIndifferentAccess[String, Integer]
-        def array: () -> String
+        type array_return = String
+        def array: () -> array_return
         def array=: (Symbol | String) -> void
                   | (Integer) -> void
       end

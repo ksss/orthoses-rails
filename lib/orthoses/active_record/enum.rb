@@ -87,6 +87,7 @@ module Orthoses
         # Expressing type casting.
         overloads = [] #: Array[String]
         if pairs.length <= @strict_limit
+          store[base_name] << "type #{name}_return = #{pairs.keys.map { |k| "\"#{k}\"" }.join(" | ")}"
           if pairs.keys.any? { |key| key.match?(/[^a-zA-Z_]/) }
             overloads << "(Symbol) -> void"
           else
@@ -94,12 +95,13 @@ module Orthoses
           end
           overloads << "(#{pairs.keys.map{|key|key.to_s.inspect}.join(" | ")}) -> void"
           overloads << "(#{pairs.values.map(&:inspect).join(" | ")}) -> void"
-          store[base_name] << "def #{name}: () -> (#{pairs.keys.map { |k| "\"#{k}\"" }.join(" | ")})"
+          store[base_name] << "def #{name}: () -> #{name}_return"
           store[base_name] << "def #{name}=: #{overloads.join(" | ")}"
         else
+          store[base_name] << "type #{name}_return = String"
           overloads << "(Symbol | String) -> void"
           overloads << "(#{pairs.values.map { |v| Orthoses::Utils.object_to_rbs(v) }.uniq.join(" | ")}) -> void"
-          store[base_name] << "def #{name}: () -> String"
+          store[base_name] << "def #{name}: () -> #{name}_return"
           store[base_name] << "def #{name}=: #{overloads.join(" | ")}"
         end
       end
