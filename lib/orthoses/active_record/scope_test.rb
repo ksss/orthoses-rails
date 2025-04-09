@@ -41,7 +41,7 @@ module ScopeTest
       class ScopeTest::User < ::ActiveRecord::Base
         def self.empty: () -> ScopeTest::User::ActiveRecord_Relation
         def self.params: (untyped a, ?untyped b, *untyped, d: untyped, ?e: untyped, **untyped) -> ScopeTest::User::ActiveRecord_Relation
-        def self.by_status: (*untyped, **untyped) { (*untyped) -> untyped } -> ScopeTest::User::ActiveRecord_Relation
+        def self.by_status: (?) -> ScopeTest::User::ActiveRecord_Relation
       end
 
       module ScopeTest::User::GeneratedRelationMethods
@@ -49,7 +49,7 @@ module ScopeTest
 
         def params: (untyped a, ?untyped b, *untyped, d: untyped, ?e: untyped, **untyped) -> ScopeTest::User::ActiveRecord_Relation
 
-        def by_status: (*untyped, **untyped) { (*untyped) -> untyped } -> ScopeTest::User::ActiveRecord_Relation
+        def by_status: (?) -> ScopeTest::User::ActiveRecord_Relation
       end
     RBS
     unless expect == actual

@@ -50,7 +50,7 @@ module Orthoses
               # no type found
               capture.argument[:methods].each do |method|
                 receiver_content << "# defined by `delegate` to: #{to_return_type}##{to_name}"
-                receiver_content << "#{prefix}def #{method}: (*untyped, **untyped) -> untyped"
+                receiver_content << "#{prefix}def #{method}: (?) -> untyped"
               end
             else
               # found return type in store or env
