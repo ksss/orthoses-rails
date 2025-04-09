@@ -25,8 +25,12 @@ module Orthoses
         "will_save_change_to_attribute?" => "() -> bool",
       }
 
-      def initialize(loader)
+      def initialize(loader, targets: TARGET_TYPE_MAP.keys)
         @loader = loader
+        unless targets.all? { |target| TARGET_TYPE_MAP.key?(target) }
+          raise ArgumentError, "Unknown target type: #{targets - TARGET_TYPE_MAP.keys}"
+        end
+        @targets = targets
       end
 
       def call
@@ -50,12 +54,13 @@ module Orthoses
 
               lines << "attr_accessor #{name}: #{type}"
               attribute_method_patterns(::ActiveRecord::Base).each do |matcher|
-                tmpl = TARGET_TYPE_MAP[matcher.proxy_target] or next
+                tmpl = target_type(matcher.proxy_target) or next
                 lines << "def #{matcher.method_name(name)}: #{tmpl % {type: type, opt: opt}}"
               end
             end
             klass.attribute_aliases.each do |alias_name, column_name|
               attribute_method_patterns(::ActiveRecord::Base).each do |matcher|
+                next unless matcher.proxy_target == "attribute" || target_type(matcher.proxy_target)
                 lines << "alias #{matcher.method_name(alias_name)} #{matcher.method_name(column_name)}"
               end
             end
@@ -81,6 +86,11 @@ module Orthoses
             end
           end
         end
+      end
+
+      def target_type(target)
+        return unless @targets.include?(target)
+        TARGET_TYPE_MAP[target]
       end
     end
   end
