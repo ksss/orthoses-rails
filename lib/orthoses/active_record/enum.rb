@@ -5,7 +5,7 @@ module Orthoses
     # >= 7.0
     #   def enum(name = nil, values = nil, **options)
     class Enum
-      def initialize(loader, strict_limit: 8)
+      def initialize(loader, strict_limit: -1)
         @loader = loader
         @strict_limit = strict_limit
       end
@@ -76,7 +76,7 @@ module Orthoses
 
         # Expressing type casting.
         setters = [] #: Array[String]
-        if pairs.length <= @strict_limit
+        if @strict_limit.negative? || pairs.length <= @strict_limit
           store[base_name] << "type #{name}_string = #{pairs.keys.map { |k| "\"#{k}\"" }.join(" | ")}"
           if pairs.keys.any? { |key| key.match?(/[^a-zA-Z_]/) }
             store[base_name] << "type #{name}_symbol = Symbol"
