@@ -75,24 +75,26 @@ module Orthoses
         end
 
         # Expressing type casting.
-        overloads = [] #: Array[String]
+        setters = [] #: Array[String]
         if pairs.length <= @strict_limit
-          store[base_name] << "type #{name}_return = #{pairs.keys.map { |k| "\"#{k}\"" }.join(" | ")}"
+          store[base_name] << "type #{name}_string = #{pairs.keys.map { |k| "\"#{k}\"" }.join(" | ")}"
           if pairs.keys.any? { |key| key.match?(/[^a-zA-Z_]/) }
-            overloads << "(Symbol) -> void"
+            store[base_name] << "type #{name}_symbol = Symbol"
           else
-            overloads << "(#{pairs.keys.map{|key|key.to_sym.inspect}.join(" | ")}) -> void"
+            store[base_name] << "type #{name}_symbol = #{pairs.keys.map{|key|key.to_sym.inspect}.join(" | ")}"
           end
-          overloads << "(#{pairs.keys.map{|key|key.to_s.inspect}.join(" | ")}) -> void"
-          overloads << "(#{pairs.values.map(&:inspect).join(" | ")}) -> void"
-          store[base_name] << "def #{name}: () -> #{name}_return"
-          store[base_name] << "def #{name}=: #{overloads.join(" | ")}"
+          setters << "(#{name}_string) -> void"
+          setters << "(#{name}_symbol) -> void"
+          setters << "(#{pairs.values.map(&:inspect).join(" | ")}) -> void"
+          store[base_name] << "def #{name}: () -> #{name}_string"
+          store[base_name] << "def #{name}=: #{setters.join(" | ")}"
         else
-          store[base_name] << "type #{name}_return = String"
-          overloads << "(Symbol | String) -> void"
-          overloads << "(#{pairs.values.map { |v| Orthoses::Utils.object_to_rbs(v) }.uniq.join(" | ")}) -> void"
-          store[base_name] << "def #{name}: () -> #{name}_return"
-          store[base_name] << "def #{name}=: #{overloads.join(" | ")}"
+          store[base_name] << "type #{name}_string = String"
+          store[base_name] << "type #{name}_symbol = Symbol"
+          setters << "(#{name}_string | #{name}_symbol) -> void"
+          setters << "(#{pairs.values.map { |v| Orthoses::Utils.object_to_rbs(v) }.uniq.join(" | ")}) -> void"
+          store[base_name] << "def #{name}: () -> #{name}_string"
+          store[base_name] << "def #{name}=: #{setters.join(" | ")}"
         end
       end
     end

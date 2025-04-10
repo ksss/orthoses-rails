@@ -24,34 +24,39 @@ module EnumTest
       class EnumTest::User1 < ::ActiveRecord::Base
         include EnumTest::User1::ActiveRecord_Enum_EnumMethods
         def self.arrays: () -> ActiveSupport::HashWithIndifferentAccess[String, Integer]
-        type array_return = "array_active" | "array_archived"
-        def array: () -> array_return
-        def array=: (:array_active | :array_archived) -> void
-                  | ("array_active" | "array_archived") -> void
+        type array_string = "array_active" | "array_archived"
+        type array_symbol = :array_active | :array_archived
+        def array: () -> array_string
+        def array=: (array_string) -> void
+                  | (array_symbol) -> void
                   | (0 | 1) -> void
         def self.maps: () -> ActiveSupport::HashWithIndifferentAccess[String, String]
-        type map_return = "map_active" | "map_archived"
-        def map: () -> map_return
-        def map=: (:map_active | :map_archived) -> void
-                | ("map_active" | "map_archived") -> void
+        type map_string = "map_active" | "map_archived"
+        type map_symbol = :map_active | :map_archived
+        def map: () -> map_string
+        def map=: (map_string) -> void
+                | (map_symbol) -> void
                 | ("active" | "archived") -> void
         def self.prefs: () -> ActiveSupport::HashWithIndifferentAccess[String, Integer]
-        type pref_return = "active" | "archived"
-        def pref: () -> pref_return
-        def pref=: (:active | :archived) -> void
-                 | ("active" | "archived") -> void
+        type pref_string = "active" | "archived"
+        type pref_symbol = :active | :archived
+        def pref: () -> pref_string
+        def pref=: (pref_string) -> void
+                 | (pref_symbol) -> void
                  | (0 | 1) -> void
         def self.suffs: () -> ActiveSupport::HashWithIndifferentAccess[String, Integer]
-        type suff_return = "active" | "archived"
-        def suff: () -> suff_return
-        def suff=: (:active | :archived) -> void
-                 | ("active" | "archived") -> void
+        type suff_string = "active" | "archived"
+        type suff_symbol = :active | :archived
+        def suff: () -> suff_string
+        def suff=: (suff_string) -> void
+                 | (suff_symbol) -> void
                  | (0 | 1) -> void
         def self.escapes: () -> ActiveSupport::HashWithIndifferentAccess[String, Integer]
-        type escape_return = "a-b-c" | "e_[]_f"
-        def escape: () -> escape_return
-        def escape=: (Symbol) -> void
-                   | ("a-b-c" | "e_[]_f") -> void
+        type escape_string = "a-b-c" | "e_[]_f"
+        type escape_symbol = Symbol
+        def escape: () -> escape_string
+        def escape=: (escape_string) -> void
+                   | (escape_symbol) -> void
                    | (0 | 1) -> void
       end
     RBS
@@ -132,9 +137,10 @@ module EnumTest
       class EnumTest::User2 < ::ActiveRecord::Base
         include EnumTest::User2::ActiveRecord_Enum_EnumMethods
         def self.arrays: () -> ActiveSupport::HashWithIndifferentAccess[String, Integer]
-        type array_return = String
-        def array: () -> array_return
-        def array=: (Symbol | String) -> void
+        type array_string = String
+        type array_symbol = Symbol
+        def array: () -> array_string
+        def array=: (array_string | array_symbol) -> void
                   | (Integer) -> void
       end
     RBS
