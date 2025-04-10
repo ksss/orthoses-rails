@@ -123,13 +123,14 @@ module EnumTest
 
   LOADER2 = ->(){
     class User2 < ActiveRecord::Base
-      enum :array, %i[a b c d e f g h i]
+      enum :array, %i[a b c d]
     end
   }
 
   def test_enum_unstrict(t)
     store = Orthoses::ActiveRecord::Enum.new(
       Orthoses::Store.new(LOADER2),
+      strict_limit: 3,
     ).call
 
     actual = store["EnumTest::User2"].to_rbs
@@ -166,26 +167,6 @@ module EnumTest
         def d?: () -> bool
 
         def d!: () -> bool
-
-        def e?: () -> bool
-
-        def e!: () -> bool
-
-        def f?: () -> bool
-
-        def f!: () -> bool
-
-        def g?: () -> bool
-
-        def g!: () -> bool
-
-        def h?: () -> bool
-
-        def h!: () -> bool
-
-        def i?: () -> bool
-
-        def i!: () -> bool
       end
     RBS
     unless expect == actual
