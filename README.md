@@ -26,13 +26,17 @@ $ bundle exec rails orthoses:rails
 
 Output is stored in the `sig/orthoses` directory.
 
-## Output example
+## Example
+
+### Inputs
 
 ```rb
 class User < ApplicationRecord
   has_one :email_account, dependent: :destroy
 end
 ```
+
+### Outputs
 
 ```rbs
 class User < ::ApplicationRecord
