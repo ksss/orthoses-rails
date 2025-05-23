@@ -43,6 +43,7 @@ module Orthoses
 
             store[class_specific_proxy].tap do |c|
               c.header = "class #{class_specific_proxy} < ::ActiveRecord::Associations::CollectionProxy"
+              c << "include #{class_specific_generated_relation_methods}"
               c << "include _ActiveRecord_Relation[#{model_name}, #{primary_key}]"
               c << "include Enumerable[#{model_name}]"
             end
