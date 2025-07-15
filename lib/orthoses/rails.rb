@@ -9,6 +9,7 @@ require_relative 'active_record'
 require_relative 'active_storage'
 require_relative 'active_support'
 require_relative 'railties'
+require_relative 'zeitwerk'
 
 require_relative "rails/application"
 require_relative "rails/version"

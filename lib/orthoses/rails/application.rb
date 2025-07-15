@@ -43,6 +43,11 @@ module Orthoses
           use Orthoses::ActiveSupport::Delegation
           use Orthoses::ActiveSupport::Configurable
           use Orthoses::ActiveSupport::MattrAccessor
+
+          if defined?(::Zeitwerk)
+            use Orthoses::Zeitwerk
+          end
+
           reset_runner loader
         end.call
       end
