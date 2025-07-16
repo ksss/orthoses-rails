@@ -26,7 +26,6 @@ jobs:
             rails_version: '7.1'
     env:
       RAILS_VERSION: ${{ matrix.rails_version }}
-      RUBYOPT: ${{ matrix.ruby == '3.4' && '--parser=parse.y' || '' }}
     steps:
     - uses: actions/checkout@v2
     - name: Remove Gemfile.lock for CI
