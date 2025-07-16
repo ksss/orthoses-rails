@@ -3,8 +3,9 @@
 module Orthoses
   module ActiveSupport
     class Concern
-      def initialize(loader)
+      def initialize(loader, prototype_members: false)
         @loader = loader
+        @prototype_members = prototype_members
       end
 
       def call
@@ -19,15 +20,19 @@ module Orthoses
           next unless receiver_name
 
           class_methods_name = "#{receiver_name}::ClassMethods"
-          members = members_prototype_of(class_methods_name)
+          if @prototype_members
+            members = members_prototype_of(class_methods_name)
 
-          writer = ::RBS::Writer.new(out: StringIO.new)
-          members.each do |member|
-            writer.write_member(member)
+            writer = ::RBS::Writer.new(out: StringIO.new)
+            members.each do |member|
+              writer.write_member(member)
+            end
+            out = writer.out
+            # NOTE: Should I remove the method that is accidentally added in prototype rb?
+            store[class_methods_name].concat(out.string.each_line.to_a)
+          else
+            store[class_methods_name].header = "module #{class_methods_name}"
           end
-          out = writer.out
-          # NOTE: Should I remove the method that is accidentally added in prototype rb?
-          store[class_methods_name].concat(out.string.each_line.to_a)
         end
 
         store

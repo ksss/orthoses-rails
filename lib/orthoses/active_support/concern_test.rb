@@ -17,7 +17,8 @@ module ConcernTest
   }
   def test_class_methods(t)
     store = Orthoses::ActiveSupport::Concern.new(
-      Orthoses::Store.new(LOADER)
+      Orthoses::Store.new(LOADER),
+      prototype_members: true
     ).call
 
     expect = <<~RBS
