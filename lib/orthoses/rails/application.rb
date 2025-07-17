@@ -40,6 +40,7 @@ module Orthoses
           use Orthoses::ActiveSupport::Aliasing
           use Orthoses::ActiveSupport::ClassAttribute
           use Orthoses::ActiveSupport::Concern
+          use Orthoses::ActiveSupport::CoreExt
           use Orthoses::ActiveSupport::Delegation
           use Orthoses::ActiveSupport::Configurable
           use Orthoses::ActiveSupport::MattrAccessor
