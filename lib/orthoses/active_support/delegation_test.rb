@@ -19,6 +19,7 @@ module DelegationTest
       delegate :ord, to: :single_alias
       delegate :even?, to: :defined
       delegate :from_bar, to: :to_bar
+      delegate :ref_untyped_function, to: :untyped_function
     end
   }
   def test_delegate(t)
@@ -40,6 +41,7 @@ module DelegationTest
         store["DelegationTest::Foo"] << "alias single_alias string"
         store["DelegationTest::Foo"] << "SINGLE_CONST: Integer"
         store["DelegationTest::Foo"] << "def to_bar: () -> DelegationTest::Bar"
+        store["DelegationTest::Foo"] << "def untyped_function: (?) -> untyped"
         store["DelegationTest::Bar"].header = "class Bar"
         store["DelegationTest::Bar"] << "def from_bar: () -> DelegationTest::Bar"
         store["DelegationTest::Bar"] << "private def priv: () -> void"
@@ -59,6 +61,7 @@ module DelegationTest
         alias single_alias string
         SINGLE_CONST: Integer
         def to_bar: () -> DelegationTest::Bar
+        def untyped_function: (?) -> untyped
         def name: () -> ::String
         def ref_no_type: (?) -> untyped
         def skip: (?) -> untyped
@@ -69,6 +72,7 @@ module DelegationTest
         def ord: () -> ::Integer
         def even?: () -> bool
         def from_bar: () -> DelegationTest::Bar
+        def ref_untyped_function: (?) -> untyped
       end
     RBS
     unless expect == actual
