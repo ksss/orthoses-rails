@@ -129,7 +129,8 @@ module Orthoses
                 return [:multi, member.overloads.map { |o| o.method_type }]
               else
                 method_type = member.overloads.map(&:method_type).find do |method_type|
-                  method_type.type.required_positionals.empty? && method_type.type.required_keywords.empty?
+                  is_untyped_function = defined?(RBS::Types::UntypedFunction) && method_type.type.is_a?(RBS::Types::UntypedFunction)
+                  is_untyped_function || (method_type.type.required_positionals.empty? && method_type.type.required_keywords.empty?)
                 end
                 next unless method_type
                 return [:single, method_type.type.return_type]
