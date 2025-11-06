@@ -24,6 +24,8 @@ when "7.2"
   gem "rails", ">= 7.2", "< 7.3"
 when "8.0"
   gem "rails", ">= 8.0", "< 8.1"
+when "8.1"
+  gem "rails", ">= 8.1", "< 8.2"
 else
   gem "rails"
 end

@@ -21,6 +21,7 @@ jobs:
           - '7.1'
           - '7.2'
           - '8.0'
+          - '8.1'
         exclude:
           - ruby: '3.4'
             rails_version: '7.1'
