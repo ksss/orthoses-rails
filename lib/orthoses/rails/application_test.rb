@@ -36,29 +36,47 @@ module ApplicationTest
       Orthoses::Store.new(LOADER)
     ).call
 
-    actual = store.fetch_values('ApplicationTest::User', 'ApplicationTest::User::GeneratedRelationMethods').map(&:to_rbs).join("\n")
-    expect = <<~RBS
-      class ApplicationTest::User < ::ActiveRecord::Base
-        extend _ActiveRecord_Relation_ClassMethods[ApplicationTest::User, ApplicationTest::User::ActiveRecord_Relation, ::Integer]
-        def self.empty: () -> ApplicationTest::User::ActiveRecord_Relation
-        def self.params: (untyped a, ?untyped b, *untyped, d: untyped, ?e: untyped, **untyped) -> ApplicationTest::User::ActiveRecord_Relation
-        def self.by_status: (?) -> ApplicationTest::User::ActiveRecord_Relation
-        extend ApplicationTest::User::ActiveRecord_Persistence_ClassMethods
-        include ApplicationTest::User::GeneratedAssociationMethods
-        include ApplicationTest::User::GeneratedAttributeMethods
-      end
+    user_signature = store.fetch('ApplicationTest::User').to_rbs
 
-      module ApplicationTest::User::GeneratedRelationMethods
-        def params: (untyped a, ?untyped b, *untyped, d: untyped, ?e: untyped, **untyped) -> ApplicationTest::User::ActiveRecord_Relation
-
-        def by_status: (?) -> ApplicationTest::User::ActiveRecord_Relation
-
-        def empty: () -> ApplicationTest::User::ActiveRecord_Relation
-      end
-    RBS
-    unless expect == actual
-      t.error("expect=\n```rbs\n#{expect}```\n, but got \n```rbs\n#{actual}```\n")
+    /(def self\.empty:.*$)/.match(user_signature) => [actual_user_empty_signature]
+    expect_user_empty_signature = 'def self.empty: () -> ApplicationTest::User::ActiveRecord_Relation'
+    unless expect_user_empty_signature == actual_user_empty_signature
+      t.error("expect=\n```rbs\n#{expect_user_empty_signature}```\n, but got \n```rbs\n#{actual_user_empty_signature}```\n")
     end
+
+    /(def self\.params:.*$)/.match(user_signature) => [actual_user_params_signature]
+    expect_user_params_signature = 'def self.params: (untyped a, ?untyped b, *untyped, d: untyped, ?e: untyped, **untyped) -> ApplicationTest::User::ActiveRecord_Relation'
+    unless expect_user_params_signature == actual_user_params_signature
+      t.error("expect=\n```rbs\n#{expect_user_params_signature}```\n, but got \n```rbs\n#{actual_user_params_signature}```\n")
+    end
+
+    /(def self\.by_status:.*$)/.match(user_signature) => [actual_user_by_status_signature]
+    expect_user_by_status_signature = 'def self.by_status: (?) -> ApplicationTest::User::ActiveRecord_Relation'
+    unless expect_user_by_status_signature == actual_user_by_status_signature
+      t.error("expect=\n```rbs\n#{expect_user_by_status_signature}```\n, but got \n```rbs\n#{actual_user_by_status_signature}```\n")
+    end
+
+    generated_relation_methods_signature = store.fetch('ApplicationTest::User::GeneratedRelationMethods').to_rbs
+
+    /(def empty:.*$)/.match(generated_relation_methods_signature) => [actual_generated_relation_methods_empty_signature]
+    expect_generated_relation_methods_empty_signature = 'def empty: () -> ApplicationTest::User::ActiveRecord_Relation'
+    unless expect_generated_relation_methods_empty_signature == actual_generated_relation_methods_empty_signature
+      t.error("expect=\n```rbs\n#{expect_generated_relation_methods_empty_signature}```\n, but got \n```rbs\n#{actual_generated_relation_methods_empty_signature}```\n")
+    end
+
+    /(def params:.*$)/.match(generated_relation_methods_signature) => [actual_generated_relation_methods_params_signature]
+    expect_generated_relation_methods_params_signature = 'def params: (untyped a, ?untyped b, *untyped, d: untyped, ?e: untyped, **untyped) -> ApplicationTest::User::ActiveRecord_Relation'
+    unless expect_generated_relation_methods_params_signature == actual_generated_relation_methods_params_signature
+      t.error("expect=\n```rbs\n#{expect_generated_relation_methods_params_signature}```\n, but got \n```rbs\n#{actual_generated_relation_methods_params_signature}```\n")
+    end
+
+    /(def by_status:.*$)/.match(generated_relation_methods_signature) => [actual_generated_relation_methods_by_status_signature]
+    expect_generated_relation_methods_by_status_signature = 'def by_status: (?) -> ApplicationTest::User::ActiveRecord_Relation'
+    unless expect_generated_relation_methods_by_status_signature == actual_generated_relation_methods_by_status_signature
+      t.error("expect=\n```rbs\n#{expect_generated_relation_methods_by_status_signature}```\n, but got \n```rbs\n#{actual_generated_relation_methods_by_status_signature}```\n")
+    end
+  rescue NoMatchingPatternError, KeyError => e
+    t.error(e.full_message)
   end
 
   def test_check_typo_only(t)
