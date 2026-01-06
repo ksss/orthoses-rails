@@ -17,18 +17,15 @@ jobs:
           - '3.2'
           - '3.3'
           - '3.4'
+          - '4.0'
         rails_version:
-          - '7.1'
           - '7.2'
           - '8.0'
           - '8.1'
-        exclude:
-          - ruby: '3.4'
-            rails_version: '7.1'
     env:
       RAILS_VERSION: ${{ matrix.rails_version }}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v6
     - name: Remove Gemfile.lock for CI
       run: rm Gemfile.lock
     - name: Set up Ruby
